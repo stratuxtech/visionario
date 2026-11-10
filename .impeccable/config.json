@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "gradient-text",
+        "value": "*",
+        "files": [
+          "src/app/globals.css"
+        ],
+        "createdAt": "2026-11-09T19:47:24.235Z",
+        "reason": "docs/02_REFERENCIAS.md (Referencia 1) pide brillo lento cian sobre una palabra clave por titular en Cormorant itálica; limitado a la utilidad .resaltado"
+      }
+    ]
+  }
+}

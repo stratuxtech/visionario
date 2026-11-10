@@ -1,0 +1,596 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* =====================================================================
+   VISIONARIO — Tokens de diseño (v2, noviembre 2026)
+   Ver DESIGN.md. El azul sale del logo (#157DCA) y el marino de su ceja
+   (#08285A). Solo existen estos colores: la paleta por defecto de
+   Tailwind se elimina para que no se cuelen valores sueltos.
+   ===================================================================== */
+
+@theme {
+  --color-*: initial;
+
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  /* Primary · Azul del logo, más saturado. 600 es el color de acción:
+     texto blanco 5,7:1 (AA). 700 para enlaces y hover: 7,5:1 (AAA). */
+  --color-primary-50: #eef6fd;
+  --color-primary-100: #d9ecfb;
+  --color-primary-200: #b5daf7;
+  --color-primary-300: #84c1f0;
+  --color-primary-400: #4aa3e6;
+  --color-primary-500: #157dca;
+  --color-primary-600: #0f69b4;
+  --color-primary-700: #0b5796;
+  --color-primary-800: #0b4a7d;
+  --color-primary-900: #0c3e68;
+  --color-primary-950: #08284a;
+
+  /* Secondary · Marino de la ceja del logo: estructura, texto, tarjetas oscuras */
+  --color-secondary-50: #f3f6fb;
+  --color-secondary-100: #e4ebf5;
+  --color-secondary-200: #cad6e8;
+  --color-secondary-300: #a4b6d2;
+  --color-secondary-400: #7489af;
+  --color-secondary-500: #566c95;
+  --color-secondary-600: #42577f;
+  --color-secondary-700: #334568;
+  --color-secondary-800: #233453;
+  --color-secondary-900: #172848;
+  --color-secondary-950: #0b1b38;
+
+  /* Oro · la joya en garantía y el lado cálido del fondo */
+  --color-oro-50: #fffaf0;
+  --color-oro-100: #fff4dc;
+  --color-oro-200: #ffe6b3;
+  --color-oro-300: #ffd27a;
+  --color-oro-400: #f7b93e;
+  --color-oro-500: #e09a12;
+  --color-oro-800: #7a4e00;
+
+  /* Éxito · pagos confirmados, pasos cumplidos (siempre con icono) */
+  --color-exito-50: #e8f7ee;
+  --color-exito-100: #cdeed9;
+  --color-exito-400: #4cc27a;
+  --color-exito-500: #22a55a;
+  --color-exito-700: #15803d;
+  --color-exito-800: #166534;
+
+  /* Alerta · errores y cuota vencida, siempre con icono y texto */
+  --color-alerta-50: #fdf0ee;
+  --color-alerta-100: #fbe0dc;
+  --color-alerta-200: #f3c4bc;
+  --color-alerta-500: #e5484d;
+  --color-alerta-600: #b42318;
+  --color-alerta-700: #912018;
+
+  /* Tipografía (variables inyectadas por next/font en layout.tsx) */
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-titulo: var(--font-ubuntu), ui-sans-serif, system-ui, sans-serif;
+  --font-destacado: var(--font-cormorant), ui-serif, Georgia, serif;
+
+  --text-titular: clamp(2.375rem, 1.5rem + 3.6vw, 4rem);
+  --text-titular--line-height: 1.04;
+  --text-titular--letter-spacing: -0.025em;
+  --text-titular--font-weight: 700;
+
+  --text-seccion: clamp(1.75rem, 1.35rem + 1.7vw, 2.625rem);
+  --text-seccion--line-height: 1.1;
+  --text-seccion--letter-spacing: -0.015em;
+  --text-seccion--font-weight: 700;
+
+  --text-bloque: 1.25rem;
+  --text-bloque--line-height: 1.3;
+  --text-bloque--font-weight: 700;
+
+  --text-entrada: 1.125rem;
+  --text-entrada--line-height: 1.5;
+
+  --text-cuerpo: 1rem;
+  --text-cuerpo--line-height: 1.5;
+
+  --text-meta: 0.875rem;
+  --text-meta--line-height: 1.4;
+  --text-meta--font-weight: 500;
+
+  --text-mini: 0.75rem;
+  --text-mini--line-height: 1.3;
+  --text-mini--font-weight: 700;
+
+  --text-destacado: 1.5rem;
+  --text-destacado--line-height: 1.3;
+
+  --text-cifra: clamp(2.25rem, 1.7rem + 2vw, 3rem);
+  --text-cifra--line-height: 1;
+  --text-cifra--letter-spacing: -0.03em;
+  --text-cifra--font-weight: 700;
+
+  /* Radios: curvas generosas como el iris; botones y chips en píldora */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
+  --radius-full: 9999px;
+
+  /* Profundidad: sombras suaves teñidas de marino y "resplandor" del azul */
+  --shadow-xs: 0 1px 2px 0 rgb(11 27 56 / 0.06);
+  --shadow-sm: 0 1px 2px 0 rgb(11 27 56 / 0.05), 0 4px 12px -2px rgb(11 27 56 / 0.07);
+  --shadow-md: 0 2px 4px 0 rgb(11 27 56 / 0.05), 0 12px 28px -6px rgb(11 27 56 / 0.12);
+  --shadow-lg: 0 4px 8px -2px rgb(11 27 56 / 0.06), 0 24px 48px -12px rgb(11 27 56 / 0.2);
+  --shadow-vidrio: inset 0 0 0 1px rgb(15 105 180 / 0.08), 0 2px 4px 0 rgb(11 27 56 / 0.05), 0 8px 24px 0 rgb(11 27 56 / 0.08);
+  --shadow-brillo: 0 16px 36px -10px rgb(15 105 180 / 0.6), 0 6px 16px -6px rgb(15 105 180 / 0.45);
+  --shadow-brillo-fuerte: 0 22px 44px -10px rgb(15 105 180 / 0.7), 0 8px 18px -6px rgb(15 105 180 / 0.5);
+  --shadow-brillo-exito: 0 14px 30px -10px rgb(34 165 90 / 0.55);
+  --shadow-presionado: inset 0 2px 6px 0 rgb(11 27 56 / 0.25);
+
+  /* Movimiento: curvas de Pling (salida firme) y un resorte para lo que flota */
+  --ease-salida: cubic-bezier(0.2, 0, 0, 1);
+  --ease-resorte: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-rebote: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-suave: cubic-bezier(0.65, 0, 0.35, 1);
+  --default-transition-duration: 250ms;
+  --default-transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+
+  --animate-entrar: entrar 520ms var(--ease-resorte) both;
+  --animate-aparecer: aparecer 700ms var(--ease-resorte) both;
+  --animate-paso-adelante: paso-adelante 420ms var(--ease-resorte) both;
+  --animate-paso-atras: paso-atras 420ms var(--ease-resorte) both;
+  --animate-aviso: aviso 520ms var(--ease-rebote) both;
+  --animate-parpadeo: parpadeo 2.4s var(--ease-suave) infinite;
+  --animate-llenar: llenar 900ms var(--ease-resorte) both;
+  --animate-latido: latido 2.4s var(--ease-salida) infinite;
+  --animate-elegir: elegir 380ms var(--ease-rebote);
+  --animate-confirmar: confirmar 640ms var(--ease-rebote) both;
+  --animate-flotar: flotar 6s var(--ease-suave) infinite;
+  --animate-flotar-lento: flotar 9s var(--ease-suave) infinite;
+  --animate-respirar: respirar 14s var(--ease-suave) infinite alternate;
+  --animate-brillo: brillo 5s linear infinite;
+  --animate-chip: chip 700ms var(--ease-rebote) both;
+  --animate-girar: girar 18s linear infinite;
+  --animate-dibujar: dibujar 900ms var(--ease-resorte) both;
+  --animate-estallido: estallido 1600ms var(--ease-salida) both;
+
+  @keyframes entrar {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: none; }
+  }
+  /* Como Pling: el texto llega desde un leve desenfoque */
+  @keyframes aparecer {
+    from { opacity: 0; transform: translateY(18px) scale(0.98); filter: blur(8px); }
+    to { opacity: 1; transform: none; filter: blur(0); }
+  }
+  @keyframes paso-adelante {
+    from { opacity: 0; transform: translateX(28px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes paso-atras {
+    from { opacity: 0; transform: translateX(-28px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes aviso {
+    from { opacity: 0; transform: translateY(-16px) scale(0.94); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes parpadeo {
+    0%, 78%, 100% { transform: scaleY(1); }
+    84% { transform: scaleY(0.08); }
+    90% { transform: scaleY(1); }
+  }
+  @keyframes latido {
+    0% { transform: scale(1); opacity: 0.55; }
+    70%, 100% { transform: scale(1.9); opacity: 0; }
+  }
+  @keyframes elegir {
+    0% { transform: scale(1); }
+    40% { transform: scale(0.95); }
+    100% { transform: scale(1); }
+  }
+  @keyframes confirmar {
+    0% { opacity: 0; transform: scale(0.4) rotate(-12deg); }
+    60% { opacity: 1; transform: scale(1.1) rotate(3deg); }
+    100% { opacity: 1; transform: none; }
+  }
+  @keyframes llenar {
+    from { transform: scaleX(var(--desde, 0)); }
+    to { transform: scaleX(1); }
+  }
+  /* Levitación: elementos que flotan alrededor de una foto o tarjeta */
+  @keyframes flotar {
+    0%, 100% { transform: translate3d(0, 0, 0) rotate(var(--giro, 0deg)); }
+    50% { transform: translate3d(0, -10px, 0) rotate(var(--giro, 0deg)); }
+  }
+  /* Fondo vivo: manchas de color que respiran despacio */
+  @keyframes respirar {
+    0% { transform: translate3d(0, 0, 0) scale(1); }
+    50% { transform: translate3d(4%, -3%, 0) scale(1.08); }
+    100% { transform: translate3d(-3%, 4%, 0) scale(0.96); }
+  }
+  /* Brillo lento sobre la palabra destacada de un titular */
+  @keyframes brillo {
+    from { background-position: 200% 50%; }
+    to { background-position: -200% 50%; }
+  }
+  /* Chips que aparecen desde un punto y se asientan */
+  @keyframes chip {
+    0% { opacity: 0; transform: translateY(12px) scale(0.6) rotate(var(--giro, 0deg)); }
+    100% { opacity: 1; transform: translateY(0) scale(1) rotate(var(--giro, 0deg)); }
+  }
+  @keyframes girar {
+    to { transform: rotate(360deg); }
+  }
+  /* Festejo: cada emoji sale disparado desde el centro y se desvanece */
+  @keyframes estallido {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.2); }
+    15% { opacity: 1; }
+    100% { opacity: 0; transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) rotate(var(--r)) scale(1.1); }
+  }
+  /* La campana se mueve una vez cuando hay notificaciones sin leer */
+  @keyframes campana {
+    0%, 60%, 100% { transform: rotate(0); }
+    10%, 30% { transform: rotate(14deg); }
+    20%, 40% { transform: rotate(-12deg); }
+    50% { transform: rotate(4deg); }
+  }
+  /* La línea que recorre el QR de pago */
+  @keyframes escanear {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(13.5rem); }
+  }
+  @keyframes dibujar {
+    from { stroke-dashoffset: var(--largo, 60); }
+    to { stroke-dashoffset: 0; }
+  }
+}
+
+/* ---------------------------------------------------------------------
+   Tokens semánticos (contrato ShadCN). Tema claro únicamente.
+   --------------------------------------------------------------------- */
+
+:root {
+  --radius: 1rem;
+
+  /* Fondo de la app: azul muy claro; las manchas de color viven en .fondo-vivo */
+  --background: #eaf2fb;
+  --foreground: var(--color-secondary-900);
+
+  /* Menús y tarjetas: blanco puro */
+  --card: #ffffff;
+  --card-foreground: var(--color-secondary-900);
+  --popover: #ffffff;
+  --popover-foreground: var(--color-secondary-900);
+
+  --primary: var(--color-primary-600);
+  --primary-hover: var(--color-primary-700);
+  --primary-foreground: #ffffff;
+
+  --secondary: var(--color-secondary-100);
+  --secondary-foreground: var(--color-secondary-900);
+
+  --muted: var(--color-secondary-100);
+  --muted-foreground: var(--color-secondary-600);
+
+  --accent: var(--color-primary-50);
+  --accent-foreground: var(--color-primary-800);
+
+  --destructive: var(--color-alerta-600);
+  --destructive-foreground: #ffffff;
+
+  --border: var(--color-secondary-200);
+  --input: var(--color-secondary-300);
+  --ring: var(--color-primary-500);
+  --enlace: var(--color-primary-700);
+
+  --pagada: var(--color-exito-800);
+  --pagada-fondo: var(--color-exito-50);
+  --pendiente: var(--color-secondary-700);
+  --pendiente-fondo: var(--color-secondary-100);
+  --vencida: var(--color-alerta-700);
+  --vencida-fondo: var(--color-alerta-50);
+
+  --progreso: var(--color-primary-500);
+  --progreso-pista: var(--color-secondary-200);
+
+  --toque-minimo: 3rem;
+  /* Alto del menú global inferior (sin zona segura) */
+  --alto-menu: 4.75rem;
+
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-enlace: var(--enlace);
+  --color-pagada: var(--pagada);
+  --color-pagada-fondo: var(--pagada-fondo);
+  --color-pendiente: var(--pendiente);
+  --color-pendiente-fondo: var(--pendiente-fondo);
+  --color-vencida: var(--vencida);
+  --color-vencida-fondo: var(--vencida-fondo);
+  --color-progreso: var(--progreso);
+  --color-progreso-pista: var(--progreso-pista);
+
+  --spacing-toque: var(--toque-minimo);
+}
+
+/* ---------------------------------------------------------------------
+   Base
+   --------------------------------------------------------------------- */
+
+@layer base {
+  *,
+  ::before,
+  ::after {
+    border-color: var(--color-border);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+    scrollbar-color: var(--color-secondary-300) transparent;
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    min-height: 100dvh;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-size: var(--text-cuerpo);
+    line-height: var(--text-cuerpo--line-height);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2 {
+    font-family: var(--font-titulo);
+    color: var(--color-secondary-950);
+    text-wrap: balance;
+  }
+
+  h3,
+  h4 {
+    font-family: var(--font-titulo);
+    font-weight: 700;
+    color: var(--color-secondary-950);
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  strong,
+  b {
+    font-weight: 800;
+    color: var(--color-secondary-950);
+  }
+
+  a {
+    color: var(--color-enlace);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  ::selection {
+    background-color: var(--color-primary-200);
+    color: var(--color-secondary-950);
+  }
+
+  input,
+  textarea {
+    caret-color: var(--color-primary-600);
+  }
+
+  ::placeholder {
+    color: var(--color-secondary-500);
+    opacity: 1;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-ring);
+    outline-offset: 3px;
+  }
+
+  .cifras,
+  time,
+  data {
+    font-variant-numeric: tabular-nums;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--color-secondary-300);
+    border: 3px solid var(--color-background);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+/* Contenedores: celular primero; en computadora la app se centra como una
+   columna de app (flujo) o un ancho cómodo (pantallas generales). */
+@utility contenedor {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+  @media (width >= 64rem) {
+    max-width: 72rem;
+    padding-inline: 2.5rem;
+  }
+}
+
+@utility contenedor-flujo {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+  @media (width >= 64rem) {
+    max-width: 40rem;
+    padding-inline: 0;
+  }
+}
+
+@utility pb-seguro {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+/* Justo encima del menú global inferior */
+@utility bottom-menu {
+  bottom: calc(var(--alto-menu) + env(safe-area-inset-bottom));
+}
+
+/* Espacio para que el contenido no quede bajo el menú global */
+@utility pb-menu {
+  padding-bottom: calc(var(--alto-menu) + env(safe-area-inset-bottom) + 2rem);
+}
+
+@utility pt-seguro {
+  padding-top: max(0.75rem, env(safe-area-inset-top));
+}
+
+@utility sin-barra {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Vidrio (Pling/Stratux): blanco translúcido con desenfoque y borde de luz */
+@utility vidrio {
+  background-color: rgb(255 255 255 / 0.72);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  backdrop-filter: blur(16px) saturate(1.4);
+  box-shadow: var(--shadow-vidrio);
+}
+
+/* Tarjeta blanca estándar */
+@utility tarjeta {
+  background-color: var(--color-card);
+  border-radius: var(--radius-3xl);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Palabra destacada del titular: Cormorant itálica con brillo azul lento */
+@utility resaltado {
+  font-family: var(--font-destacado);
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  padding-inline: 0.04em 0.1em;
+  color: var(--color-primary-600);
+  background-image: linear-gradient(100deg, var(--color-primary-700) 20%, var(--color-primary-500) 40%, var(--color-primary-700) 60%);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: var(--animate-brillo);
+}
+
+/* La misma palabra destacada sobre fondos oscuros o azules: brillo dorado */
+.resaltado.resaltado-claro {
+  color: var(--color-oro-300);
+  background-image: linear-gradient(100deg, var(--color-oro-300) 20%, var(--color-white) 40%, var(--color-oro-300) 60%);
+}
+
+/* Revelado al entrar en pantalla (lo activa <Revelar>) */
+@utility revelar {
+  opacity: 0;
+  transform: translateY(24px);
+  filter: blur(6px);
+  transition:
+    opacity 800ms var(--ease-resorte),
+    transform 800ms var(--ease-resorte),
+    filter 800ms var(--ease-resorte);
+  transition-delay: var(--retraso, 0ms);
+  &[data-visible="true"] {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+/* Fondo vivo de la app: dos manchas (azul y oro) que respiran despacio */
+.fondo-vivo {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--color-background);
+}
+.fondo-vivo::before,
+.fondo-vivo::after {
+  content: "";
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(60px);
+  animation: var(--animate-respirar);
+  will-change: transform;
+}
+.fondo-vivo::before {
+  width: 80vmax;
+  height: 80vmax;
+  top: -40vmax;
+  left: -30vmax;
+  background: radial-gradient(circle, rgb(132 193 240 / 0.55), transparent 65%);
+}
+.fondo-vivo::after {
+  width: 70vmax;
+  height: 70vmax;
+  bottom: -38vmax;
+  right: -28vmax;
+  background: radial-gradient(circle, rgb(255 210 122 / 0.45), transparent 65%);
+  animation-delay: -7s;
+}
+
+/* Versión sin movimiento: obligatoria para cada animación */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+  .revelar {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}

@@ -1,0 +1,177 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-09T00:00:00Z",
+  "title": "Design System: Visionario",
+  "extensions": {
+    "colorMeta": {
+      "primary-500": { "role": "primary", "displayName": "Cian Iris", "canonical": "#3da9df", "tonalRamp": ["#0f344a", "#174e6f", "#1b5d83", "#206e9c", "#288bc2", "#3da9df", "#8fcae8", "#dbeff8"] },
+      "primary-400": { "role": "primary", "displayName": "Cian Claro", "canonical": "#5bb1dd" },
+      "primary-300": { "role": "primary", "displayName": "Cian Hielo", "canonical": "#8fcae8" },
+      "primary-50": { "role": "primary", "displayName": "Cian Bruma", "canonical": "#f0f8fc" },
+      "primary-100": { "role": "primary", "displayName": "Cian Bruma", "canonical": "#dbeff8" },
+      "primary-700": { "role": "primary", "displayName": "Cian Profundo (foco)", "canonical": "#206e9c" },
+      "primary-800": { "role": "primary", "displayName": "Cian Profundo (enlace)", "canonical": "#1b5d83" },
+      "secondary-950": { "role": "secondary", "displayName": "Marino Noche", "canonical": "#13212c", "tonalRamp": ["#13212c", "#1f3342", "#223c4f", "#355265", "#42657c", "#759eb2", "#c7d7e2", "#f3f6f8"] },
+      "secondary-900": { "role": "secondary", "displayName": "Slate Tinta", "canonical": "#1f3342" },
+      "secondary-700": { "role": "secondary", "displayName": "Slate Medio", "canonical": "#355265" },
+      "secondary-600": { "role": "secondary", "displayName": "Slate Medio (atenuado)", "canonical": "#42657c" },
+      "secondary-500": { "role": "secondary", "displayName": "Slate Control", "canonical": "#568199" },
+      "secondary-50": { "role": "neutral", "displayName": "Slate Bruma (fondo)", "canonical": "#f3f6f8" },
+      "secondary-200": { "role": "neutral", "displayName": "Slate Bruma (borde)", "canonical": "#c7d7e2" },
+      "white": { "role": "neutral", "displayName": "Blanco", "canonical": "#ffffff" },
+      "alerta-600": { "role": "tertiary", "displayName": "Alerta", "canonical": "#b42318", "tonalRamp": ["#912018", "#b42318", "#f3c4bc", "#fdf0ee"] }
+    },
+    "typographyMeta": {
+      "titular": { "displayName": "Titular", "purpose": "H1 de cada pantalla, Ubuntu Bold, equilibrado." },
+      "seccion": { "displayName": "Sección", "purpose": "H2 de bandas y bloques." },
+      "bloque": { "displayName": "Bloque", "purpose": "H3, paradas del recorrido y títulos de tarjeta." },
+      "entrada": { "displayName": "Entrada", "purpose": "Párrafo de apertura y texto de botón grande." },
+      "cuerpo": { "displayName": "Cuerpo", "purpose": "Texto corrido, formularios, contratos." },
+      "meta": { "displayName": "Meta", "purpose": "Ayudas, fechas, lugares, pastillas de estado." },
+      "cifra": { "displayName": "Cifra", "purpose": "Montos grandes con cifras tabulares." },
+      "destacado": { "displayName": "Destacado", "purpose": "Cormorant itálica solo para agradecer o cerrar." }
+    },
+    "shadows": [
+      { "name": "xs", "value": "0 1px 2px 0 rgb(19 33 44 / 0.06)", "purpose": "Apenas un borde inferior." },
+      { "name": "sm", "value": "0 1px 2px 0 rgb(19 33 44 / 0.06), 0 2px 6px -1px rgb(19 33 44 / 0.08)", "purpose": "Tarjetas blancas y botón primario en reposo." },
+      { "name": "md", "value": "0 2px 4px -1px rgb(19 33 44 / 0.06), 0 8px 20px -4px rgb(19 33 44 / 0.12)", "purpose": "Bloque de próxima cita y tarjetas destacadas." },
+      { "name": "lg", "value": "0 4px 8px -2px rgb(19 33 44 / 0.06), 0 20px 40px -8px rgb(19 33 44 / 0.18)", "purpose": "Bloque de horarios libres, avisos flotantes, columna de app en tablet." },
+      { "name": "presionado", "value": "inset 0 2px 4px 0 rgb(19 33 44 / 0.18)", "purpose": "Botón primario y secundario al presionar: hundir, no oscurecer." }
+    ],
+    "motion": [
+      { "name": "ease-salida", "value": "cubic-bezier(0.22, 1, 0.36, 1)", "purpose": "Curva de todo lo que entra y de las transiciones de estado." },
+      { "name": "ease-suave", "value": "cubic-bezier(0.65, 0, 0.35, 1)", "purpose": "Parpadeo del isotipo de carga." },
+      { "name": "transicion-defecto", "value": "180ms", "purpose": "Duración por defecto; 150ms en botones y campos." },
+      { "name": "entrar", "value": "320ms ease-salida, translateY(8px) a 0 con opacidad", "purpose": "Aparición de tarjetas y bloques." },
+      { "name": "paso-adelante / paso-atras", "value": "360ms ease-salida, translateX(±24px)", "purpose": "Avance lineal entre pasos de un flujo." },
+      { "name": "aviso", "value": "420ms ease-salida, translateY(-12px) scale(0.98)", "purpose": "Entrada de avisos." },
+      { "name": "elegir", "value": "320ms ease-salida, escala 1 a 0.94 a 1", "purpose": "Micro-respuesta al elegir opción, horario o montura." },
+      { "name": "confirmar", "value": "520ms ease-salida, escala 0.6 a 1.06 a 1", "purpose": "Sello de cita confirmada." },
+      { "name": "llenar", "value": "700ms ease-salida, scaleX desde la izquierda", "purpose": "Segmento de cuota recién pagado." },
+      { "name": "latido", "value": "2.4s ease-salida infinito, escala 1 a 1.9 con desvanecido", "purpose": "Pulso del iris en 'Usted está aquí'." },
+      { "name": "parpadeo", "value": "2.4s ease-suave infinito, scaleY a 0.08", "purpose": "Isotipo como indicador de carga." },
+      { "name": "movimiento-reducido", "value": "animaciones y transiciones a 1ms, una iteración; pulso del iris oculto", "purpose": "Obligatorio para toda animación." }
+    ],
+    "breakpoints": [
+      { "name": "celular", "value": "390px (vista principal; columna de app hasta 28rem)" },
+      { "name": "md", "value": "768px (columna centrada con sombra lg sobre slate 200)" },
+      { "name": "lg", "value": "1024px (escritorio adaptado: navegación superior, dos columnas, flujo de 40rem)" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Botón primario",
+      "kind": "button",
+      "refersTo": "button-primary-lg",
+      "description": "Acción principal de cada pantalla: cian 500 con texto marino 950 (AA 6,2:1).",
+      "html": "<button class=\"ds-btn-primary\">Agendar cita gratuita <svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M9 6l6 6-6 6\"/></svg></button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; height: 3.5rem; padding: 0 1.5rem; border: 0; border-radius: 0.5rem; background: #3da9df; color: #13212c; font-family: Manrope, system-ui, sans-serif; font-weight: 700; font-size: 1.125rem; box-shadow: 0 1px 2px 0 rgb(19 33 44 / 0.06), 0 2px 6px -1px rgb(19 33 44 / 0.08); transition: background-color 150ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 150ms cubic-bezier(0.22, 1, 0.36, 1), transform 150ms cubic-bezier(0.22, 1, 0.36, 1); cursor: pointer; } .ds-btn-primary:hover { background: #5bb1dd; } .ds-btn-primary:active { background: #3da9df; transform: translateY(1px); box-shadow: inset 0 2px 4px 0 rgb(19 33 44 / 0.18); } .ds-btn-primary:focus-visible { outline: 3px solid #206e9c; outline-offset: 2px; }"
+    },
+    {
+      "name": "Botón de contorno",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Acción alternativa: borde marino de 2px sobre blanco.",
+      "html": "<button class=\"ds-btn-outline\">Ver monturas</button>",
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; gap: 0.5rem; height: 3rem; padding: 0 1.25rem; border: 2px solid #223c4f; border-radius: 0.5rem; background: #ffffff; color: #13212c; font-family: Manrope, system-ui, sans-serif; font-weight: 700; font-size: 1rem; transition: background-color 150ms cubic-bezier(0.22, 1, 0.36, 1); cursor: pointer; } .ds-btn-outline:hover { background: #f3f6f8; } .ds-btn-outline:active { background: #e2eaef; transform: translateY(1px); } .ds-btn-outline:focus-visible { outline: 3px solid #206e9c; outline-offset: 2px; }"
+    },
+    {
+      "name": "Botón fantasma",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Acciones de barra (volver, avisos, iniciar sesión).",
+      "html": "<button class=\"ds-btn-ghost\">Iniciar sesión</button>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; height: 2.5rem; padding: 0 1rem; border: 0; border-radius: 0.5rem; background: transparent; color: #1f3342; font-family: Manrope, system-ui, sans-serif; font-weight: 700; font-size: 0.875rem; transition: background-color 150ms cubic-bezier(0.22, 1, 0.36, 1); cursor: pointer; } .ds-btn-ghost:hover { background: #e2eaef; } .ds-btn-ghost:active { background: #c7d7e2; } .ds-btn-ghost:focus-visible { outline: 3px solid #206e9c; outline-offset: 2px; }"
+    },
+    {
+      "name": "Campo de texto",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Campo de 48px con borde slate 500 de 2px y halo cian al enfocar.",
+      "html": "<label class=\"ds-label\">Número de celular<input class=\"ds-input\" placeholder=\"7xxxxxxx\" /></label>",
+      "css": ".ds-label { display: grid; gap: 0.375rem; font-family: Manrope, system-ui, sans-serif; font-weight: 600; color: #13212c; } .ds-input { height: 3rem; padding: 0 1rem; border: 2px solid #568199; border-radius: 0.5rem; background: #ffffff; color: #13212c; font: inherit; font-weight: 400; font-size: 1rem; caret-color: #206e9c; transition: border-color 150ms, box-shadow 150ms; } .ds-input::placeholder { color: #42657c; } .ds-input:hover { border-color: #42657c; } .ds-input:focus-visible { outline: none; border-color: #206e9c; box-shadow: 0 0 0 4px #bde0f2; } .ds-input[aria-invalid=true] { border-color: #b42318; }"
+    },
+    {
+      "name": "Opción grande",
+      "kind": "chip",
+      "refersTo": "opcion-marcada",
+      "description": "Radio nativo dentro de una etiqueta táctil de 56px; marcada en cian 50 con borde cian 700.",
+      "html": "<label class=\"ds-opcion ds-opcion--marcada\"><span class=\"ds-opcion-punto\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12l5 5L20 7\"/></svg></span>Sí, uso lentes</label>",
+      "css": ".ds-opcion { display: flex; align-items: center; gap: 0.75rem; min-height: 3.5rem; padding: 0.75rem 1rem; border: 2px solid #c7d7e2; border-radius: 0.75rem; background: #ffffff; color: #1f3342; font-family: Manrope, system-ui, sans-serif; font-weight: 600; cursor: pointer; transition: border-color 150ms, background-color 150ms; } .ds-opcion:hover { border-color: #759eb2; } .ds-opcion--marcada { border-color: #206e9c; background: #f0f8fc; color: #13212c; } .ds-opcion-punto { display: flex; align-items: center; justify-content: center; width: 1.5rem; height: 1.5rem; border-radius: 9999px; border: 2px solid #206e9c; background: #206e9c; color: #ffffff; }"
+    },
+    {
+      "name": "Estado de cuota",
+      "kind": "chip",
+      "refersTo": "estado-pagada",
+      "description": "Pastilla con icono + texto + color: Pagada, Pendiente, Vencida.",
+      "html": "<span class=\"ds-estado ds-estado--pagada\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M8 12.5l3 3 5-6\"/></svg>Pagada</span> <span class=\"ds-estado ds-estado--pendiente\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M12 7v5l3 2\"/></svg>Pendiente</span> <span class=\"ds-estado ds-estado--vencida\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M12 7v6M12 16.5v.5\"/></svg>Vencida</span>",
+      "css": ".ds-estado { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.25rem 0.75rem 0.25rem 0.5rem; border-radius: 9999px; font-family: Manrope, system-ui, sans-serif; font-size: 0.875rem; font-weight: 700; line-height: 1.4; } .ds-estado--pagada { background: #dbeff8; color: #1b5d83; } .ds-estado--pendiente { background: #e2eaef; color: #355265; } .ds-estado--vencida { background: #fdf0ee; color: #912018; }"
+    },
+    {
+      "name": "Bloque de decisión",
+      "kind": "card",
+      "refersTo": "bloque-decision",
+      "description": "Bloque marino 950 con la acción cian dentro: horarios libres, próxima cita, total.",
+      "html": "<section class=\"ds-bloque\"><h2 class=\"ds-bloque-t\">Próximos horarios libres</h2><p class=\"ds-bloque-n\">Cita gratuita de 60 minutos en la óptica</p><button class=\"ds-bloque-fila\"><span><b>Hoy</b><br><small>09:00 – 10:00</small></span><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"M9 6l6 6-6 6\"/></svg></button><button class=\"ds-bloque-cta\">Agendar cita gratuita</button></section>",
+      "css": ".ds-bloque { max-width: 26rem; padding: 1.25rem; border-radius: 1.5rem; background: #13212c; color: #ffffff; font-family: Manrope, system-ui, sans-serif; box-shadow: 0 4px 8px -2px rgb(19 33 44 / 0.06), 0 20px 40px -8px rgb(19 33 44 / 0.18); } .ds-bloque-t { margin: 0; font-family: Ubuntu, system-ui, sans-serif; font-weight: 500; font-size: 1.25rem; color: #ffffff; } .ds-bloque-n { margin: 0.125rem 0 1rem; font-size: 0.875rem; color: #a1becd; } .ds-bloque-fila { display: flex; width: 100%; min-height: 3.5rem; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; border: 0; border-radius: 0.75rem; background: #1f3342; box-shadow: 0 0 0 1px rgb(255 255 255 / 0.1); color: #ffffff; text-align: left; font: inherit; cursor: pointer; } .ds-bloque-fila small { color: #a1becd; font-variant-numeric: tabular-nums; } .ds-bloque-fila svg { color: #8fcae8; } .ds-bloque-fila:hover { background: #223c4f; } .ds-bloque-cta { margin-top: 1rem; width: 100%; height: 3.5rem; border: 0; border-radius: 0.5rem; background: #3da9df; color: #13212c; font: inherit; font-weight: 700; font-size: 1.125rem; cursor: pointer; } .ds-bloque-cta:hover { background: #5bb1dd; } .ds-bloque-cta:focus-visible, .ds-bloque-fila:focus-visible { outline: 3px solid #8fcae8; outline-offset: 2px; }"
+    },
+    {
+      "name": "Recorrido con iris",
+      "kind": "custom",
+      "refersTo": "recorrido",
+      "description": "Gesto propio: una línea con paradas; el iris del logo marca 'Usted está aquí'.",
+      "html": "<ol class=\"ds-rec\"><li class=\"ds-rec-p ds-rec-p--hecha\"><span class=\"ds-rec-m\"><span class=\"ds-rec-check\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12l5 5L20 7\"/></svg></span></span><div><h3>Agenda su cita</h3><p>Elija día y hora desde el celular.</p></div></li><li class=\"ds-rec-p\"><span class=\"ds-rec-m\"><span class=\"ds-iris\"><span class=\"ds-iris-pulso\"></span><svg viewBox=\"0 0 28 28\" width=\"28\" height=\"28\"><circle cx=\"14\" cy=\"14\" r=\"13\" fill=\"#3da9df\"/><circle cx=\"12.5\" cy=\"14.5\" r=\"6\" fill=\"#13212c\"/><circle cx=\"18.6\" cy=\"9.8\" r=\"3.4\" fill=\"#fff\"/><circle cx=\"18.6\" cy=\"18.2\" r=\"3.4\" fill=\"#fff\"/></svg></span></span><div><span class=\"ds-rec-aqui\">Usted está aquí</span><h3>Medición y montura</h3><p>En la óptica medimos su vista sin costo.</p></div></li><li class=\"ds-rec-p ds-rec-p--futura\"><span class=\"ds-rec-m\"><span class=\"ds-rec-anillo\"></span></span><div><h3>Deja su joya en garantía</h3><p>Pesamos su joya de oro de 18 quilates.</p></div></li></ol>",
+      "css": ".ds-rec { list-style: none; margin: 0; padding: 0; font-family: Manrope, system-ui, sans-serif; color: #355265; } .ds-rec-p { position: relative; display: grid; grid-template-columns: 2rem 1fr; column-gap: 1rem; padding-bottom: 1.75rem; } .ds-rec-p:not(:last-child)::before { content: ''; position: absolute; top: 2rem; bottom: 0; left: 1rem; width: 2px; transform: translateX(-50%); border-radius: 9999px; background: #c7d7e2; } .ds-rec-p--hecha::before { background: #3da9df !important; } .ds-rec-m { position: relative; z-index: 1; display: flex; width: 2rem; height: 2rem; align-items: center; justify-content: center; } .ds-rec-check { display: flex; width: 1.5rem; height: 1.5rem; align-items: center; justify-content: center; border-radius: 9999px; background: #3da9df; color: #13212c; font-size: 0.75rem; font-weight: 800; } .ds-rec-anillo { width: 1rem; height: 1rem; border-radius: 9999px; border: 2px solid #759eb2; background: #f3f6f8; } .ds-rec-p--futura > div { opacity: 0.75; } .ds-rec h3 { margin: 0.25rem 0 0; font-size: 1.25rem; font-weight: 600; line-height: 1.3; color: #13212c; } .ds-rec p { margin: 0.25rem 0 0; } .ds-rec-aqui { display: inline-block; margin-top: 0.25rem; padding: 0.125rem 0.625rem; border-radius: 9999px; background: #dbeff8; color: #174e6f; font-size: 0.875rem; font-weight: 700; } .ds-iris { position: relative; display: inline-flex; width: 1.75rem; height: 1.75rem; } .ds-iris svg { position: relative; } .ds-iris-pulso { position: absolute; inset: 0; border-radius: 9999px; background: #8fcae8; animation: ds-latido 2.4s cubic-bezier(0.22, 1, 0.36, 1) infinite; } @keyframes ds-latido { 0% { transform: scale(1); opacity: 0.55; } 70%, 100% { transform: scale(1.9); opacity: 0; } } @media (prefers-reduced-motion: reduce) { .ds-iris-pulso { display: none; } }"
+    },
+    {
+      "name": "Barra inferior",
+      "kind": "nav",
+      "refersTo": "navegacion-celular",
+      "description": "Cuatro pestañas en celular; la activa con píldora cian 100.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-a ds-nav-a--activa\" href=\"#\" aria-current=\"page\"><span class=\"ds-nav-i\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z\"/></svg></span>Inicio</a><a class=\"ds-nav-a\" href=\"#\"><span class=\"ds-nav-i\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" aria-hidden=\"true\"><rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"2\"/><path d=\"M3 10h18M8 3v4M16 3v4\"/></svg></span>Mi cita</a></nav>",
+      "css": ".ds-nav { display: grid; grid-template-columns: repeat(2, 1fr); max-width: 28rem; border-top: 1px solid #c7d7e2; background: rgb(255 255 255 / 0.95); font-family: Manrope, system-ui, sans-serif; } .ds-nav-a { display: flex; min-height: 4rem; flex-direction: column; align-items: center; justify-content: center; gap: 0.25rem; padding-top: 0.5rem; font-size: 0.875rem; color: #42657c; text-decoration: none; transition: color 180ms; } .ds-nav-a:hover { color: #1f3342; } .ds-nav-a--activa { font-weight: 700; color: #174e6f; } .ds-nav-i { display: flex; width: 3.5rem; height: 2rem; align-items: center; justify-content: center; border-radius: 9999px; transition: background-color 200ms; } .ds-nav-a--activa .ds-nav-i { background: #dbeff8; } .ds-nav-a:focus-visible { outline: 3px solid #206e9c; outline-offset: 2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Una sola línea con paradas",
+    "overview": "El recorrido del paciente, del primer clic a la joya devuelta, es una línea de tránsito con paradas. La app la usa para explicar (en la landing, como plano del proceso) y para ubicar (en el panel y los flujos, con el iris del logo como marcador de \"Usted está aquí\"). Todo lo demás se subordina a esa idea: barras de pasos segmentadas en los flujos, cuotas dibujadas como segmentos que se llenan, el plan de pago como una línea de tres paradas que termina en la joya devuelta.\n\nEl mundo es claro, sereno y legible para personas con poca experiencia digital y medidas visuales altas (desde ±4 D). Fondo slate muy pálido, superficies blancas con sombras suaves teñidas de marino, y bloques de decisión en marino casi negro donde vive la acción cian. La densidad es baja: áreas de toque de 48 a 56px, cuerpo de 16px como mínimo, texto secundario que nunca baja de 4,5:1. El mundo visual lo fija el brief de marca del cliente (docs/visionario_bible_brand_system.md); este documento registra cómo aterrizó en el código.\n\nCelular primero de forma estricta (390px es la vista principal; la app vive en una columna de hasta 28rem). El escritorio es secundario pero adaptado desde 1024px: navegación superior junto al logo, composiciones a dos columnas en landing, inicio, cuenta y felicitación, y una columna de lectura de 40rem para los flujos. Rechazos confirmados por el brief: fondos de partículas, gradientes ruidosos, efectos de plantilla vieja y emojis como iconos funcionales.",
+    "keyCharacteristics": [
+      "Una línea con paradas como gesto propio; el iris del logo marca el presente.",
+      "Cian 500 reservado para acción y progreso; slate/marino para estructura y texto.",
+      "Botón primario cian 500 con texto marino 950 (decisión del cliente por WCAG AA).",
+      "Ubuntu en títulos, Manrope en todo lo operativo, Cormorant solo para agradecer.",
+      "Estados siempre con icono + texto + color, nunca solo color.",
+      "Movimiento corto que explica o reconforta, con versión sin movimiento obligatoria."
+    ],
+    "rules": [
+      { "name": "The Cian Es Avanzar Rule", "body": "El cian 500 solo aparece donde algo avanza o se decide: botón primario, progreso, parada cumplida, iris. Nunca como texto (no llega a 4,5:1 sobre blanco) ni como decoración de fondo.", "section": "colors" },
+      { "name": "The Texto Marino Sobre Cian Rule", "body": "Todo texto o icono sobre cian 500 es marino 950 (6,2:1). El blanco sobre cian 500 queda prohibido.", "section": "colors" },
+      { "name": "The Alerta Solo Para Problemas Rule", "body": "El rojo de alerta solo marca errores, cuota vencida y conteo de avisos sin leer, y siempre va con icono y texto.", "section": "colors" },
+      { "name": "The Cormorant Agradece Rule", "body": "Cormorant solo se usa para agradecer o cerrar con calidez (cierre de la landing, felicitación al liquidar). Nunca en títulos operativos, montos ni botones.", "section": "typography" },
+      { "name": "The Cifras Alineadas Rule", "body": "Dinero, fechas, horas y dioptrías usan cifras tabulares (`.cifras`, `<time>`, `<data>`).", "section": "typography" },
+      { "name": "The Sin Mayúsculas Rule", "body": "No hay texto en mayúsculas sostenidas ni espaciado ancho en el sistema; la jerarquía se hace con familia, peso y tamaño.", "section": "typography" },
+      { "name": "The Hundir No Oscurecer Rule", "body": "Presionar un botón lo hunde (sombra interior y 1px hacia abajo); el color de relleno no se oscurece.", "section": "elevation" },
+      { "name": "The Bloque Marino Rule", "body": "La decisión principal de una pantalla (horarios libres, próxima cita, total a pagar) vive en un bloque marino 950 con la acción cian dentro. Un bloque marino por vista.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do usar cian 500 con texto marino 950 en el botón primario, con hover cian 400 y presionado hundido (decisión del cliente por WCAG AA).",
+      "Do usar el logo oficial recortado sin el lema \"Accesorios Ópticos\" en la barra superior; el lockup completo solo en el pie y en tamaños grandes (decisión del cliente).",
+      "Do diseñar primero a 390px y adaptar el escritorio desde 1024px con navegación superior, dos columnas en pantallas generales y una columna de 40rem en flujos (decisión del cliente).",
+      "Do ubicar a la persona con el recorrido y el iris como \"Usted está aquí\" en el panel, y con la barra de pasos segmentada en cada flujo.",
+      "Do acompañar cada estado de pago con icono + texto + color.",
+      "Do mantener áreas de toque de 48px como mínimo y 56px para la acción principal y las opciones.",
+      "Do usar solo iconos HugeIcons en SVG, trazo 1.75 en reposo y 2 activo.",
+      "Do dar a cada animación su versión sin movimiento."
+    ],
+    "donts": [
+      "Don't poner texto blanco sobre cian 500 ni usar cian 500 como color de texto.",
+      "Don't incluir un estimador o tasador de la joya: la tasación es manual en la óptica y la app solo explica que la joya se pesa en la cita (decisión del cliente).",
+      "Don't usar colores fuera de las escalas cian, slate y alerta, ni valores arbitrarios sueltos.",
+      "Don't usar fondos de partículas, gradientes ruidosos ni efectos de plantilla vieja.",
+      "Don't usar emojis como iconos funcionales.",
+      "Don't usar Cormorant fuera de agradecimientos y cierres.",
+      "Don't reemplazar la carga del isotipo por un spinner giratorio.",
+      "Don't distinguir un estado solo por color."
+    ]
+  }
+}
