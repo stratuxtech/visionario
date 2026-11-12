@@ -45,3 +45,23 @@
 | monturas/n-08.jpg | Boris Hamer | https://www.pexels.com/photo/portrait-of-a-cute-girl-with-eyeglasses-18883722/ |
 | monturas/n-09.jpg | Ron Lach | https://www.pexels.com/photo/girl-in-brown-dress-lying-down-on-the-carpet-8554143/ |
 | monturas/n-10.jpg | 🇻🇳🇻🇳Nguyễn Tiến Thịnh 🇻🇳🇻🇳 | https://www.pexels.com/photo/young-girl-in-stylish-red-and-gray-outfit-36079985/ |
+| puestos/a-01.jpg | Melih Can | https://www.pexels.com/photo/smiling-face-of-man-in-eyeglasses-17151925/ |
+| puestos/a-02.jpg | veeru edits | https://www.pexels.com/photo/shallow-focus-of-a-bearded-man-wearing-eyeglasses-12180887/ |
+| puestos/a-03.jpg | K | https://www.pexels.com/photo/man-in-black-jacket-wearing-eyeglasses-3812011/ |
+| puestos/a-04.jpg | MART  PRODUCTION | https://www.pexels.com/photo/close-up-shot-of-a-man-wearing-eyeglasses-7256348/ |
+| puestos/a-05.jpg | Anaghan  Km | https://www.pexels.com/photo/man-wearing-grey-shirt-in-sunlight-20139591/ |
+| puestos/a-06.jpg | Omran Soliman | https://www.pexels.com/photo/a-girl-in-a-jacket-and-eyeglasses-standing-in-city-in-the-evening-and-smiling-16046265/ |
+| puestos/a-07.jpg | Lynde | https://www.pexels.com/photo/woman-in-black-white-and-red-striped-shirt-3790480/ |
+| puestos/a-08.jpg | Theo  Decker | https://www.pexels.com/photo/close-up-shot-of-a-woman-in-gray-turtleneck-sweater-wearing-eyeglasses-5945242/ |
+| puestos/a-09.jpg | https://kaboompics.com/ | https://www.pexels.com/photo/woman-in-white-shirt-wearing-eyeglasses-8107619/ |
+| puestos/a-10.jpg | Shovan Datta | https://www.pexels.com/photo/portrait-of-a-young-woman-wearing-eyeglasses-17184887/ |
+| puestos/n-01.jpg | Mouli Ghosh | https://www.pexels.com/photo/boy-with-black-hair-and-eyeglasses-smiling-and-looking-away-20437260/ |
+| puestos/n-02.jpg | Nadin Sh | https://www.pexels.com/photo/smiling-young-boy-relaxing-on-cozy-couch-indoors-34930875/ |
+| puestos/n-03.jpg | Mohammed Elbrassi | https://www.pexels.com/photo/portrait-of-a-boy-in-white-shirt-wearing-eyeglasses-while-holding-a-book-15012405/ |
+| puestos/n-04.jpg | Nadin Sh | https://www.pexels.com/photo/a-little-boy-eating-a-meal-at-the-restaurant-24811720/ |
+| puestos/n-05.jpg | RDNE Stock project | https://www.pexels.com/photo/young-boy-wearing-blue-backpack-8499536/ |
+| puestos/n-06.jpg | 🇻🇳🇻🇳Nguyễn Tiến Thịnh 🇻🇳🇻🇳 | https://www.pexels.com/photo/stylish-young-girl-in-red-and-grey-outfit-36079986/ |
+| puestos/n-07.jpg | Kimy Moto | https://www.pexels.com/photo/portrait-of-a-filipina-in-manila-27862790/ |
+| puestos/n-08.jpg | Vika Glitter | https://www.pexels.com/photo/cheerful-schoolboy-in-glasses-looking-at-camera-7258382/ |
+| puestos/n-09.jpg | Vika Glitter | https://www.pexels.com/photo/little-boy-with-glasses-touching-hair-7280265/ |
+| puestos/n-10.jpg | Sóc Năng Động | https://www.pexels.com/photo/young-girl-with-medal-outdoors-in-summer-37764001/ |

@@ -285,8 +285,8 @@ alerta-600/700 con fondo alerta-50 para errores, cuota vencida y el contador de 
 
 - **Celular primero.** La columna de la app mide hasta 28rem; en tablet hasta 42rem; desde 1024px ocupa la pantalla.
 - **Contenedores:** general (1.25rem de margen, máx. 72rem en escritorio) y de flujo (columna de 40rem).
-- **Barra superior blanca:** el título de la pantalla a la izquierda (también en escritorio) y, a la derecha, la campana de notificaciones y el avatar de Mi cuenta. Sin logo dentro de la app: el logo vive en la homepage, el acceso, las barras de flujo en escritorio y el contrato.
-- **Menú global abajo, siempre:** blanco, a todo el ancho de la pantalla, con las 5 pestañas (Mi cita, Estado, Pagos, Monturas, Receta) centradas en un ancho máximo de 42rem. Alto de 76px más la zona segura. El contenido reserva ese espacio con `pb-menu`.
+- **Barra superior blanca:** el título de la pantalla a la izquierda (también en escritorio) y, a la derecha, el acceso a Monturas (ícono de lentes) y el avatar de Mi cuenta. Sin logo dentro de la app: el logo vive en la homepage, el acceso, las barras de flujo en escritorio y el contrato.
+- **Menú global abajo, siempre:** blanco, a todo el ancho de la pantalla, con las 5 pestañas (Mi cita, Estado, Pagos, Receta, Avisos) centradas en un ancho máximo de 42rem. Alto de 76px más la zona segura. El contenido reserva ese espacio con `pb-menu`.
 - **Acción principal fija** en celular, sobre un degradado del fondo (sobre el menú si la pantalla lo tiene); en escritorio pasa al final del contenido.
 - **Botones a todo el ancho** por defecto (tamaños `default` y `lg`); solo los pequeños (`sm`), los de ícono y los que se piden con `block={false}` se ajustan a su contenido. En la homepage de escritorio los CTA del héroe y del cierre se ponen lado a lado con ancho automático.
 
@@ -325,7 +325,7 @@ Píldora, Ubuntu 700, a todo el ancho por defecto. En hover suben 2px y crece el
 Componente de información dentro de una pantalla (no flota): ícono en un chip blanco, título en negrita y, si hace falta, una línea más. Tonos: `info` (azul 50), `exito` (verde 50), `alerta` (rojo 50), `oro` (joya) y `oscuro`. Entran con un leve deslizamiento.
 
 ### Notificaciones flotantes (`avisos.tsx`)
-Tarjeta de vidrio con radio 1.5rem que entra desde arriba con rebote (arriba a la derecha en escritorio): isotipo en un chip blanco con punto rojo, título Ubuntu, texto y la acción como píldora azul. Se van solas a los 7 s. La campana de la barra se mueve una vez cuando hay notificaciones sin leer y muestra un contador rojo.
+Tarjeta de vidrio con radio 1.5rem que entra desde arriba con rebote (arriba a la derecha en escritorio): isotipo en un chip blanco con punto rojo, título Ubuntu, texto y la acción como píldora azul. Se van solas a los 7 s. La pestaña Avisos del menú global muestra un contador rojo con las notificaciones sin leer. Las notificaciones son parte del núcleo de la app y por eso viven en el menú global; Monturas, de uso menos frecuente, queda en la barra superior.
 
 ### Chips flotantes (`chip-flotante.tsx`)
 Píldoras de vidrio (o azules, verdes de éxito, oro) con un ícono o emoji en un círculo. Aparecen con un pequeño rebote escalonado y luego levitan (6 s, 10px). Decorativos (`aria-hidden`): la información real siempre está en el texto. Se usan alrededor de fotos (homepage, onboarding), del celular simulado y de los estados vacíos.

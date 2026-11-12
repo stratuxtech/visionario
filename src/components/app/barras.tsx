@@ -26,8 +26,8 @@ const pestanas = [
   { href: rutas.agendar, etiqueta: navegacion.cita, icono: Calendar03Icon },
   { href: rutas.panel, etiqueta: navegacion.estado, icono: RouteIcon },
   { href: rutas.pagos, etiqueta: navegacion.pagos, icono: Coins01Icon },
-  { href: rutas.monturas, etiqueta: navegacion.monturas, icono: GlassesIcon },
   { href: rutas.receta, etiqueta: navegacion.receta, icono: MedicalFileIcon },
+  { href: rutas.notificaciones, etiqueta: navegacion.avisosCorto, icono: Notification01Icon },
 ];
 
 function esActiva(ruta: string, href: string) {
@@ -68,6 +68,13 @@ function PuntoNovedad({ className }: { className?: string }) {
   );
 }
 
+/** Cantidad de notificaciones sin leer (0 hasta hidratar, para no desfasar el HTML). */
+function useSinLeer() {
+  const hidratado = useHidratado();
+  const sinLeer = useApp((s) => s.notificaciones.filter((n) => !n.leida).length);
+  return hidratado ? sinLeer : 0;
+}
+
 const estiloBarra = "sticky top-0 z-30 bg-white shadow-[0_1px_0_var(--color-secondary-100),0_6px_20px_-12px_rgb(11_27_56/0.18)]";
 
 /** Barra superior con el logo oficial (homepage y acceso). */
@@ -84,29 +91,21 @@ export function BarraMarca({ children, enlaceLogo = rutas.inicio }: { children?:
   );
 }
 
-/** Campana de notificaciones con contador de no leídas. */
-export function BotonAvisos() {
+/** Monturas: acceso rápido al catálogo, a la izquierda de Mi cuenta. */
+export function BotonMonturas() {
   const ruta = usePathname();
-  const hidratado = useHidratado();
-  const sinLeer = useApp((s) => s.notificaciones.filter((n) => !n.leida).length);
-  const n = hidratado ? sinLeer : 0;
-  const actual = ruta === rutas.notificaciones;
+  const actual = ruta.startsWith(rutas.monturas);
   return (
     <Link
-      href={rutas.notificaciones}
+      href={rutas.monturas}
       aria-current={actual ? "page" : undefined}
-      aria-label={n ? `${navegacion.avisos}: ${n} sin leer` : navegacion.avisos}
+      aria-label={navegacion.monturas}
       className={cn(
-        "relative flex size-11 items-center justify-center rounded-full text-secondary-800 transition-[background-color,transform] duration-300 hover:-translate-y-0.5 hover:bg-primary-50",
+        "flex size-11 items-center justify-center rounded-full text-secondary-800 transition-[background-color,transform] duration-300 hover:-translate-y-0.5 hover:bg-primary-50",
         actual && "bg-primary-50 text-primary-700",
       )}
     >
-      <HugeiconsIcon icon={Notification01Icon} size={24} strokeWidth={1.8} aria-hidden className={cn(n > 0 && "origin-top animate-[campana_2.6s_var(--ease-suave)_1]")} />
-      {n > 0 && (
-        <span className="cifras absolute top-0.5 right-0.5 flex min-w-5 animate-confirmar items-center justify-center rounded-full bg-alerta-500 px-1 text-mini leading-5 text-white ring-2 ring-white">
-          {n}
-        </span>
-      )}
+      <HugeiconsIcon icon={GlassesIcon} size={24} strokeWidth={1.8} aria-hidden />
     </Link>
   );
 }
@@ -129,7 +128,7 @@ export function BotonCuenta() {
 
 /**
  * Barra superior de las pantallas de la app: el título de la pantalla a la
- * izquierda (en celular y en computadora) y, a la derecha, notificaciones y
+ * izquierda (en celular y en computadora) y, a la derecha, monturas y
  * Mi cuenta. Blanca.
  */
 export function BarraApp({ titulo }: { titulo: string }) {
@@ -140,7 +139,7 @@ export function BarraApp({ titulo }: { titulo: string }) {
           {titulo}
         </p>
         <div className="flex shrink-0 items-center gap-1">
-          <BotonAvisos />
+          <BotonMonturas />
           <BotonCuenta />
         </div>
       </div>
@@ -252,6 +251,7 @@ export function BarraFlujo({
 export function BarraInferior() {
   const ruta = usePathname();
   const novedad = useNovedadEstado();
+  const sinLeer = useSinLeer();
   return (
     <nav
       aria-label={navegacion.menuPrincipal}
@@ -265,6 +265,7 @@ export function BarraInferior() {
               <Link
                 href={href}
                 aria-current={activa ? "page" : undefined}
+                aria-label={href === rutas.notificaciones ? (sinLeer ? `${navegacion.avisos}: ${sinLeer} sin leer` : navegacion.avisos) : undefined}
                 className={cn(
                   "group flex flex-1 flex-col items-center justify-center gap-1 rounded-2xl text-meta no-underline transition-colors duration-300",
                   activa ? "font-bold text-primary-700" : "font-semibold text-secondary-600 hover:text-secondary-950",
@@ -280,8 +281,16 @@ export function BarraInferior() {
                 >
                   <HugeiconsIcon icon={icono} size={22} strokeWidth={activa ? 2.2 : 1.8} aria-hidden />
                   {href === rutas.panel && novedad && <PuntoNovedad className="-top-0.5 right-2" />}
+                  {href === rutas.notificaciones && sinLeer > 0 && (
+                    <span
+                      aria-hidden
+                      className="cifras absolute -top-1.5 right-1 flex min-w-5 animate-confirmar items-center justify-center rounded-full bg-alerta-500 px-1 text-mini leading-5 text-white ring-2 ring-white"
+                    >
+                      {sinLeer}
+                    </span>
+                  )}
                 </span>
-                {etiqueta}
+                <span aria-hidden={href === rutas.notificaciones ? true : undefined}>{etiqueta}</span>
               </Link>
             </li>
           );

@@ -558,23 +558,24 @@
   content: "";
   position: absolute;
   border-radius: 9999px;
-  filter: blur(60px);
+  /* Sin filter: blur() ni will-change: un blur animado de este tamaño deja
+     cuadrados que se mueven detrás de los elementos de vidrio. El degradado
+     radial ya se desvanece solo. */
   animation: var(--animate-respirar);
-  will-change: transform;
 }
 .fondo-vivo::before {
   width: 80vmax;
   height: 80vmax;
   top: -40vmax;
   left: -30vmax;
-  background: radial-gradient(circle, rgb(132 193 240 / 0.55), transparent 65%);
+  background: radial-gradient(circle, rgb(132 193 240 / 0.55), rgb(132 193 240 / 0.18) 40%, transparent 70%);
 }
 .fondo-vivo::after {
   width: 70vmax;
   height: 70vmax;
   bottom: -38vmax;
   right: -28vmax;
-  background: radial-gradient(circle, rgb(255 210 122 / 0.45), transparent 65%);
+  background: radial-gradient(circle, rgb(255 210 122 / 0.45), rgb(255 210 122 / 0.15) 40%, transparent 70%);
   animation-delay: -7s;
 }
 

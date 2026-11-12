@@ -10,6 +10,7 @@ import { useApp, useHidratado } from "@/lib/estado";
 import { AccionFija, BarraFlujo, PantallaApp } from "@/components/app/barras";
 import { Button, Flecha } from "@/components/ui/button";
 import { Segmentado } from "@/components/ui/opciones";
+import { VisorMontura } from "./visor-montura";
 import { cn } from "@/lib/utils";
 
 export function Catalogo() {
@@ -18,9 +19,11 @@ export function Catalogo() {
   const sesion = useApp((s) => s.sesion.activa);
   const marcadas = useApp((s) => s.monturasInteres);
   const [publico, setPublico] = useState<PublicoMontura>("adultos");
+  const [abierta, setAbierta] = useState<string | null>(null);
   const conSesion = hidratado && sesion;
   const interes = hidratado ? marcadas : [];
   const lista = monturas.filter((m) => m.publico === publico);
+  const enVisor = monturas.find((m) => m.id === abierta) ?? null;
 
   const contenido = (
     <>
@@ -62,7 +65,13 @@ export function Catalogo() {
                     <HugeiconsIcon icon={GlassesIcon} size={40} strokeWidth={1.25} aria-hidden />
                   </span>
                 )}
-                <span className="vidrio absolute top-2.5 left-2.5 rounded-full px-2.5 py-0.5 text-mini text-secondary-900">{m.codigo}</span>
+                <button
+                  type="button"
+                  onClick={() => setAbierta(m.id)}
+                  aria-label={catalogo.visor.abrir(m.nombre)}
+                  className="absolute inset-0 cursor-zoom-in focus-visible:outline-offset-[-4px]"
+                />
+                <span className="vidrio pointer-events-none absolute top-2.5 left-2.5 rounded-full px-2.5 py-0.5 text-mini text-secondary-900">{m.codigo}</span>
                 <button
                   type="button"
                   onClick={() => alternar(m.id)}
@@ -84,6 +93,12 @@ export function Catalogo() {
           );
         })}
       </ul>
+      <VisorMontura
+        montura={enVisor}
+        marcada={enVisor ? interes.includes(enVisor.id) : false}
+        alMarcar={alternar}
+        alCerrar={() => setAbierta(null)}
+      />
     </>
   );
 

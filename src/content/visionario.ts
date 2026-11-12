@@ -36,6 +36,8 @@ export interface Montura {
   material: string | null;
   /** Ruta de la foto en /public. null = se muestra marcador. */
   imagen: string | null;
+  /** Foto de una persona usando la montura (segunda foto del visor) */
+  imagenPuesta: string | null;
   pendiente: boolean;
 }
 
@@ -186,9 +188,9 @@ export const pantallas: {
   { ruta: "orden", titulo: "Mi orden de compra", fase: 3, historia: "HU 3.1" },
   { ruta: "contrato", titulo: "Firmar contrato", fase: 3, historia: "HU 3.2" },
   { ruta: "pago", titulo: "Pagar cuota", fase: 3, historia: "HU 3.3" },
-  { ruta: "receta", titulo: "Mi receta", fase: 4, historia: "HU 4.3" },
+  { ruta: "receta", titulo: "Mis recetas", fase: 4, historia: "HU 4.3" },
   { ruta: "cuenta", titulo: "Mi cuenta", fase: 4, historia: "HU 4.4" },
-  { ruta: "notificaciones", titulo: "Notificaciones y promociones", fase: 4, historia: "HU 4.2" },
+  { ruta: "notificaciones", titulo: "Notificaciones", fase: 4, historia: "HU 4.2" },
   { ruta: "liquidacion", titulo: "Lentes pagados", fase: 5, historia: "HU 5.1" },
 ];
 
@@ -536,9 +538,11 @@ export const navegacion = {
   estado: "Estado",
   pagos: "Pagos",
   monturas: "Monturas",
-  receta: "Receta",
+  receta: "Recetas",
   cuenta: "Mi cuenta",
-  avisos: "Notificaciones y promociones",
+  avisos: "Notificaciones",
+  /** Etiqueta corta para la pestaña del menú global */
+  avisosCorto: "Avisos",
   conNovedades: "hay novedades",
   volver: "Volver",
   cerrar: "Cerrar",
@@ -550,9 +554,9 @@ export const navegacion = {
     estado: "Mi estado",
     pagos: "Mis pagos",
     monturas: "Catálogo",
-    receta: "Mi receta",
+    receta: "Mis recetas",
     cuenta: "Mi cuenta",
-    avisos: "Notificaciones y promociones",
+    avisos: "Notificaciones",
   },
 } as const;
 
@@ -612,6 +616,7 @@ const crearMonturas = (publico: PublicoMontura, prefijo: string, nombres: string
       material: null,
       /* Fotos de ejemplo (Pexels) hasta tener las fotos reales del catálogo */
       imagen: `/fotos/monturas/${prefijo.toLowerCase()}-${n}.jpg`,
+      imagenPuesta: `/fotos/puestos/${prefijo.toLowerCase()}-${n}.jpg`,
       pendiente: true,
     };
   });
@@ -629,6 +634,15 @@ export const catalogo = {
   meInteresa: "Me interesa",
   marcada: "Le interesa",
   agendar: "Agendar mi cita",
+  /** Visor en pantalla completa */
+  visor: {
+    abrir: (nombre: string) => `Ver ${nombre} en pantalla completa`,
+    cerrar: "Cerrar y volver al catálogo",
+    anterior: "Foto anterior",
+    siguiente: "Foto siguiente",
+    lente: "El lente",
+    puesto: "Puesto",
+  },
 } as const;
 
 /* ------------------------------------------------------------------ */
@@ -946,7 +960,7 @@ export const cuotasPanel = {
 /* ------------------------------------------------------------------ */
 
 export const receta = {
-  titulo: "Mi receta",
+  titulo: "Mis recetas",
   vacia: {
     titulo: "Su receta aparecerá aquí",
     texto: "La verá después de su medición en la óptica.",
@@ -988,7 +1002,7 @@ export const cuenta = {
 /* ------------------------------------------------------------------ */
 
 export const avisos = {
-  titulo: "Notificaciones y promociones",
+  titulo: "Notificaciones",
   vacio: {
     titulo: "Aún no tiene notificaciones",
     texto: "Aquí verá sus recordatorios y promociones.",
