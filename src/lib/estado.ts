@@ -13,6 +13,7 @@ import {
   type IdParada,
   type OjoReceta,
   type TipoNotificacion,
+  type TipoOrden,
 } from "@/content/optihelp";
 import { sumarMeses } from "@/lib/utils";
 
@@ -29,12 +30,20 @@ export interface Perfil {
   usoMedidas: string | null;
   medidaEstimada: string | null;
   comoNosConocio: string | null;
+  /** ONG que lo envía (opcional). No aplica descuento por sí sola. */
+  institucion: string | null;
+  /** Carnet con extensión ("7712765 SC"). Se pide recién antes de firmar. */
+  ci: string;
+  /** Zona, barrio o calle. Se pide recién antes de firmar. */
+  domicilio: string;
   foto: string | null;
 }
 
 export interface Cuota {
   numero: number;
   monto: number;
+  /** 0,4 · 0,3 · 0,3 en crédito; 1 en el pago único del contado */
+  porcentaje: number;
   vence: string;
   estado: EstadoCuota;
   pagadaEl: string | null;
@@ -42,13 +51,18 @@ export interface Cuota {
 
 export interface Orden {
   numero: string;
+  tipo: TipoOrden;
+  optica: string;
   lente: string;
   tratamientos: readonly string[];
-  monturaId: string;
+  /** La montura la elige el cliente en la óptica; `cubiertaPor`: la ONG que la paga */
+  montura: { descripcion: string; valor: number; cubiertaPor: string | null };
+  /** Solo en contado: precio de la receta */
+  receta: number | null;
+  /** Precio de los lentes antes de la ayuda de la ONG */
+  precioLista: number;
   total: number;
   recibidaEl: string;
-  /** Joya en garantía: su foto (si ya la subió la óptica) y el valor de la tasación */
-  joya?: { descripcion: string; tasacion: number; foto: string | null };
 }
 
 export interface Receta {
@@ -80,12 +94,11 @@ interface Datos {
   orden: Orden | null;
   receta: Receta | null;
   contrato: { firmadoEl: string; firma: string } | null;
+  /** En crédito: las 3 cuotas (al firmar). En contado: un solo pago (al llegar la orden). */
   cuotas: Cuota[];
   laboratorio: EstadoLaboratorio;
   liquidadoEl: string | null;
   notificaciones: Notificacion[];
-  /** Monturas marcadas como "me interesa" en el catálogo */
-  monturasInteres: string[];
   /** Horario tocado en la landing antes de tener cuenta */
   horarioPreelegido: string | null;
   /** Solo demo: días que el simulador adelanta el reloj (renovación a 6 o 12 meses) */
@@ -98,7 +111,6 @@ interface Acciones {
   guardarPerfil: (cambios: Partial<Perfil>, completo?: boolean) => void;
   marcarProcesoVisto: () => void;
   agendarCita: (inicio: string) => void;
-  alternarMontura: (id: string) => void;
   preelegirHorario: (inicio: string | null) => void;
   marcarEstadoVisto: (clave: string) => void;
   usarBeneficio: () => void;
@@ -109,6 +121,8 @@ interface Acciones {
   /* Simulador de flujos (solo con demo.activo) */
   simular: {
     ordenErp: () => void;
+    ordenOng: () => void;
+    ordenContado: () => void;
     pagoCuota: () => void;
     laboratorioListo: () => void;
     mora: () => void;
@@ -133,6 +147,9 @@ const perfilVacio: Perfil = {
   usoMedidas: null,
   medidaEstimada: null,
   comoNosConocio: null,
+  institucion: null,
+  ci: "",
+  domicilio: "",
   foto: null,
 };
 
@@ -151,7 +168,6 @@ export const datosIniciales: Datos = {
   laboratorio: "sin-orden",
   liquidadoEl: null,
   notificaciones: [],
-  monturasInteres: [],
   horarioPreelegido: null,
   desfaseDias: 0,
 };
@@ -161,24 +177,35 @@ export const datosIniciales: Datos = {
 /* ------------------------------------------------------------------ */
 
 /**
- * Reparte el total en cuotas exactamente iguales (regla: Bs 900 = 300 + 300 +
- * 300). Por eso el precio total siempre es múltiplo de la cantidad de cuotas:
- * si no lo fuera, se redondea la cuota al boliviano y el total se ajusta.
+ * Reparte el total con `negocio.cuotas.porcentajes` (40 / 30 / 30). Cada cuota
+ * se redondea al boliviano y la última es el resto, así la suma da siempre el
+ * total exacto (Bs 1.740 = 696 + 522 + 522). Vencen el mismo día de cada mes
+ * desde la firma, como en el contrato de referencia.
  */
-export const montoCuota = (total: number) => Math.round(total / negocio.cuotas.cantidad);
-
 export function generarCuotas(total: number, desde: string): Cuota[] {
-  const n = negocio.cuotas.cantidad;
-  const monto = montoCuota(total);
-  return Array.from({ length: n }, (_, i) => ({
-    numero: i + 1,
-    monto,
-    vence: sumarMeses(desde, i),
-    estado: "pendiente" as const,
-    pagadaEl: null,
-  }));
+  const { porcentajes, mesesDesdeFirma } = negocio.cuotas;
+  let asignado = 0;
+  return porcentajes.map((porcentaje, i) => {
+    const ultima = i === porcentajes.length - 1;
+    const monto = ultima ? total - asignado : Math.round(total * porcentaje);
+    asignado += monto;
+    return {
+      numero: i + 1,
+      monto,
+      porcentaje,
+      vence: sumarMeses(desde, mesesDesdeFirma[i]),
+      estado: "pendiente" as const,
+      pagadaEl: null,
+    };
+  });
 }
 
+/** Orden al contado: un solo pago por QR, al 100%. */
+export function generarPagoUnico(total: number, desde: string): Cuota[] {
+  return [{ numero: 1, monto: total, porcentaje: 1, vence: desde, estado: "pendiente", pagadaEl: null }];
+}
+
+export const esContado = (o: Pick<Orden, "tipo"> | null) => o?.tipo === "contado";
 export const cuotasPagadas = (c: Cuota[]) => c.filter((x) => x.estado === "pagada").length;
 export const proximaCuota = (c: Cuota[]) => c.find((x) => x.estado !== "pagada") ?? null;
 
@@ -207,9 +234,26 @@ export const useApp = create<EstadoApp>()(
         const nuevas = cuotas.map((c) =>
           c.numero === objetivo ? { ...c, estado: "pagada" as const, pagadaEl: ahora() } : c,
         );
-        const liquidado = cuotasPagadas(nuevas) === negocio.cuotas.cantidad;
+        // En contado el pago único también marca liquidadoEl (sin pantalla de cliente cumplido)
+        const liquidado = nuevas.length > 0 && cuotasPagadas(nuevas) === nuevas.length;
         set({ cuotas: nuevas, liquidadoEl: liquidado ? ahora() : null });
         notificar("pago-confirmado");
+      };
+
+      /** La orden de crédito que carga el ERP de OptiHelp (con o sin ONG). */
+      const cargarOrdenCredito = (ong: string | null) => {
+        const fechaCita = get().cita?.inicio ?? ahora();
+        const base = semilla.orden;
+        set({
+          orden: {
+            ...base,
+            montura: { ...base.montura, cubiertaPor: ong },
+            total: ong ? base.precioLista - base.montura.valor : base.total,
+            recibidaEl: ahora(),
+          },
+          receta: { ...semilla.receta, fecha: fechaCita },
+        });
+        notificar("orden-recibida");
       };
 
       return {
@@ -233,13 +277,6 @@ export const useApp = create<EstadoApp>()(
 
         agendarCita: (inicio) => set({ cita: { inicio, creadaEl: ahora() }, horarioPreelegido: null }),
 
-        alternarMontura: (id) =>
-          set((s) => ({
-            monturasInteres: s.monturasInteres.includes(id)
-              ? s.monturasInteres.filter((x) => x !== id)
-              : [...s.monturasInteres, id],
-          })),
-
         preelegirHorario: (inicio) => set({ horarioPreelegido: inicio }),
 
         marcarEstadoVisto: (clave) => set({ estadoVisto: clave }),
@@ -255,13 +292,15 @@ export const useApp = create<EstadoApp>()(
 
         marcarTodasLeidas: () => set((s) => ({ notificaciones: s.notificaciones.map((n) => ({ ...n, leida: true })) })),
 
+        /* Solo crédito: el contado no tiene contrato */
         firmarContrato: (firma) => {
           const { orden } = get();
-          if (!orden) return;
+          if (!orden || esContado(orden)) return;
           const firmadoEl = ahora();
           set({ contrato: { firmadoEl, firma }, cuotas: generarCuotas(orden.total, firmadoEl) });
         },
 
+        /* El primer pago (cuota inicial o pago único) manda a hacer los lentes */
         pagarCuota: (numero) => {
           pagarCuota(numero);
           if (get().cuotas[0]?.estado === "pagada" && get().laboratorio === "sin-orden") {
@@ -273,13 +312,17 @@ export const useApp = create<EstadoApp>()(
           set((s) => ({ notificaciones: s.notificaciones.map((n) => (n.id === id ? { ...n, leida: true } : n)) })),
 
         simular: {
-          ordenErp: () => {
+          ordenErp: () => cargarOrdenCredito(null),
+          ordenOng: () => cargarOrdenCredito(semilla.ongDemo),
+          ordenContado: () => {
             const fechaCita = get().cita?.inicio ?? ahora();
+            const recibidaEl = ahora();
             set({
-              orden: { ...semilla.orden, recibidaEl: ahora() },
-              receta: { ...semilla.receta, fecha: fechaCita },
+              orden: { ...semilla.ordenContado, recibidaEl },
+              receta: { ...semilla.recetaContado, fecha: fechaCita },
+              cuotas: generarPagoUnico(semilla.ordenContado.total, recibidaEl),
             });
-            notificar("orden-recibida");
+            notificar("orden-contado");
           },
           pagoCuota: () => get().pagarCuota(),
           laboratorioListo: () => {
@@ -330,19 +373,21 @@ export const useApp = create<EstadoApp>()(
 
 type Situacion = Pick<
   Datos,
-  "sesion" | "perfilCompleto" | "procesoVisto" | "cita" | "orden" | "contrato" | "cuotas" | "liquidadoEl"
+  "sesion" | "perfilCompleto" | "procesoVisto" | "cita" | "orden" | "contrato" | "cuotas" | "laboratorio" | "liquidadoEl"
 >;
 
 /**
  * Siguiente pantalla según el avance de la persona. Sin cuenta: registro.
  * Sin datos completos: el asistente (no se puede saltar). Luego, una sola vez,
  * la explicación del proceso. Después "Mi cita" es la pantalla inicial, hasta
- * que la cita ya se realizó y el seguimiento vive en "Mi estado".
+ * que la cita ya se realizó y el seguimiento vive en "Mi estado". Con una
+ * orden al contado sin pagar, la orden (ahí se paga).
  */
-export function siguienteRuta(s: Situacion): ClaveRuta {
+export function siguienteRuta(s: Pick<Situacion, "sesion" | "perfilCompleto" | "procesoVisto" | "orden" | "cuotas" | "liquidadoEl">): ClaveRuta {
   if (!s.sesion.activa) return "registro";
   if (!s.perfilCompleto) return "perfil";
   if (!s.procesoVisto) return "proceso";
+  if (esContado(s.orden)) return cuotasPagadas(s.cuotas) === 0 ? "orden" : "panel";
   if (s.orden && !s.liquidadoEl) return "panel";
   return "agendar";
 }
@@ -365,10 +410,20 @@ export function citaVigente(s: Pick<Datos, "cita" | "liquidadoEl" | "orden">) {
   return !s.orden;
 }
 
-/** Último día del mes de gracia: fecha de la última cuota + gracia. */
-export function finDeGracia(cuotas: Cuota[]) {
-  const ultima = cuotas[cuotas.length - 1];
-  return ultima ? sumarMeses(ultima.vence, negocio.gracia.meses) : null;
+/**
+ * Último día para ponerse al día sin recargo: la fecha de vencimiento más 3
+ * días hábiles (de lunes a sábado, como el horario de la óptica; PENDIENTE
+ * confirmar si el sábado cuenta). Después corre el interés por atraso.
+ */
+export function fechaLimiteRegularizar(vence: string) {
+  const d = new Date(vence);
+  const habiles: readonly number[] = negocio.atraso.diasHabiles;
+  let faltan = negocio.atraso.diasHabilesParaRegularizar;
+  while (faltan > 0) {
+    d.setDate(d.getDate() + 1);
+    if (habiles.includes(d.getDay())) faltan--;
+  }
+  return d.toISOString();
 }
 
 /** Días que faltan hasta una fecha (negativo si ya pasó). */
@@ -380,13 +435,17 @@ export function diasHasta(iso: string) {
   return Math.round((d.getTime() - hoy.getTime()) / 86_400_000);
 }
 
-/** Parada actual en el recorrido (la línea de la landing y del inicio). */
-export function paradaActual(s: Situacion): IdParada {
+/**
+ * Parada actual en el recorrido de crédito (Mi estado). El contado no tiene
+ * recorrido de cuotas: Mi estado solo muestra su orden.
+ */
+export function paradaActual(s: Pick<Situacion, "cita" | "orden" | "contrato" | "cuotas" | "laboratorio">): IdParada {
   if (s.contrato) {
     const pagadas = cuotasPagadas(s.cuotas);
-    if (pagadas >= negocio.cuotas.cantidad) return "devolucion";
+    if (pagadas >= negocio.cuotas.cantidad) return "terminado";
     if (pagadas === 0) return "firma";
-    return pagadas === 1 ? "cuota-2" : "cuota-3";
+    if (pagadas === 1) return s.laboratorio === "listo" ? "cuota-2" : "recojo";
+    return "cuota-3";
   }
   if (s.orden) return "firma";
   if (s.cita) return "medicion";
@@ -397,7 +456,16 @@ export function paradaActual(s: Situacion): IdParada {
 /* Qué le está pasando ahora al paciente                               */
 /* ------------------------------------------------------------------ */
 
-export type TipoSituacion = "sin-cita" | "cita" | "orden" | "cuota-1" | "fabricando" | "vencida" | "listo" | "liquidado";
+export type TipoSituacion =
+  | "sin-cita"
+  | "cita"
+  | "orden"
+  | "contado"
+  | "cuota-1"
+  | "fabricando"
+  | "vencida"
+  | "listo"
+  | "liquidado";
 
 /**
  * La situación actual con una clave propia. Cada cambio produce una clave
@@ -412,6 +480,11 @@ export function situacionActual(
     clave: detalle === "" ? tipo : tipo + ":" + detalle,
     cuota,
   });
+  /* Contado: orden por pagar → fabricación → listos para recoger */
+  if (esContado(s.orden)) {
+    if (cuotasPagadas(s.cuotas) === 0) return hecho("contado", "", s.cuotas[0] ?? null);
+    return s.laboratorio === "listo" ? hecho("listo", "contado", null) : hecho("fabricando", "contado", null);
+  }
   if (s.liquidadoEl) return hecho("liquidado", "", null);
   const vencida = s.cuotas.find((c) => c.estado === "vencida");
   if (vencida) return hecho("vencida", vencida.numero, vencida);

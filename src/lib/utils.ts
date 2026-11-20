@@ -47,9 +47,16 @@ export function dioptria(valor: number) {
   return `${signo}${Math.abs(valor).toFixed(2).replace(".", ",")}`;
 }
 
-/** Suma meses a una fecha ISO (vencimientos mensuales). */
+/**
+ * Suma meses a una fecha ISO (vencimientos mensuales): el mismo día de cada
+ * mes. Si ese día no existe (31 de enero + 1), queda el último día del mes.
+ */
 export function sumarMeses(iso: string, meses: number) {
   const d = new Date(iso);
+  const dia = d.getDate();
+  d.setDate(1);
   d.setMonth(d.getMonth() + meses);
+  const ultimo = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+  d.setDate(Math.min(dia, ultimo));
   return d.toISOString();
 }
