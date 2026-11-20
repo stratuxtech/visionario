@@ -5,9 +5,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { File01Icon, IdIcon, RefreshIcon, Tick02Icon, WhatsappIcon } from "@hugeicons/core-free-icons";
+import { Camera01Icon, CheckmarkCircle02Icon, File01Icon, IdIcon, RefreshIcon, Tick02Icon, WhatsappIcon } from "@hugeicons/core-free-icons";
 import { contrato as t, rutas, textos, type DatosContrato } from "@/content/optihelp";
-import { esContado, generarCuotas, useApp, type Cuota, type Orden, type Perfil } from "@/lib/estado";
+import { esContado, generarCuotas, useApp, type Cuota, type LadoCarnet, type Orden, type Perfil } from "@/lib/estado";
 import { useGuardia } from "@/lib/guardias";
 import { bs, cn, fecha } from "@/lib/utils";
 import { AccionFija, BarraFlujo } from "@/components/app/barras";
@@ -19,6 +19,8 @@ import { Input, estiloCampo } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Nota } from "@/components/ui/nota";
 import { Festejo } from "@/components/app/festejo";
+import { CamaraCarnet } from "@/components/contrato/camara-carnet";
+import { CarnetDemo } from "@/components/contrato/carnet-demo";
 
 const d = t.datos;
 
@@ -38,7 +40,50 @@ function separarCi(ci: string) {
   return { numero, extension };
 }
 
-type Errores = Partial<Record<"ci" | "domicilio" | "whatsapp", string>>;
+type Errores = Partial<Record<"ci" | "domicilio" | "whatsapp" | "fotos", string>>;
+const LADOS: LadoCarnet[] = ["anverso", "reverso"];
+
+/** true si ya tiene las dos fotos del carnet */
+export const fotosCompletas = (p: Perfil) => !!(p.fotosCarnet.anverso && p.fotosCarnet.reverso);
+
+/** Un lado del carnet: vacío invita a tomar la foto; con foto muestra la miniatura y "Repetir". */
+function FotoLado({ lado, tomadaEl, invalido, alTomar }: { lado: LadoCarnet; tomadaEl: string | null; invalido: boolean; alTomar: () => void }) {
+  const t = d.fotos;
+  const info = t.lados[lado];
+  return (
+    <button
+      type="button"
+      onClick={alTomar}
+      aria-label={`${info.nombre} (${info.detalle}): ${tomadaEl ? `${t.lista}. ${t.repetir}` : t.tomar}`}
+      className={cn(
+        "group flex flex-col gap-2 rounded-2xl border p-2.5 text-left transition-[border-color,box-shadow,transform] duration-300 ease-salida hover:-translate-y-0.5 hover:shadow-md",
+        "focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-ring",
+        tomadaEl ? "border-exito-200 bg-exito-50" : invalido ? "border-dashed border-alerta-600 bg-white" : "border-dashed border-primary-300 bg-primary-50/50",
+      )}
+    >
+      <span className="relative block overflow-hidden rounded-xl">
+        {tomadaEl ? (
+          <>
+            <CarnetDemo lado={lado} className="animate-entrar" />
+            <span className="absolute top-1.5 right-1.5 flex size-7 animate-confirmar items-center justify-center rounded-full bg-exito-700 text-white shadow-md">
+              <HugeiconsIcon icon={Tick02Icon} size={16} strokeWidth={3} aria-hidden />
+            </span>
+          </>
+        ) : (
+          <span className="flex aspect-[856/540] items-center justify-center rounded-xl bg-white text-primary-700 shadow-xs">
+            <HugeiconsIcon icon={Camera01Icon} size={30} strokeWidth={1.75} aria-hidden />
+          </span>
+        )}
+      </span>
+      <span className="px-1 pb-0.5">
+        <span className="block font-bold text-secondary-950">
+          {info.nombre} <span className="font-normal text-muted-foreground">({info.detalle})</span>
+        </span>
+        <span className={cn("block text-meta font-semibold", tomadaEl ? "text-exito-800" : "text-primary-700")}>{tomadaEl ? t.repetir : t.tomar}</span>
+      </span>
+    </button>
+  );
+}
 
 /**
  * Paso previo a la firma: el contrato lleva el carnet (con extensión) y el
@@ -51,6 +96,8 @@ function DatosFirmante({ perfil, esMenor, alGuardar }: { perfil: Perfil; esMenor
   const [extension, setExtension] = useState(inicial.extension);
   const [domicilio, setDomicilio] = useState(perfil.domicilio);
   const [whatsapp, setWhatsapp] = useState(perfil.whatsapp);
+  const [fotos, setFotos] = useState(perfil.fotosCarnet);
+  const [camara, setCamara] = useState<{ abierta: boolean; lado: LadoCarnet }>({ abierta: false, lado: "anverso" });
   const [errores, setErrores] = useState<Errores>({});
 
   const enviar = () => {
@@ -58,13 +105,14 @@ function DatosFirmante({ perfil, esMenor, alGuardar }: { perfil: Perfil; esMenor
     if (!/^\d{5,10}$/.test(numero)) e.ci = textos.errores.ci;
     if (domicilio.trim().length < 3) e.domicilio = textos.errores.domicilio;
     if (!/^[67]\d{7}$/.test(whatsapp)) e.whatsapp = textos.errores.whatsapp;
+    if (!fotos.anverso || !fotos.reverso) e.fotos = d.fotos.falta;
     setErrores(e);
     const primero = Object.keys(e)[0];
     if (primero) {
       document.getElementById(`campo-${primero}`)?.focus();
       return;
     }
-    alGuardar({ ci: `${numero} ${extension}`, domicilio: domicilio.trim(), whatsapp });
+    alGuardar({ ci: `${numero} ${extension}`, domicilio: domicilio.trim(), whatsapp, fotosCarnet: fotos });
   };
 
   const error = (k: keyof Errores) =>
@@ -166,7 +214,35 @@ function DatosFirmante({ perfil, esMenor, alGuardar }: { perfil: Perfil; esMenor
               </p>
             )}
           </div>
+
+          {/* Fotos del carnet: frente y atrás, con la cámara (simulada en el prototipo) */}
+          <fieldset id="campo-fotos" tabIndex={-1} aria-describedby={errores.fotos ? "fotos-error" : "fotos-ayuda"} className="space-y-3 outline-none">
+            <legend className="text-meta font-bold text-secondary-900">{d.fotos.titulo}</legend>
+            <p id="fotos-ayuda" className="text-meta text-muted-foreground">
+              {d.fotos.texto}
+            </p>
+            <div className="grid grid-cols-2 gap-3">
+              {LADOS.map((lado) => (
+                <FotoLado key={lado} lado={lado} tomadaEl={fotos[lado]} invalido={!!errores.fotos && !fotos[lado]} alTomar={() => setCamara({ abierta: true, lado })} />
+              ))}
+            </div>
+            {error("fotos")}
+          </fieldset>
         </form>
+
+        <CamaraCarnet
+          abierta={camara.abierta}
+          lado={camara.lado}
+          alCerrar={() => setCamara({ ...camara, abierta: false })}
+          alCapturar={(lado) => {
+            const nuevas = { ...fotos, [lado]: new Date().toISOString() };
+            setFotos(nuevas);
+            if (nuevas.anverso && nuevas.reverso && errores.fotos) setErrores({ ...errores, fotos: undefined });
+            /* Después del frente, sigue con la parte de atrás si falta */
+            const siguiente = LADOS.find((x) => !nuevas[x]);
+            setCamara(siguiente ? { abierta: true, lado: siguiente } : { ...camara, abierta: false });
+          }}
+        />
       </main>
 
       <AccionFija>
@@ -278,8 +354,8 @@ export function FirmaContrato() {
     );
   }
 
-  /* Primero los datos del contrato: sin carnet ni domicilio no se habilita la firma */
-  if (editarDatos || !perfil.ci || !perfil.domicilio) {
+  /* Primero los datos del contrato: sin carnet, domicilio y las dos fotos del carnet no se habilita la firma */
+  if (editarDatos || !perfil.ci || !perfil.domicilio || !fotosCompletas(perfil)) {
     return (
       <>
         <BarraFlujo titulo={t.titulo} paso={2} total={3} volverA={rutas.orden} />
@@ -332,6 +408,10 @@ export function FirmaContrato() {
               C.I. {perfil.ci} · {perfil.whatsapp}
             </p>
             <p className="truncate text-meta text-secondary-700">{perfil.domicilio}</p>
+            <p className="mt-1 flex items-center gap-1.5 text-meta font-semibold text-exito-800">
+              <HugeiconsIcon icon={CheckmarkCircle02Icon} size={16} strokeWidth={2} aria-hidden />
+              {d.fotos.resumen}
+            </p>
           </div>
           <Button variant="secondary" size="sm" className="h-11 px-4" onClick={() => setEditarDatos(true)}>
             {d.cambiar}

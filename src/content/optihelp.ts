@@ -983,9 +983,36 @@ export const contrato = {
     extension: { etiqueta: "Extensión", opciones: ["SC", "LP", "CB", "OR", "PT", "CH", "TJ", "BE", "PD"], porDefecto: "SC" },
     domicilio: { etiqueta: "Domicilio", ejemplo: "Ej.: Plan 3000, calle 5, casa 12" },
     whatsapp: { etiqueta: "Celular (WhatsApp)", ayuda: "Viene de su perfil. Corríjalo si cambió." },
+    /** Fotos del carnet (frente y atrás). En el prototipo la cámara se simula: esDemo. */
+    fotos: {
+      titulo: "Fotos de su carnet",
+      texto: "Saque una foto del frente y otra de atrás de su carnet. Así confirmamos que el contrato lo firma usted.",
+      lados: {
+        anverso: { nombre: "Frente", detalle: "Anverso", camara: "Foto del frente del carnet" },
+        reverso: { nombre: "Atrás", detalle: "Reverso", camara: "Foto de atrás del carnet" },
+      },
+      tomar: "Tomar foto",
+      repetir: "Repetir",
+      lista: "Lista",
+      falta: "Saque las dos fotos de su carnet para continuar.",
+      resumen: "Fotos del carnet: frente y atrás",
+      esDemo: true,
+    },
     continuar: "Continuar al contrato",
     resumen: "Sus datos",
     cambiar: "Cambiar",
+  },
+  /** Cámara simulada para las fotos del carnet (demo: no usa la cámara real) */
+  camara: {
+    cerrar: "Cerrar la cámara",
+    demo: "Cámara simulada (demo)",
+    instruccion: "Ponga su carnet dentro del recuadro, sobre una mesa y con buena luz.",
+    disparar: "Tomar la foto",
+    revisar: "¿Se lee bien su carnet?",
+    revisarTexto: "Revise que se vean todos los datos, sin reflejos ni partes cortadas.",
+    usar: "Usar esta foto",
+    otra: "Sacar otra",
+    ejemplo: "Ejemplo",
   },
   documento: {
     cerrar: "Cerrar contrato",

@@ -36,8 +36,12 @@ export interface Perfil {
   ci: string;
   /** Zona, barrio o calle. Se pide recién antes de firmar. */
   domicilio: string;
+  /** Fotos del carnet antes de firmar. Demo: se guarda la fecha de la foto simulada, no una imagen. */
+  fotosCarnet: { anverso: string | null; reverso: string | null };
   foto: string | null;
 }
+
+export type LadoCarnet = keyof Perfil["fotosCarnet"];
 
 export interface Cuota {
   numero: number;
@@ -150,6 +154,7 @@ const perfilVacio: Perfil = {
   institucion: null,
   ci: "",
   domicilio: "",
+  fotosCarnet: { anverso: null, reverso: null },
   foto: null,
 };
 
@@ -355,6 +360,11 @@ export const useApp = create<EstadoApp>()(
       partialize: (s): Datos => {
         const claves = Object.keys(datosIniciales) as (keyof Datos)[];
         return Object.fromEntries(claves.map((k) => [k, s[k]])) as unknown as Datos;
+      },
+      /* El perfil guardado antes de agregar un campo nuevo lo toma del perfil vacío */
+      merge: (guardado, actual) => {
+        const g = (guardado ?? {}) as Partial<Datos>;
+        return { ...actual, ...g, perfil: { ...perfilVacio, ...g.perfil } };
       },
     },
   ),
