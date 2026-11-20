@@ -153,7 +153,7 @@ export function DetalleOrden() {
           <section aria-labelledby="total" className="relative mt-5 overflow-hidden rounded-[2rem] bg-secondary-950 p-5 text-white shadow-lg lg:p-7">
             <span aria-hidden className="absolute -top-16 -right-16 size-48 rounded-full bg-primary-500/40 blur-3xl" />
             {ong && (
-              <p className="cifras relative text-meta text-secondary-300">
+              <p className="cifras relative mb-2 text-meta text-secondary-300">
                 {t.precioLista}: <s>{bs(o.precioLista)}</s>
               </p>
             )}
