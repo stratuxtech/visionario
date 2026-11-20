@@ -2,7 +2,7 @@
 @import "tw-animate-css";
 
 /* =====================================================================
-   VISIONARIO — Tokens de diseño (v2, noviembre 2026)
+   OPTIHELP — Tokens de diseño (v2, noviembre 2026)
    Ver DESIGN.md. El azul sale del logo (#157DCA) y el marino de su ceja
    (#08285A). Solo existen estos colores: la paleta por defecto de
    Tailwind se elimina para que no se cuelen valores sueltos.
@@ -43,7 +43,7 @@
   --color-secondary-900: #172848;
   --color-secondary-950: #0b1b38;
 
-  /* Oro · la joya en garantía y el lado cálido del fondo */
+  /* Dorado (tokens oro-*): solo beneficios (montura pagada por la ONG, descuento en gafas de sol) y el lado cálido del fondo */
   --color-oro-50: #fffaf0;
   --color-oro-100: #fff4dc;
   --color-oro-200: #ffe6b3;

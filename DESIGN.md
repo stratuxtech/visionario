@@ -242,7 +242,7 @@ La paleta por defecto de Tailwind está eliminada (`--color-*: initial`). Solo e
 - **Bruma** (secondary-100 a 300): bordes de campos (200), pistas de progreso, estados pendientes.
 
 ### Oro · los beneficios
-oro-100/200 con texto oro-800 (6,6:1) para la nota "Pagada por {ONG}" de la montura en la orden y para la tarjeta del descuento en gafas de sol al terminar de pagar. También tiñe la mancha cálida del fondo.
+oro-100/200 con texto oro-800 (6,6:1) para la nota "Pagada por {ONG}" de la montura en la orden; oro-300 con texto oro-800 para el ícono del descuento en gafas de sol, y el sello oro del festejo al terminar de pagar. La marca "Pendiente de revisión legal" del contrato también usa oro-100. También tiñe la mancha cálida del fondo.
 
 ### Éxito
 exito-500 para el sello del festejo y los checks de cuotas pagadas; exito-50 con texto exito-800 (6,4:1) para "Pagada", "Pago recibido" y notas positivas; exito-100 para los círculos con check de las listas.
