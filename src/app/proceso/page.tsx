@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { proceso } from "@/content/visionario";
+import { proceso } from "@/content/optihelp";
 import { Carrusel } from "./carrusel";
 
 export const metadata: Metadata = { title: proceso.titulo };

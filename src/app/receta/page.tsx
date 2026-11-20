@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { navegacion } from "@/content/visionario";
+import { navegacion } from "@/content/optihelp";
 import { VerReceta } from "./ver-receta";
 
 export const metadata: Metadata = { title: navegacion.titulos.receta };

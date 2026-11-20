@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { FavouriteIcon, GlassesIcon } from "@hugeicons/core-free-icons";
-import { catalogo, monturas, navegacion, rutas, type PublicoMontura } from "@/content/visionario";
+import { catalogo, monturas, navegacion, rutas, type PublicoMontura } from "@/content/optihelp";
 import { useApp, useHidratado } from "@/lib/estado";
 import { AccionFija, BarraFlujo, PantallaApp } from "@/components/app/barras";
 import { Button, Flecha } from "@/components/ui/button";

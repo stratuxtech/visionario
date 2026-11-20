@@ -12,7 +12,7 @@ import {
   SignatureIcon,
   MedicalFileIcon,
 } from "@hugeicons/core-free-icons";
-import { formularioPerfil, marca, negocio, rutas, textos } from "@/content/visionario";
+import { formularioPerfil, marca, negocio, rutas, textos } from "@/content/optihelp";
 import { Logo } from "@/components/marca/logo";
 import { IsotipoCarga } from "@/components/marca/isotipo-carga";
 import { Button } from "@/components/ui/button";

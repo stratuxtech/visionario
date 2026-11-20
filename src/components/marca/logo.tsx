@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { marca } from "@/content/visionario";
+import { marca } from "@/content/optihelp";
 import { cn } from "@/lib/utils";
 
 /** Logo oficial. `navbar`: sin lema · `completo`: con "Accesorios Ópticos". */

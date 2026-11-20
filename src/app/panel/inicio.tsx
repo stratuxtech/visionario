@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { AlertCircleIcon, ArrowRight01Icon, PlayIcon } from "@hugeicons/core-free-icons";
-import { estado as t, navegacion, rutas } from "@/content/visionario";
+import { estado as t, navegacion, rutas } from "@/content/optihelp";
 import { paradaActual, proximaCuota, situacionActual, useApp, type TipoSituacion } from "@/lib/estado";
 import { useGuardia } from "@/lib/guardias";
 import { fechaCita, horaInicio } from "@/lib/agenda";
@@ -11,7 +11,7 @@ import { bs, cn, fecha } from "@/lib/utils";
 import { PantallaApp } from "@/components/app/barras";
 import { LineaEstado, type Parada } from "@/components/linea-estado";
 import { Button, Flecha } from "@/components/ui/button";
-import type { IdParada } from "@/content/visionario";
+import type { IdParada } from "@/content/optihelp";
 
 const ORDEN: IdParada[] = ["cita", "medicion", "joya", "firma", "cuota-2", "cuota-3", "devolucion"];
 const EMOJIS: Record<IdParada, string> = {

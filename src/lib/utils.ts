@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { extendTailwindMerge } from "tailwind-merge";
-import { negocio } from "@/content/visionario";
+import { negocio } from "@/content/optihelp";
 
 const twMerge = extendTailwindMerge({
   extend: {

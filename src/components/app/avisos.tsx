@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Cancel01Icon } from "@hugeicons/core-free-icons";
-import { marca, notificaciones, rutas, type TipoNotificacion } from "@/content/visionario";
+import { marca, notificaciones, rutas, type TipoNotificacion } from "@/content/optihelp";
 import { useApp, useHidratado, type Notificacion } from "@/lib/estado";
 
 const DURACION = 7000;

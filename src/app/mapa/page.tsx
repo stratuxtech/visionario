@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ArrowRight01Icon } from "@hugeicons/core-free-icons";
-import { pantallas, rutas } from "@/content/visionario";
+import { pantallas, rutas } from "@/content/optihelp";
 import { Logo } from "@/components/marca/logo";
 
 /**

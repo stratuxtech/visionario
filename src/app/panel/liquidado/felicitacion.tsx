@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { CheckmarkCircle02Icon, NecklaceIcon, SunglassesIcon } from "@hugeicons/core-free-icons";
-import { cupones, liquidacion as t, negocio, rutas } from "@/content/visionario";
+import { cupones, liquidacion as t, negocio, rutas } from "@/content/optihelp";
 import { useApp } from "@/lib/estado";
 import { useGuardia } from "@/lib/guardias";
 import { BarraApp } from "@/components/app/barras";

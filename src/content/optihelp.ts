@@ -1,8 +1,11 @@
 /**
- * ARCHIVO ÚNICO DE CONTENIDO — Visionario
+ * ARCHIVO ÚNICO DE CONTENIDO — OptiHelp
  *
  * Todo texto, dato, ruta e imagen de la app sale de aquí. Cambiar un dato en
  * este archivo lo cambia en toda la app. No repita estos valores en componentes.
+ *
+ * OptiHelp es la marca de la app: vende, da el crédito y cobra las cuotas.
+ * La atención es en la Óptica Visionario, la óptica aliada (docs/CAMBIOS_FASE_1.md).
  *
  * Convenciones:
  * - `pendiente: true` marca un dato que el negocio aún no ha definido
@@ -16,7 +19,8 @@
 /* ------------------------------------------------------------------ */
 
 export type EstadoCuota = "pendiente" | "pagada" | "vencida";
-export type PublicoMontura = "adultos" | "ninos";
+/** Crédito: 4 dioptrías o más, 3 cuotas. Contado: menos de 4, un solo pago. */
+export type TipoOrden = "credito" | "contado";
 export type TipoNotificacion =
   | "recordatorio-cuota"
   | "lente-listo"
@@ -24,22 +28,9 @@ export type TipoNotificacion =
   | "renovacion-12"
   | "recordatorio-cita"
   | "orden-recibida"
+  | "orden-contado"
   | "pago-confirmado"
   | "cuota-vencida";
-
-export interface Montura {
-  id: string;
-  codigo: string;
-  publico: PublicoMontura;
-  nombre: string;
-  /** Material real del modelo. Pendiente hasta tener el catálogo. */
-  material: string | null;
-  /** Ruta de la foto en /public. null = se muestra marcador. */
-  imagen: string | null;
-  /** Foto de una persona usando la montura (segunda foto del visor) */
-  imagenPuesta: string | null;
-  pendiente: boolean;
-}
 
 export interface OjoReceta {
   esfera: number;
@@ -53,16 +44,21 @@ export interface OjoReceta {
 /* ------------------------------------------------------------------ */
 
 export const marca = {
-  nombre: "Visionario",
+  nombre: "OptiHelp",
+  /** La óptica donde se atiende al cliente. No es la marca de la app. */
+  opticaAliada: "Óptica Visionario",
   ciudad: "Santa Cruz de la Sierra, Bolivia",
+  irAlInicio: "OptiHelp, ir al inicio",
   logo: {
-    /** Logo oficial recortado sin el lema, para la barra superior. */
-    navbar: { src: "/brand/logo-navbar.png", ancho: 1200, alto: 358 },
-    /** Lockup completo con "Accesorios Ópticos": pie y tamaños grandes. */
-    completo: { src: "/brand/logo-completo.png", ancho: 1400, alto: 416 },
+    /** Logo de OptiHelp (sin lema) para la barra superior. */
+    navbar: { src: "/brand/logo-navbar.png", ancho: 1200, alto: 223 },
+    /** El mismo dibujo en tamaño grande: pie, acceso y contrato. */
+    completo: { src: "/brand/logo-completo.png", ancho: 1400, alto: 260 },
+    /** Versión blanca, sobre fondos oscuros (tarjetas marino, cierre). */
+    blanco: { src: "/brand/logo-blanco.png", ancho: 1400, alto: 260 },
     /** Isotipo del ojo, fondo transparente: spinner y estados vacíos. */
     isotipo: { src: "/brand/isotipo.png", ancho: 640, alto: 640 },
-    alt: "Visionario",
+    alt: "OptiHelp",
   },
 } as const;
 
@@ -76,7 +72,8 @@ export const demo = {
   etiqueta: "Demo",
   /** Solo lo muestra el simulador de flujos */
   aviso: "Prototipo de demostración. Ningún pago, firma ni mensaje de esta app tiene validez real.",
-  claveAlmacenamiento: "visionario-demo-v1",
+  /** v2: la forma de los datos cambió en la Fase 1; así no se cargan datos viejos. */
+  claveAlmacenamiento: "optihelp-demo-v2",
 } as const;
 
 /* ------------------------------------------------------------------ */
@@ -85,51 +82,81 @@ export const demo = {
 
 export const negocio = {
   moneda: "Bs",
-  medidaMinimaDioptrias: 4,
+  /** Mínimo para acceder al crédito. Con menos: receta cobrada y lentes al contado. */
+  medidaMinimaCredito: 4,
   precioReferencial: {
-    minimo: 900,
-    maximo: 2000,
+    minimo: 825,
+    maximo: 3490,
     etiqueta: "Referencial",
-    nota: "El precio exacto depende de su medida y del tratamiento. Se lo confirmamos en la óptica antes de firmar.",
+    nota: "El precio exacto depende de su medida y de la montura que elija. Se lo confirmamos en su orden antes de firmar.",
+    /** Precios con una montura de precio promedio. PENDIENTE: cotizaciones reales del laboratorio. */
+    perfiles: [
+      { id: "basico", medida: "Menos de 4 dioptrías", precio: 825, precioTradicional: 950, credito: false },
+      { id: "medio", medida: "Media (4 a 6 dioptrías)", precio: 1740, precioTradicional: 2040, credito: true },
+      { id: "alto", medida: "Alta (más de 6 dioptrías)", precio: 3490, precioTradicional: 4140, credito: true },
+    ],
     pendiente: true,
+  },
+  contado: {
+    receta: { precio: 100, esDemo: true, pendiente: true },
+    texto: "Con menos de 4 dioptrías no accede al crédito. Le cobramos la receta y puede comprar sus lentes al contado.",
   },
   cuotas: {
     cantidad: 3,
-    frecuencia: "mensual",
+    porcentajes: [0.4, 0.3, 0.3],
+    /** Meses desde la firma: el mismo día de cada mes, como en el contrato de referencia */
+    mesesDesdeFirma: [0, 1, 2],
     intereses: false,
-    /** Supuesto del prototipo: la cuota inicial es la cuota 1 de 3. */
-    cuotaInicialEsPrimera: true,
+    medio: "QR",
   },
   cita: { duracionMinutos: 60, gratuita: true },
-  laboratorio: { diasHabilesMinimo: 1, diasHabilesMaximo: 3 },
-  gracia: { meses: 1 },
-  garantia: {
-    joya: "Oro de 18 quilates",
-    custodia: "Bóveda externa de custodia",
-    devolucion: "Su joya se le devuelve al pagar la tercera cuota.",
+  laboratorio: { diasHabilesMinimo: 1, diasHabilesMaximo: 3, pendiente: true },
+  atraso: {
+    diasHabilesParaRegularizar: 3,
+    interesMoratorioMensual: 0.03,
+    /** Días hábiles: de lunes a sábado, como el horario de la óptica. PENDIENTE: confirmar si el sábado cuenta. */
+    diasHabiles: [1, 2, 3, 4, 5, 6],
+    pendiente: true, // revisión legal
   },
   tratamientos: [
     { id: "antirreflejo", nombre: "Antirreflejo", precio: null, pendiente: true },
     { id: "luz-azul", nombre: "Filtro de luz azul", precio: null, pendiente: true },
     { id: "bifocal", nombre: "Bifocal", precio: null, pendiente: true },
   ],
+  beneficios: {
+    /** ONG 1: paga la montura de los clientes que ella envía. */
+    ongMontura: { texto: "La montura la paga {ong}.", pendiente: true },
+  },
   renovacionMeses: [6, 12],
   cancelaciones: "Una vez firmado el contrato no hay cancelaciones ni reembolsos.",
   derivacion:
     "Si su evaluación muestra una condición que requiere cirugía, le orientamos hacia otro centro de salud.",
 } as const;
 
-/* La tasación de la joya es un proceso manual de la óptica (ERP).
-   La app del cliente no la estima: solo explica que se hace en la cita. */
+/* ------------------------------------------------------------------ */
+/* Datos del vendedor (para el contrato)                               */
+/* PENDIENTE: OptiHelp debe estar constituida (NIT) antes de vender.   */
+/* ------------------------------------------------------------------ */
+
+export const empresa = {
+  razonSocial: "[Razón social de OptiHelp]",
+  nit: "[NIT]",
+  representante: { nombre: "[Nombre del representante legal]", ci: "[C.I.]" },
+  domicilio: "[Domicilio legal]",
+  ciudad: "Santa Cruz de la Sierra, Bolivia",
+  pendiente: true,
+};
 
 /* ------------------------------------------------------------------ */
-/* Óptica                                                              */
+/* Óptica aliada                                                       */
 /* ------------------------------------------------------------------ */
 
 export const optica = {
   nombre: "Óptica Visionario",
+  rol: "Nuestra óptica aliada",
   direccion: "Centro de Santa Cruz de la Sierra",
   referencia: "Dirección exacta pendiente de confirmar",
+  horarioTexto: "Horario pendiente de confirmar",
   /** Horario provisional para generar bloques de 60 minutos en la agenda. */
   horario: {
     /** 1 = lunes … 6 = sábado */
@@ -152,7 +179,6 @@ export const rutas = {
   registro: "/registro",
   perfil: "/registro/perfil",
   proceso: "/proceso",
-  monturas: "/monturas",
   agendar: "/agendar",
   panel: "/panel",
   orden: "/panel/orden",
@@ -181,11 +207,10 @@ export const pantallas: {
   { ruta: "registro", titulo: "Crear cuenta", fase: 2, historia: "HU 1.2" },
   { ruta: "perfil", titulo: "Sus datos", fase: 2, historia: "HU 1.3" },
   { ruta: "proceso", titulo: "Cómo es el proceso", fase: 2, historia: "HU 2.1" },
-  { ruta: "monturas", titulo: "Catálogo de monturas", fase: 2, historia: null },
   { ruta: "agendar", titulo: "Mi cita", fase: 2, historia: "HU 2.2" },
   { ruta: "panel", titulo: "Mi estado", fase: 2, historia: "HU 4.1" },
   { ruta: "pagos", titulo: "Mis pagos", fase: 4, historia: "HU 4.2" },
-  { ruta: "orden", titulo: "Mi orden de compra", fase: 3, historia: "HU 3.1" },
+  { ruta: "orden", titulo: "Mi orden de compra", fase: 3, historia: "HU 3.1 · 3.4 · 3.5" },
   { ruta: "contrato", titulo: "Firmar contrato", fase: 3, historia: "HU 3.2" },
   { ruta: "pago", titulo: "Pagar cuota", fase: 3, historia: "HU 3.3" },
   { ruta: "receta", titulo: "Mis recetas", fase: 4, historia: "HU 4.3" },
@@ -225,6 +250,9 @@ export const textos = {
       : `Ha pagado ${pagadas} de ${total} cuotas`,
   faltanCuotas: (faltan: number) =>
     faltan === 1 ? "Le falta 1 cuota" : `Le faltan ${faltan} cuotas`,
+  /** "Cuota inicial" para la 1; "Cuota 2 de 3" para las demás. */
+  nombreCuota: (n: number, total: number) => (n === 1 ? "Cuota inicial" : `Cuota ${n} de ${total}`),
+  porcentaje: (p: number) => `${Math.round(p * 100)}%`,
   referencial: "Referencial",
   pendiente: "Dato pendiente",
   cargando: "Cargando…",
@@ -233,6 +261,8 @@ export const textos = {
     correo: "Revise el correo: debe tener la forma nombre@correo.com.",
     whatsapp: "Escriba su número de 8 dígitos. Ejemplo: 71234567.",
     edad: "Escriba su edad en números.",
+    ci: "Escriba su número de carnet, solo números. Ejemplo: 7712765.",
+    domicilio: "Escriba su zona, barrio o calle.",
     generico: "Algo no salió como esperábamos. Intente de nuevo.",
   },
 } as const;
@@ -244,13 +274,13 @@ export const textos = {
 export const landing = {
   /** Las negritas se marcan con **asteriscos** y se pintan con <ConNegrita>. */
   heroe: {
-    etiqueta: "Óptica a medida · Santa Cruz",
+    etiqueta: "Lentes en cuotas · Santa Cruz",
     titulo: { antes: "Sus lentes a medida,", resaltado: "en 3 cuotas", despues: "sin intereses." },
-    bajada: "Para medidas desde **4 dioptrías**. Solo con su **carnet** y una **joya de oro** en garantía.",
+    bajada: "Para medidas desde **4 dioptrías**. Solo con su **carnet**. Le atendemos en la **Óptica Visionario**.",
     verComo: "Ver cómo funciona",
-    pruebas: ["Medición gratis", "Cita de 60 minutos", "Listos en 1 a 3 días"],
+    pruebas: ["Medición gratis", "Sin garantía", "Listos en 1 a 3 días"],
     foto: { src: "/fotos/mujer-lentes.jpg", alt: "Mujer sonriente con sus lentes nuevos" },
-    chips: { cita: "Cita gratis · 60 min", cuota: "Cuota 1 pagada", listo: "¡Sus lentes están listos!", joya: "Joya en custodia" },
+    chips: { cita: "Cita gratis · 60 min", cuota: "Cuota inicial pagada", listo: "¡Sus lentes están listos!", atencion: "Óptica Visionario" },
   },
   horarios: {
     titulo: "Próximos horarios libres",
@@ -261,17 +291,17 @@ export const landing = {
     etiqueta: "El problema",
     titulo: { antes: "Ver mal le cuesta", resaltado: "trabajo,", despues: "estudio y salud." },
     datos: [
-      { cifra: "Bs 900–2.000", texto: "cuesta un lente a medida **al contado**. Imposible de juntar de golpe." },
+      { cifra: "Bs 1.740–3.490", texto: "cuesta un lente a medida **al contado**. Imposible de juntar de golpe.", fuente: "Precio referencial" },
       { cifra: "+33%", texto: "más ganan las personas que **corrigen su visión**.", fuente: "Estudio THRIVE, 2024" },
       { cifra: "4+ dioptrías", texto: "y sus lentes **deben tallarse a medida**. Las ópticas económicas no los tienen." },
       { cifra: "Cada año", texto: "los lentes se **rayan, se rompen o se pierden**. Sobre todo los de los niños." },
     ],
   },
   comparacion: {
-    etiqueta: "Por qué Visionario",
+    etiqueta: "Por qué OptiHelp",
     titulo: { antes: "Lo que hay hoy", resaltado: "no le sirve", despues: "" },
     hoy: "Hoy",
-    con: "Con Visionario",
+    con: "Con OptiHelp",
     puntosHoy: [
       "Campañas que llegan **cada tantos meses**",
       "Ópticas baratas que **no hacen medidas altas**",
@@ -281,8 +311,8 @@ export const landing = {
     puntosCon: [
       "Su cita **cuando usted quiera**, desde el celular",
       "Lentes **tallados a medida** en laboratorio",
-      "**3 cuotas iguales** y sin intereses",
-      "Solo **carnet y una joya** en garantía",
+      "**3 cuotas** sin intereses",
+      "Solo su **carnet**, sin garantía",
     ],
   },
   pasos: {
@@ -297,16 +327,49 @@ export const landing = {
       },
       {
         pestana: "En la óptica",
-        titulo: "Medimos, elige y **tasamos su joya**.",
-        texto: "Elija entre **20 monturas**. Su joya de oro de 18 quilates queda guardada en una bóveda.",
-        puntos: ["10 modelos de adulto y 10 de niño", "Tasación en el momento", "Firma su contrato en pantalla"],
+        titulo: "Medimos su vista y **elige su montura**.",
+        texto: "En la **Óptica Visionario** le medimos la vista y elige su montura entre las de la óptica.",
+        puntos: ["Medición sin costo", "Monturas de la óptica", "Firma su contrato en el celular"],
       },
       {
         pestana: "Pague y recoja",
-        titulo: "Pague por QR y **recoja en 1 a 3 días**.",
-        texto: "Paga la primera cuota y le avisamos por **WhatsApp** cuando sus lentes estén listos.",
-        puntos: ["Cuotas iguales, sin intereses", "Aviso por WhatsApp", "Su joya vuelve al terminar"],
+        titulo: "Pague el 40% por QR y **recoja en 1 a 3 días**.",
+        texto: "Con su primer pago mandamos a hacer sus lentes y le avisamos por **WhatsApp** cuando estén listos.",
+        puntos: ["Cuotas sin intereses", "Aviso por WhatsApp", "Todo por QR"],
       },
+    ],
+  },
+  /** Lo que muestra el celular de ejemplo en "Cómo funciona" (montos referenciales) */
+  celular: {
+    traiga: "Traiga su carnet",
+    orden: {
+      titulo: "Su orden",
+      montura: "Montura · Óptica Visionario",
+      monturaDetalle: "Elegida por usted en la óptica",
+      total: "Precio total · referencial",
+      inicial: "Cuota inicial 40%",
+      sinGarantia: "Sin garantía: solo su carnet",
+    },
+    pago: {
+      titulo: "Cuota inicial",
+      recibido: "Pago recibido",
+      remitente: "OptiHelp",
+      mensaje: "¡Sus lentes están listos! Recójalos en la Óptica Visionario.",
+    },
+    qr: "Código QR de ejemplo",
+    chips: [
+      [
+        { emoji: "📅", texto: "60 min para usted" },
+        { emoji: "💬", texto: "Recordatorio por WhatsApp" },
+      ],
+      [
+        { emoji: "👓", texto: "Medición gratis" },
+        { emoji: "🤝", texto: "Sin garantía" },
+      ],
+      [
+        { emoji: "📱", texto: "Pago por QR" },
+        { emoji: "🎉", texto: "¡Listos!" },
+      ],
     ],
   },
   paraQuien: {
@@ -320,55 +383,61 @@ export const landing = {
       { src: "/fotos/nino-lentes.jpg", alt: "Niño sonriente con lentes", rol: "Niño" },
     ],
     escala: {
-      comun: "Menos de 4: lentes de stock",
-      medida: "4 o más: lentes a medida",
+      comun: "Menos de 4: receta y lentes al contado",
+      medida: "4 o más: lentes en 3 cuotas",
     },
-    noSabe: "¿No sabe su medida? **La medimos gratis** en su cita.",
+    noSabe: "¿No sabe su medida? **Se la medimos** en su cita.",
   },
+  /** Una línea opcional para quien llega enviado por una ONG */
+  ong: "¿Le envía una ONG? Díganos en su registro: puede pagar menos por su montura.",
   cuotas: {
     etiqueta: "Las cuotas",
-    titulo: { antes: "Partes", resaltado: "iguales.", despues: "Sin sorpresas." },
-    ejemplo: 900,
-    nota: "Ejemplo con un lente de **Bs 900**. El precio exacto se lo damos **antes de firmar** y no cambia.",
-    pasos: ["Al firmar", "Al mes", "A los 2 meses"],
-    final: "Su joya vuelve",
-    gracia: "Si se atrasa, tiene **un mes de gracia**.",
+    titulo: { antes: "Una cuota inicial y", resaltado: "dos más pequeñas.", despues: "" },
+    ejemplo: 1000,
+    nota: "Ejemplo con un lente de **Bs 1.000**. El precio exacto se lo damos **antes de firmar** y no cambia.",
+    pasos: ["Al mandar a hacer", "Al mes", "A los 2 meses"],
+    final: "Listo, son suyos",
+    atraso: "Si se atrasa, tiene **3 días hábiles** para ponerse al día sin recargo.",
   },
-  catalogo: {
-    etiqueta: "Monturas",
-    titulo: { antes: "20 monturas para", resaltado: "toda la familia", despues: "" },
-    texto: "**10 para adultos y 10 para niños**, resistentes y pensadas para durar.",
-    accion: "Ver catálogo",
-    fotos: ["/fotos/montura-negra.jpg", "/fotos/montura-carey.jpg", "/fotos/nina-optica.jpg"],
+  dondeAtendemos: {
+    etiqueta: "Dónde le atendemos",
+    titulo: { antes: "En la", resaltado: "Óptica Visionario", despues: "" },
+    texto: "Nuestra óptica aliada en el centro de Santa Cruz: ahí le medimos la vista, elige su montura y recoge sus lentes.",
+    direccion: "Dirección exacta pendiente de confirmar",
+    horario: "Horario pendiente de confirmar",
+    /** Foto marcador hasta tener la foto real de la óptica */
+    foto: { src: "/fotos/optica-espejo.jpg", alt: "Foto de referencia de una óptica", etiqueta: "Foto de referencia" },
+    pendiente: true,
   },
   cierre: {
     titulo: { antes: "Su primera cita es", resaltado: "gratis", despues: "" },
-    texto: "Traiga su **carnet** y su **joya de oro de 18 quilates**. Nosotros hacemos el resto.",
+    texto: "Traiga su **carnet de identidad**. Nosotros hacemos el resto.",
     accion: "Agendar cita gratuita",
   },
   pie: {
-    requisitos: "Para su cita traiga su carnet de identidad y su joya de oro de 18 quilates.",
+    requisitos: "Para su cita traiga su carnet de identidad.",
+    atencion: "Atención en la",
     creditos: "Fotografías de Pexels",
   },
 } as const;
 
 /* ------------------------------------------------------------------ */
-/* El recorrido: una sola línea del primer clic a la joya devuelta.    */
-/* Se usa para explicar (landing) y para ubicar al paciente (inicio).  */
+/* El recorrido: una sola línea del primer clic a los lentes pagados.  */
+/* Se usa para explicar (sistema visual) y para ubicar al paciente.    */
 /* ------------------------------------------------------------------ */
 
-export type IdParada = "cita" | "medicion" | "joya" | "firma" | "cuota-2" | "cuota-3" | "devolucion";
+export type IdParada = "cita" | "medicion" | "firma" | "recojo" | "cuota-2" | "cuota-3" | "terminado";
 
 export const recorrido = {
   titulo: "Cómo funciona",
   paradas: [
-    { id: "cita", titulo: "Agenda su cita", texto: "Elija día y hora desde el celular. Le reservamos 60 minutos.", lugar: "app", aviso: "Traiga su joya de oro de 18 quilates" },
-    { id: "medicion", titulo: "Medición y montura", texto: "En la óptica medimos su vista sin costo y elige su montura entre 20 modelos.", lugar: "optica" },
-    { id: "joya", titulo: "Deja su joya en garantía", texto: "Pesamos su joya de oro de 18 quilates. Queda guardada en una bóveda de custodia.", lugar: "optica" },
-    { id: "firma", titulo: "Firma y paga la cuota 1", texto: "Firma su contrato en la pantalla y paga la primera cuota. Fabricamos su lente en 1 a 3 días hábiles.", lugar: "app" },
-    { id: "cuota-2", titulo: "Cuota 2", texto: "Un mes después. Le avisamos por WhatsApp antes de la fecha.", lugar: "app" },
-    { id: "cuota-3", titulo: "Cuota 3", texto: "Dos meses después de firmar.", lugar: "app" },
-    { id: "devolucion", titulo: "Su joya vuelve a sus manos", texto: "Al pagar la tercera cuota le devolvemos su joya.", lugar: "optica" },
+    { id: "cita", titulo: "Agenda su cita", texto: "Elija día y hora desde el celular. Le reservamos 60 minutos.", lugar: "app", aviso: "Traiga su carnet de identidad" },
+    { id: "medicion", titulo: "Medición y montura", texto: "En la Óptica Visionario medimos su vista y elige su montura.", lugar: "optica" },
+    { id: "firma", titulo: "Firma y paga el 40%", texto: "Firma su contrato en el celular y paga la cuota inicial por QR. Con eso mandamos a hacer sus lentes.", lugar: "app" },
+    { id: "recojo", titulo: "Recoge sus lentes", texto: "En 1 a 3 días hábiles. Le avisamos por WhatsApp.", lugar: "optica" },
+    { id: "cuota-2", titulo: "Cuota 2", texto: "Un mes después. Le avisamos antes por WhatsApp.", lugar: "app" },
+    { id: "cuota-3", titulo: "Cuota 3", texto: "Dos meses después.", lugar: "app" },
+    { id: "terminado", titulo: "Terminó de pagar", texto: "Sus lentes son suyos y tiene un descuento en gafas de sol.", lugar: "app" },
   ] satisfies { id: IdParada; titulo: string; texto: string; lugar: "app" | "optica"; aviso?: string }[],
   lugares: { app: "Desde su celular", optica: "En la óptica" },
   aquiEsta: "Usted está aquí",
@@ -411,28 +480,28 @@ export const proceso = {
       foto: { src: "/fotos/mujer-lentes.jpg", alt: "" },
       chips: [
         { emoji: "🪪", texto: "Su carnet" },
-        { emoji: "💛", texto: "Una joya de oro" },
         { emoji: "✅", texto: "Sin intereses" },
+        { emoji: "🤝", texto: "Sin garantía" },
       ],
     },
     {
       id: "optica",
-      titulo: "**Agende gratis.** En la óptica le medimos la vista y **tasamos su joya**.",
+      titulo: "**Agende gratis.** En la Óptica Visionario le medimos la vista y **elige su montura**.",
       foto: { src: "/fotos/examen-vista.jpg", alt: "" },
       chips: [
-        { emoji: "📅", texto: "60 min para usted" },
+        { emoji: "📅", texto: "Su hora" },
         { emoji: "👓", texto: "Medición gratis" },
-        { emoji: "💎", texto: "Joya tasada" },
+        { emoji: "🕶️", texto: "Monturas de la óptica" },
       ],
     },
     {
       id: "recoger",
-      titulo: "**Pague por QR** y recoja sus lentes. Su joya **vuelve con usted** al terminar.",
+      titulo: "**Pague el 40% por QR** y recoja sus lentes. El resto, en 2 cuotas.",
       foto: { src: "/fotos/nino-lentes.jpg", alt: "" },
       chips: [
-        { emoji: "📱", texto: "Cuota 1 pagada" },
+        { emoji: "📱", texto: "Cuota inicial pagada" },
         { emoji: "💬", texto: "¡Sus lentes están listos!" },
-        { emoji: "🎁", texto: "Joya devuelta" },
+        { emoji: "🕶️", texto: "Descuento en gafas de sol" },
       ],
     },
   ],
@@ -450,7 +519,7 @@ export const proceso = {
 
 export const agenda = {
   titulo: "Mi cita",
-  joyaAviso: "Recuerde traer su joya de oro de 18 quilates",
+  carnetAviso: "Traiga su carnet de identidad",
   dia: "Elija el día",
   hora: "Elija la hora",
   manana: "Mañana",
@@ -461,8 +530,8 @@ export const agenda = {
   cambiar: "Cambiar horario de mi cita",
   mantener: "Mantener mi cita actual",
   calendario: "Agregar a Google Calendar",
-  calendarioTitulo: "Cita en Visionario",
-  calendarioDetalle: "Traiga su carnet de identidad y su joya de oro de 18 quilates.",
+  calendarioTitulo: "Cita en Óptica Visionario (OptiHelp)",
+  calendarioDetalle: "Traiga su carnet de identidad.",
   eligeHora: "Elija una hora para continuar",
   confirmada: {
     titulo: "Su cita está reservada",
@@ -472,8 +541,8 @@ export const agenda = {
     festejo: "¡Su cita está reservada!",
     queSigue: [
       { emoji: "💬", texto: "Le recordamos por **WhatsApp** un día antes" },
-      { emoji: "💛", texto: "Traiga su **carnet** y su **joya de oro de 18k**" },
-      { emoji: "👓", texto: "Le medimos la vista **gratis** y elige su montura" },
+      { emoji: "🪪", texto: "Traiga su **carnet**" },
+      { emoji: "👓", texto: "Le medimos la vista y elige su montura en la óptica" },
     ],
   },
   tarjeta: { reservada: "Su cita", realizada: "Cita realizada" },
@@ -494,50 +563,55 @@ export const estado = {
     agendar: "Agendar mi cita",
     verCita: "Ver mi cita",
     verOrden: "Ver mi orden",
-    pagar: (n: number) => `Pagar cuota ${n}`,
+    pagar: (n: number) => (n === 1 ? "Pagar cuota inicial" : `Pagar cuota ${n}`),
+    pagarContado: "Pagar por QR",
     verBeneficio: "Ver mi beneficio",
   },
   /** Qué está pasando ahora con el paciente: una frase corta por situación */
   situaciones: {
-    "sin-cita": { titulo: "Agende su cita gratuita", detalle: "Traiga su carnet y una joya de oro de 18 quilates." },
-    cita: { titulo: (fecha: string) => `Su cita es el ${fecha}`, detalle: "Traiga su carnet y su joya de oro de 18 quilates." },
+    "sin-cita": { titulo: "Agende su cita gratuita", detalle: "Traiga su carnet de identidad." },
+    cita: { titulo: (fecha: string) => `Su cita es el ${fecha}`, detalle: "Traiga su carnet de identidad." },
     orden: { titulo: "Su orden de compra está lista", detalle: "Revísela y firme su contrato." },
-    "cuota-1": { titulo: "Pague su cuota 1", detalle: "Así empezamos a fabricar sus lentes." },
+    contado: { titulo: "Su orden al contado está lista", detalle: "Su medida no requiere crédito. Revise su receta y pague por QR." },
+    "cuota-1": { titulo: "Pague su cuota inicial", detalle: "Con ese pago mandamos a hacer sus lentes." },
     fabricando: { titulo: "Estamos fabricando sus lentes", detalle: "Tardan de 1 a 3 días hábiles. Le avisaremos por WhatsApp." },
-    vencida: { titulo: (n: number) => `Su cuota ${n} está vencida`, detalle: "Pague ahora para conservar su joya." },
-    listo: { titulo: "Sus lentes están listos", detalle: "Recójalos en la óptica con su carnet de identidad." },
-    liquidado: { titulo: "Terminó de pagar", detalle: "Recoja su joya en la óptica." },
+    vencida: { titulo: (n: number) => `Su cuota ${n} está vencida`, detalle: "Póngase al día en 3 días hábiles para evitar el interés por atraso." },
+    listo: { titulo: "Sus lentes están listos", detalle: "Recójalos en la Óptica Visionario con su carnet de identidad." },
+    liquidado: { titulo: "Terminó de pagar", detalle: "Sus lentes son suyos. Tiene un descuento en gafas de sol." },
   },
   proximaCuota: (n: number, fecha: string) => `Próxima: cuota ${n}, vence el ${fecha}`,
+  /** Tarjeta de la orden al contado (sin recorrido de cuotas) */
+  contado: {
+    titulo: "Su orden al contado",
+    total: "Total a pagar",
+    verOrden: "Ver mi orden y mi receta",
+  },
   /** El recorrido: cada parada es un solo título largo y simple */
   paradas: {
     cita: {
-      pendiente: "Agende su cita gratuita y traiga su joya de oro de 18 quilates",
-      hecha: (fecha: string) => `Su cita es el ${fecha}. Traiga su joya de oro de 18 quilates`,
+      pendiente: "Agende su cita gratuita y traiga su carnet de identidad",
+      hecha: (fecha: string) => `Su cita es el ${fecha}. Traiga su carnet de identidad`,
       pasada: "Cita realizada",
     },
-    medicion: { pendiente: "Mida su vista sin costo y elija su montura", hecha: "Medición y montura listas" },
-    joya: {
-      pendiente: "Tasamos su joya y la guardamos en custodia",
-      hecha: (valor: string) => `Su joya fue tasada en ${valor} y está en custodia`,
-    },
+    medicion: { pendiente: "En la Óptica Visionario medimos su vista y elige su montura", hecha: "Medición y montura listas" },
     firma: {
-      pendiente: "Firme su contrato y pague la cuota 1",
-      hecha: "Contrato firmado y cuota 1 pagada",
+      pendiente: "Firme su contrato y pague el 40% por QR",
+      hecha: "Contrato firmado y cuota inicial pagada",
+    },
+    recojo: {
+      pendiente: "Recoja sus lentes en 1 a 3 días hábiles. Le avisamos por WhatsApp",
+      hecha: "Sus lentes están listos en la óptica",
     },
     "cuota-2": "Pague la cuota 2, un mes después",
     "cuota-3": "Pague la cuota 3, dos meses después",
-    devolucion: "Su joya vuelve a sus manos al pagar la cuota 3",
+    terminado: "Terminó de pagar: sus lentes son suyos y tiene un descuento en gafas de sol",
   },
-  monturasInteres: (n: number) =>
-    n === 1 ? "Le interesa 1 montura; se la mostraremos en su cita." : `Le interesan ${n} monturas; se las mostraremos en su cita.`,
 } as const;
 
 export const navegacion = {
   cita: "Mi cita",
   estado: "Estado",
   pagos: "Pagos",
-  monturas: "Monturas",
   receta: "Recetas",
   cuenta: "Mi cuenta",
   avisos: "Notificaciones",
@@ -553,7 +627,6 @@ export const navegacion = {
     cita: "Mi cita",
     estado: "Mi estado",
     pagos: "Mis pagos",
-    monturas: "Catálogo",
     receta: "Mis recetas",
     cuenta: "Mi cuenta",
     avisos: "Notificaciones",
@@ -562,6 +635,7 @@ export const navegacion = {
 
 /* ------------------------------------------------------------------ */
 /* Formulario de perfil (HU 1.3) — solo los datos documentados         */
+/* El registro NO pide carnet ni domicilio: se piden antes de firmar.  */
 /* ------------------------------------------------------------------ */
 
 export const formularioPerfil = {
@@ -574,7 +648,7 @@ export const formularioPerfil = {
   barra: "Sus datos",
   continuar: "Continuar",
   terminar: "Terminar",
-  menorDeEdad: "Como el paciente es menor de edad, el contrato lo firma y deja la joya su padre, madre o tutor.",
+  menorDeEdad: "Como el paciente es menor de edad, el contrato lo firma su padre, madre o tutor.",
   elegir: "Elija una opción",
   elegirVarias: "Puede marcar varias",
   campos: {
@@ -586,62 +660,23 @@ export const formularioPerfil = {
     usoMedidas: { etiqueta: "¿Le han medido la vista antes?", opciones: ["Sí", "No"] },
     medidaEstimada: {
       etiqueta: "¿Cuál es su medida aproximada?",
-      opciones: ["Entre 4 y 6 dioptrías", "Entre 6 y 8 dioptrías", "Más de 8 dioptrías", "No sé"],
-      noSabe: "Atendemos desde 4 dioptrías. Si su medida es menor, igual le regalamos la medición.",
+      opciones: ["Menos de 4 dioptrías", "Entre 4 y 6 dioptrías", "Más de 6 dioptrías", "No sé"],
+      /** Opciones que muestran la aclaración de abajo */
+      conAclaracion: ["Menos de 4 dioptrías", "No sé"],
+      noSabe: "El crédito es para medidas desde 4 dioptrías. Si su medida es menor, le cobramos la receta y puede comprar sus lentes al contado.",
     },
     comoNosConocio: {
       etiqueta: "¿Cómo nos conoció?",
-      opciones: ["Facebook", "TikTok", "Instagram", "WhatsApp", "Un familiar o conocido", "Pasé por la óptica", "Otro"],
+      opciones: ["Facebook", "TikTok", "Instagram", "WhatsApp", "Un familiar o conocido", "Una ONG o fundación", "Pasé por la Óptica Visionario", "Otro"],
+      /** La opción que muestra la pregunta por la ONG */
+      ong: "Una ONG o fundación",
     },
-  },
-} as const;
-
-/* ------------------------------------------------------------------ */
-/* Catálogo de monturas — 10 adultos + 10 niños (catálogo cerrado)     */
-/* PENDIENTE: nombres, materiales y fotos reales.                      */
-/* ------------------------------------------------------------------ */
-
-/* Nombres de demostración hasta tener el catálogo real del negocio */
-const nombresAdultos = ["Illimani", "Aurora", "Sajama", "Cumbre", "Sierra", "Ámbar", "Pampa", "Cedro", "Alba", "Chaco"];
-const nombresNinos = ["Colibrí", "Tucán", "Mariposa", "Cóndor", "Zorrito", "Delfín", "Picaflor", "Ranita", "Jaguar", "Panda"];
-
-const crearMonturas = (publico: PublicoMontura, prefijo: string, nombres: string[]): Montura[] =>
-  nombres.map((nombre, i) => {
-    const n = String(i + 1).padStart(2, "0");
-    return {
-      id: `${prefijo.toLowerCase()}-${n}`,
-      codigo: `${prefijo}-${n}`,
-      publico,
-      nombre,
-      material: null,
-      /* Fotos de ejemplo (Pexels) hasta tener las fotos reales del catálogo */
-      imagen: `/fotos/monturas/${prefijo.toLowerCase()}-${n}.jpg`,
-      imagenPuesta: `/fotos/puestos/${prefijo.toLowerCase()}-${n}.jpg`,
-      pendiente: true,
-    };
-  });
-
-export const monturas: Montura[] = [
-  ...crearMonturas("adultos", "A", nombresAdultos),
-  ...crearMonturas("ninos", "N", nombresNinos),
-];
-
-export const catalogo = {
-  titulo: "Catálogo",
-  publicos: { adultos: "Adultos", ninos: "Niños" } satisfies Record<PublicoMontura, string>,
-  materialesDisponibles: ["Acetato", "Aluminio", "Metal"],
-  sinFoto: "Foto pendiente",
-  meInteresa: "Me interesa",
-  marcada: "Le interesa",
-  agendar: "Agendar mi cita",
-  /** Visor en pantalla completa */
-  visor: {
-    abrir: (nombre: string) => `Ver ${nombre} en pantalla completa`,
-    cerrar: "Cerrar y volver al catálogo",
-    anterior: "Foto anterior",
-    siguiente: "Foto siguiente",
-    lente: "El lente",
-    puesto: "Puesto",
+    /** Solo si eligió "Una ONG o fundación". Opcional y no aplica descuento por sí solo. */
+    institucion: {
+      etiqueta: "¿Cómo se llama la ONG?",
+      ejemplo: "Ej.: Fundación Ver Bien",
+      ayuda: "Es opcional. Si la ONG le ayuda con su montura, se lo confirmamos en su orden.",
+    },
   },
 } as const;
 
@@ -652,25 +687,31 @@ export const catalogo = {
 export const notificaciones: Record<TipoNotificacion, { titulo: string; texto: string; accion: string | null; ruta: ClaveRuta | null }> = {
   "recordatorio-cita": {
     titulo: "Su cita es mañana",
-    texto: "Traiga su carnet de identidad y su joya de oro de 18 quilates.",
+    texto: "Traiga su carnet de identidad.",
     accion: "Ver mi cita",
     ruta: "agendar",
   },
   "orden-recibida": {
     titulo: "Su orden de compra está lista",
-    texto: "Revise sus lentes, firme el contrato y pague la cuota 1.",
+    texto: "Revise sus lentes, firme el contrato y pague la cuota inicial.",
+    accion: "Ver mi orden",
+    ruta: "orden",
+  },
+  "orden-contado": {
+    titulo: "Su receta y su orden están listas",
+    texto: "Su medida no requiere crédito. Revise el precio al contado.",
     accion: "Ver mi orden",
     ruta: "orden",
   },
   "pago-confirmado": {
     titulo: "Recibimos su pago",
-    texto: "Su cuota quedó registrada. Gracias por cumplir.",
+    texto: "Su pago quedó registrado. Gracias por cumplir.",
     accion: "Ver mis pagos",
     ruta: "pagos",
   },
   "lente-listo": {
     titulo: "Sus lentes están listos",
-    texto: "Recójalos en la óptica con su carnet de identidad.",
+    texto: "Recójalos en la Óptica Visionario con su carnet de identidad.",
     accion: "Ver mi estado",
     ruta: "panel",
   },
@@ -682,7 +723,7 @@ export const notificaciones: Record<TipoNotificacion, { titulo: string; texto: s
   },
   "cuota-vencida": {
     titulo: "Tiene una cuota vencida",
-    texto: "Está en su mes de gracia. Pague para conservar su joya.",
+    texto: "Tiene 3 días hábiles para ponerse al día sin recargo.",
     accion: "Pagar cuota",
     ruta: "pago",
   },
@@ -710,6 +751,7 @@ export const cupones = {
     codigo: "GRACIAS",
     porcentaje: 15,
     producto: "Gafas de sol",
+    pagaDescuento: "OptiHelp",
     esDemo: true,
     pendiente: true,
   },
@@ -721,11 +763,13 @@ export const cupones = {
 
 export const simulador = {
   titulo: "Simulador de flujos",
-  descripcion: "Dispara lo que en la vida real haría la óptica, el banco o el paso del tiempo.",
+  descripcion: "Dispara lo que en la vida real haría el ERP de OptiHelp, la óptica o el paso del tiempo.",
   abrir: "Abrir simulador de demo",
   cerrar: "Cerrar simulador",
   acciones: {
-    ordenErp: "Simular orden del ERP",
+    ordenErp: "Simular orden del ERP (crédito)",
+    ordenOng: "Simular orden con montura pagada por ONG",
+    ordenContado: "Simular orden al contado (menos de 4 dioptrías)",
     pagoCuota: "Simular pago de cuota",
     laboratorio: "Simular laboratorio listo",
     mora: "Simular vencimiento o mora",
@@ -734,22 +778,27 @@ export const simulador = {
     reiniciar: "Reiniciar demo",
   },
   descripciones: {
-    ordenErp: "La óptica envía la orden de compra tras la cita.",
-    pagoCuota: "Marca como pagada la próxima cuota.",
-    laboratorio: "El laboratorio terminó el lente: aviso para recoger o delivery.",
-    mora: "La próxima cuota pasa a vencida y empieza el mes de gracia.",
+    ordenErp: "Tras la cita se carga la orden con la medida, la montura y el precio.",
+    ordenOng: "La misma orden, pero la ONG aliada paga la montura y el cliente paga menos.",
+    ordenContado: "La medida es menor a 4 dioptrías: receta cobrada y lentes al contado, sin contrato.",
+    pagoCuota: "Marca como pagada la próxima cuota (o el pago único del contado).",
+    laboratorio: "El laboratorio terminó los lentes: aviso para recoger en la óptica.",
+    mora: "La próxima cuota pasa a vencida y empiezan los 3 días hábiles para regularizar.",
     liquidacion: "Paga todas las cuotas pendientes de una vez.",
     reiniciar: "Borra todo y vuelve al visitante sin cuenta.",
   },
   requisitos: {
     sesion: "Requiere una cuenta iniciada",
-    orden: "Ya llegó la orden",
-    contrato: "Requiere contrato firmado (fase 3)",
+    orden: "Ya hay una orden: solo puede haber una",
+    contrato: "Requiere contrato firmado",
+    pago: "Requiere contrato firmado u orden al contado",
     cuotas: "No quedan cuotas pendientes",
-    laboratorio: "Requiere la cuota 1 pagada",
+    laboratorio: "Requiere la cuota inicial o el pago al contado",
   },
   tipoNotificacion: "Tipo de notificación",
   estado: "Estado actual",
+  filas: { cuenta: "Cuenta", cita: "Cita", orden: "Orden", cuotas: "Cuotas" },
+  tiposOrden: { credito: "crédito", ong: "crédito con ONG", contado: "al contado" },
   mapa: "Mapa del prototipo",
   sistema: "Sistema visual",
   confirmarReinicio: "¿Reiniciar la demo? Se borran la cuenta, la cita y los pagos simulados.",
@@ -775,16 +824,32 @@ export const semilla = {
     foto: "/fotos/avatar-rosa.jpg",
     esDemo: true,
   },
-  /** Orden que "llega" desde el ERP de la óptica tras la cita. */
+  /** Orden de crédito que OptiHelp carga en su ERP tras la cita. */
   orden: {
     numero: "OC-0001",
-    lente: "Lente orgánico de alto índice, tallado a medida",
+    tipo: "credito" as TipoOrden,
+    optica: "Óptica Visionario",
+    lente: "Lente orgánico tallado a medida", // perfil medio por la receta demo (−5,25)
     tratamientos: ["antirreflejo"],
-    monturaId: "a-03",
-    /** Joya que el cliente dejó en garantía: foto (pendiente) y valor de la tasación. */
-    joya: { descripcion: "Cadena de oro de 18 quilates", tasacion: 1800, foto: "/fotos/cadena-oro.jpg" as string | null },
-    /** Monto demo dentro del rango referencial (Bs 900 – Bs 2.000). */
-    total: 1350,
+    montura: { descripcion: "Montura elegida en la Óptica Visionario", valor: 240, cubiertaPor: null as string | null },
+    receta: null as number | null, // solo en contado: precio de la receta
+    precioLista: 1740,
+    total: 1740,
+    esDemo: true,
+  },
+  /** Nombre de la ONG de demostración que paga la montura. PENDIENTE: nombre real. */
+  ongDemo: "ONG aliada (demo)",
+  /** Orden al contado: receta demo con −2,50 / −2,00 · perfil básico */
+  ordenContado: {
+    numero: "OC-0001",
+    tipo: "contado" as TipoOrden,
+    optica: "Óptica Visionario",
+    lente: "Lente orgánico",
+    tratamientos: [] as string[],
+    montura: { descripcion: "Montura elegida en la Óptica Visionario", valor: 240, cubiertaPor: null as string | null },
+    receta: 100 as number | null,
+    precioLista: 825,
+    total: 925,
     esDemo: true,
   },
   receta: {
@@ -795,11 +860,19 @@ export const semilla = {
     distanciaPupilar: 62,
     esDemo: true,
   },
-  joya: { descripcion: "Cadena de oro 18k", gramos: 4.2, esDemo: true },
+  /** Receta de la orden al contado: menos de 4 dioptrías */
+  recetaContado: {
+    fecha: null as string | null,
+    profesional: "Optometrista",
+    ojoDerecho: { esfera: -2.5, cilindro: -0.5, eje: 180, adicion: null } satisfies OjoReceta,
+    ojoIzquierdo: { esfera: -2.0, cilindro: -0.25, eje: 170, adicion: null } satisfies OjoReceta,
+    distanciaPupilar: 62,
+    esDemo: true,
+  },
 } as const;
 
 /* ------------------------------------------------------------------ */
-/* Fase 3 · Orden de compra (HU 3.1)                                   */
+/* Fase 3 · Orden de compra (HU 3.1 · 3.4 · 3.5)                       */
 /* ------------------------------------------------------------------ */
 
 export const orden = {
@@ -807,73 +880,182 @@ export const orden = {
   bajada: "Revise que todo esté correcto antes de firmar.",
   vacia: {
     titulo: "Su orden llegará después de su cita",
-    texto: "Cuando el optometrista termine su evaluación, la orden aparecerá aquí con el detalle de sus lentes.",
+    texto: "Cuando termine su cita en la Óptica Visionario, su orden aparecerá aquí con el detalle de sus lentes.",
+    chips: { lentes: "Sus lentes", montura: "Su montura" },
+    accion: "Ir a mi estado",
   },
+  encabezado: "Su orden · Óptica Visionario",
   numero: "Orden",
   recibida: "Recibida el",
   lente: "Lente",
   tratamientos: "Tratamiento",
   sinTratamiento: "Sin tratamiento adicional",
   montura: "Montura",
+  monturaIncluida: "Incluida en el precio total",
+  montoOng: "Pagada por {ong}",
+  atiende: { etiqueta: "Le atiende", valor: "Óptica Visionario" },
+  financia: { etiqueta: "Crédito de", valor: "OptiHelp" },
   receta: "Su medida",
   verReceta: "Ver receta completa",
-  joya: "Garantía en custodia",
-  tasada: "Tasada en",
+  precioLista: "Precio de sus lentes",
   total: "Precio total",
   sinIntereses: "Sin intereses. Este monto no cambia.",
   plan: "Así quedan sus 3 cuotas",
-  cuandoCuota: ["Al firmar", "Un mes después", "Dos meses después"],
+  cuandoCuota: ["Hoy, al mandar a hacer (40%)", "En un mes (30%)", "En dos meses (30%)"],
   firmar: "Revisar y firmar contrato",
   firmado: (fecha: string) => `Contrato firmado el ${fecha}`,
   verCuotas: "Ver mis cuotas",
   ojoDerecho: "Ojo derecho",
   ojoIzquierdo: "Ojo izquierdo",
+  /** Orden al contado: menos de 4 dioptrías, sin crédito */
+  contado: {
+    titulo: "Su orden al contado",
+    aviso: "Su medida es menor a 4 dioptrías, por eso no aplica el crédito.",
+    receta: "Receta",
+    lentes: "Lentes al contado",
+    total: "Total a pagar",
+    unPago: "Un solo pago por QR, a OptiHelp.",
+    accion: "Pagar por QR",
+    pagado: (fecha: string) => `Pagado el ${fecha}`,
+    verPagos: "Ver mi pago",
+  },
 } as const;
 
 /* ------------------------------------------------------------------ */
 /* Fase 3 · Contrato (HU 3.2)                                          */
-/* TEXTO PROVISIONAL: resume docs/reglas_de_negocio.md. Debe revisarlo */
-/* un abogado antes del lanzamiento (ver brief §8 y reglas §12).       */
+/* TEXTO PROVISIONAL, basado en el contrato de The Blink Eye           */
+/* (docs/CAMBIOS_FASE_1.md §5). Debe revisarlo un abogado antes del    */
+/* lanzamiento (reglas §14).                                           */
 /* ------------------------------------------------------------------ */
+
+/** Lo que el contrato necesita para armar sus cláusulas (ya formateado). */
+export interface DatosContrato {
+  total: string;
+  precioLista: string;
+  /** Nombre de la ONG que paga la montura, si aplica */
+  ong: string | null;
+  cuotas: { fecha: string; monto: string }[];
+}
 
 export const contrato = {
   titulo: "Contrato",
-  tarjeta: { titulo: "Contrato de financiamiento", detalle: "Léalo antes de firmar", ver: "Ver" },
+  tarjeta: { titulo: "Contrato de compra en cuotas", detalle: "Léalo antes de firmar", ver: "Ver" },
+  vacio: {
+    titulo: "Aún no hay contrato para firmar",
+    texto: "Se prepara cuando OptiHelp carga su orden de compra después de su cita.",
+    chips: { firma: "Firma en pantalla", papel: "Sin papeles" },
+  },
+  contado: {
+    titulo: "Su orden es al contado",
+    texto: "Con una medida menor a 4 dioptrías no hay contrato de crédito. Pague su orden por QR.",
+    accion: "Ver mi orden",
+  },
+  /** Paso previo a la firma: datos que el contrato necesita */
+  datos: {
+    titulo: "Sus datos para el contrato",
+    texto: "El contrato lleva su carnet y su domicilio. Los guardamos para no pedírselos de nuevo.",
+    menor: "Como el paciente es menor de edad, escriba los datos del padre, madre o tutor que firma.",
+    ci: { etiqueta: "Número de carnet (C.I.)", ejemplo: "Ej.: 7712765" },
+    extension: { etiqueta: "Extensión", opciones: ["SC", "LP", "CB", "OR", "PT", "CH", "TJ", "BE", "PD"], porDefecto: "SC" },
+    domicilio: { etiqueta: "Domicilio", ejemplo: "Ej.: Plan 3000, calle 5, casa 12" },
+    whatsapp: { etiqueta: "Celular (WhatsApp)", ayuda: "Viene de su perfil. Corríjalo si cambió." },
+    continuar: "Continuar al contrato",
+    resumen: "Sus datos",
+    cambiar: "Cambiar",
+  },
   documento: {
     cerrar: "Cerrar contrato",
     pagina: (n: number, total: number) => `Página ${n} de ${total}`,
-    encabezado: "Contrato de financiamiento de lentes",
-    partes: (nombre: string) => `Entre Visionario y ${nombre || "el cliente"}.`,
+    paginas: (n: number) => `${n} págs.`,
+    encabezado: "Contrato de compra en cuotas sin interés",
+    partes: {
+      optihelp: (e: { razonSocial: string; nit: string; representante: { nombre: string; ci: string }; domicilio: string }) =>
+        `Entre ${e.razonSocial}, con NIT ${e.nit}, representada por ${e.representante.nombre}, con C.I. ${e.representante.ci}, con domicilio en ${e.domicilio} (en adelante, OPTIHELP);`,
+      cliente: (c: { nombre: string; ci: string; domicilio: string; whatsapp: string }) =>
+        `y ${c.nombre || "[Nombre]"}, con C.I. ${c.ci || "[C.I.]"}, domiciliado en ${c.domicilio || "[Domicilio]"}, celular ${c.whatsapp || "[Celular]"} (en adelante, EL CLIENTE).`,
+      optica: "La Óptica Visionario realiza la medición, la fabricación y la entrega de los lentes.",
+    },
+    lugarFecha: (fecha: string) => `Firmado en Santa Cruz de la Sierra, el ${fecha}.`,
+    firmas: {
+      cliente: "EL CLIENTE",
+      optihelp: "OPTIHELP",
+      ci: (ci: string) => `C.I. ${ci}`,
+      sinFirma: "Firma al pie de la pantalla de firma",
+      firmaOptihelp: "[Firma del representante legal]",
+    },
+    pendienteLegal: "Pendiente de revisión legal",
     provisional: "Texto provisional, pendiente de revisión legal.",
   },
+  /** Cláusulas en orden. `soloConOng`: solo si una ONG paga la montura. */
   condiciones: [
     {
-      titulo: "Precio y cuotas",
-      texto: (total: string, cuota: string) =>
-        `El precio total de sus lentes es ${total}. Lo paga en 3 cuotas mensuales de ${cuota}, sin intereses. La primera cuota se paga hoy.`,
+      id: "objeto",
+      titulo: "Objeto del contrato",
+      parrafos: (d: DatosContrato) => [
+        { texto: `EL CLIENTE compra a OPTIHELP lentes completos (lente y montura) por un precio total de ${d.total}, que paga en tres (3) cuotas sin intereses.` },
+      ],
     },
     {
-      titulo: "Su joya como garantía",
-      texto: () =>
-        "Su joya de oro de 18 quilates queda guardada en una bóveda de custodia externa. Se le devuelve cuando paga la tercera cuota.",
+      id: "ong",
+      titulo: "Ayuda de una ONG",
+      soloConOng: true,
+      parrafos: (d: DatosContrato) => [{ texto: `${d.ong} paga la montura. Por eso su total es ${d.total} en lugar de ${d.precioLista}.` }],
     },
     {
-      titulo: "Si se atrasa",
-      texto: () =>
-        "Tiene un mes de gracia después de la fecha de la última cuota. No se cobran intereses por atraso.",
+      id: "forma",
+      titulo: "Forma de pago",
+      parrafos: () => [
+        { texto: "Todas las cuotas se pagan por QR, a OPTIHELP, desde la app o desde el enlace que le enviamos por WhatsApp." },
+      ],
     },
     {
-      titulo: "Si no completa el pago",
-      texto: () =>
-        "Si al terminar el mes de gracia no completó el pago, la joya queda con Visionario para cubrir la deuda. Si su valor no alcanza, Visionario le pedirá el monto que falte.",
+      id: "fechas",
+      titulo: "Fechas de pago",
+      parrafos: (d: DatosContrato) => [
+        { texto: `1.ª cuota: ${d.cuotas[0]?.fecha} — ${d.cuotas[0]?.monto} (se paga hoy; con este pago se mandan a hacer los lentes)` },
+        { texto: `2.ª cuota: ${d.cuotas[1]?.fecha} — ${d.cuotas[1]?.monto}` },
+        { texto: `3.ª cuota: ${d.cuotas[2]?.fecha} — ${d.cuotas[2]?.monto}` },
+      ],
     },
     {
+      id: "garantia",
+      titulo: "Sin garantía",
+      parrafos: () => [{ texto: "EL CLIENTE no deja ninguna garantía. Solo firma este contrato con su carnet de identidad." }],
+    },
+    {
+      id: "responsabilidad",
+      titulo: "Responsabilidad del cliente",
+      parrafos: () => [
+        { texto: "EL CLIENTE se compromete a pagar en las fechas indicadas." },
+        { texto: "Si se atrasa, tiene tres (3) días hábiles para ponerse al día." },
+        { texto: "Si no lo hace, la deuda tendrá un interés por atraso de tres por ciento (3%) mensual sobre el monto vencido, hasta que lo pague.", pendiente: true },
+        { texto: "Además, OPTIHELP podrá iniciar las acciones legales que correspondan y reportar la deuda a las centrales de información crediticia.", pendiente: true },
+      ],
+    },
+    {
+      id: "datos",
+      titulo: "Sus datos",
+      parrafos: () => [
+        { texto: "OPTIHELP guarda sus datos y su historial de pagos para atenderle y para ofrecerle crédito en futuras compras.", pendiente: true },
+      ],
+    },
+    {
+      id: "cancelaciones",
       titulo: "Sin cancelaciones",
-      texto: () => "Una vez firmado, el contrato no se puede cancelar y las cuotas pagadas no se devuelven.",
+      parrafos: () => [{ texto: "Una vez firmado, el contrato no se puede cancelar y las cuotas pagadas no se devuelven." }],
     },
-  ],
-  menor:
-    "Como el paciente es menor de edad, este contrato lo firma su padre, madre o tutor, que es quien deja la joya en garantía.",
+    {
+      id: "jurisdiccion",
+      titulo: "Jurisdicción",
+      parrafos: () => [{ texto: "Para cualquier controversia, ambas partes se someten a los tribunales de Santa Cruz de la Sierra, Bolivia." }],
+    },
+  ] as {
+    id: string;
+    titulo: string;
+    soloConOng?: boolean;
+    parrafos: (d: DatosContrato) => { texto: string; pendiente?: boolean }[];
+  }[],
+  menor: "Como el paciente es menor de edad, este contrato lo firma su padre, madre o tutor, con sus propios datos.",
   acepto: "Leí y acepto las condiciones del contrato",
   leaPrimero: "Abra el contrato y léalo para poder aceptarlo.",
   firmaTitulo: "Su firma",
@@ -884,8 +1066,10 @@ export const contrato = {
   faltaAcepto: "Marque la casilla para aceptar las condiciones.",
   firmado: {
     titulo: "Contrato firmado",
-    texto: "Guardamos su firma junto al contrato.",
-    accion: "Pagar cuota 1",
+    texto: "Guardamos su firma junto al contrato. Le enviamos una copia por WhatsApp.",
+    copiaDemo: "Envío por WhatsApp simulado (demo)",
+    ver: "Ver contrato firmado",
+    accion: "Pagar cuota inicial",
   },
 } as const;
 
@@ -894,33 +1078,54 @@ export const contrato = {
 /* ------------------------------------------------------------------ */
 
 export const pago = {
-  titulo: (n: number, total: number) => `Cuota ${n} de ${total}`,
+  titulo: (n: number, total: number) => textos.nombreCuota(n, total),
+  barra: "Pagar cuota",
+  pagoUnico: "Pago único",
   vence: "Vence el",
+  pagaA: { etiqueta: "Paga a", valor: "OptiHelp" },
   protegido: "Pago protegido",
   escanee: "Escanee el QR con la app de su banco",
   qr: "Código QR de pago",
   yaPague: "Ya pagué",
   verificando: "Verificando su pago…",
+  sinCuotas: {
+    titulo: "Aún no hay cuotas por pagar",
+    texto: "Sus cuotas se activan cuando firma su contrato.",
+    accion: "Ir a mis pagos",
+  },
+  sinPendientes: {
+    titulo: "No tiene cuotas pendientes",
+    texto: "Pagó todas sus cuotas. ¡Gracias por cumplir!",
+    accion: "Ver mi beneficio",
+    accionContado: "Ver mi estado",
+  },
   exito: {
     titulo: "¡Recibimos su pago!",
     gracias: "Gracias por confiar en nosotros.",
     volver: "Ver mi estado",
     queSigue: "¿Y ahora qué pasa?",
-    /** Después de la cuota 1: empieza la fabricación */
+    /** Después de la cuota inicial: empieza la fabricación */
     trasPrimera: [
-      { emoji: "✅", texto: "**Cuota 1** pagada", hecho: true },
-      { emoji: "🔬", texto: "Fabricamos sus lentes en **1 a 3 días hábiles**" },
+      { emoji: "✅", texto: "**Cuota inicial** pagada", hecho: true },
+      { emoji: "🔬", texto: "Mandamos a hacer sus lentes: listos en **1 a 3 días hábiles**" },
       { emoji: "💬", texto: "Le avisamos por **WhatsApp** cuando estén listos" },
-      { emoji: "👓", texto: "Los recoge en la óptica con su **carnet**" },
+      { emoji: "👓", texto: "Los recoge en la Óptica Visionario con su **carnet**" },
+    ],
+    /** Después del pago al contado */
+    trasContado: [
+      { emoji: "✅", texto: "**Pago** recibido", hecho: true },
+      { emoji: "🔬", texto: "Mandamos a hacer sus lentes: listos en **1 a 3 días hábiles**" },
+      { emoji: "💬", texto: "Le avisamos por **WhatsApp** cuando estén listos" },
+      { emoji: "👓", texto: "Los recoge en la Óptica Visionario con su **carnet**" },
     ],
     /** Después de una cuota intermedia: falta la siguiente */
     trasIntermedia: (n: number, siguiente: number, vence: string) => [
       { emoji: "✅", texto: `**Cuota ${n}** pagada`, hecho: true },
       { emoji: "📅", texto: `Su **cuota ${siguiente}** vence el **${vence}**` },
-      { emoji: "💛", texto: "Al terminar, **le devolvemos su joya**" },
+      { emoji: "🕶️", texto: "Al terminar, sus lentes son suyos y tiene un **descuento en gafas de sol**" },
     ],
   },
-  vencida: "Esta cuota está vencida. Aún está en su mes de gracia.",
+  vencida: (fecha: string) => `Tiene hasta el ${fecha} para ponerse al día sin recargo.`,
 } as const;
 
 /* ------------------------------------------------------------------ */
@@ -932,26 +1137,38 @@ export const cuotasPanel = {
   vacia: {
     titulo: "Aquí verá sus pagos",
     texto: "Su plan de 3 cuotas aparecerá cuando su orden esté lista.",
+    chips: { qr: "Pago por QR", cuotas: "3 cuotas sin intereses", intereses: "Sin intereses" },
   },
   plan: {
     titulo: "Su plan de 3 cuotas",
+    resumen: (total: string) => `${total} · 3 cuotas sin intereses`,
     texto: "Se activa al firmar su contrato.",
     accion: "Revisar mi orden",
   },
+  cuota: (n: number, porcentaje: string) => `Cuota ${n} · ${porcentaje}`,
   adelantar: (n: number) => `Adelantar cuota ${n}`,
   restante: "Le falta pagar",
   pagado: "Pagado",
   total: "Total",
-  pagar: (n: number) => `Pagar cuota ${n}`,
+  resumen: "Resumen de sus cuotas",
+  pagar: (n: number) => (n === 1 ? "Pagar cuota inicial" : `Pagar cuota ${n}`),
   pagadaEl: (fecha: string) => `Pagada el ${fecha}`,
   venceEl: (fecha: string) => `Vence el ${fecha}`,
   alertaVencida: {
     titulo: "Tiene una cuota vencida",
-    texto: (fecha: string) => `Puede pagarla sin intereses hasta el ${fecha}, fin de su mes de gracia. Después de esa fecha la joya queda con Visionario.`,
+    texto: (fecha: string) =>
+      `Tiene hasta el ${fecha} para ponerse al día sin recargo. Después, la deuda tiene un interés por atraso de 3% mensual sobre lo vencido.`,
   },
   alertaProxima: {
     titulo: "Su cuota vence pronto",
     texto: (dias: number) => (dias <= 0 ? "Vence hoy." : dias === 1 ? "Vence mañana." : `Vence en ${dias} días.`),
+  },
+  /** Orden al contado: un solo pago */
+  contado: {
+    titulo: "Su pago al contado",
+    texto: "Su medida es menor a 4 dioptrías: paga sus lentes y su receta en un solo pago por QR.",
+    accion: "Pagar por QR",
+    pagado: (fecha: string) => `Pagado el ${fecha}`,
   },
 } as const;
 
@@ -1017,19 +1234,18 @@ export const avisos = {
 
 export const liquidacion = {
   titulo: "¡Sus lentes ya son suyos!",
+  barra: "¡Felicidades!",
   destacado: "Gracias por confiar en nosotros y por cumplir con cada cuota.",
-  joya: {
-    titulo: "Su joya está lista para volver",
-    texto: "Recójala en la óptica presentando su carnet de identidad.",
-  },
+  pagadas: (total: number) => `${total} de ${total} cuotas pagadas`,
   beneficio: {
     titulo: (producto: string) => `${producto} con descuento`,
     texto: (porcentaje: number) =>
-      `Por terminar sus pagos, tiene ${porcentaje}% de descuento en un segundo producto. Se aplica automáticamente en su próxima visita.`,
+      `Por terminar sus pagos, tiene ${porcentaje}% de descuento en unas gafas de sol. El descuento lo pone OptiHelp.`,
     codigo: "Su código",
     accion: "Usar mi descuento",
     usado: "Descuento guardado: lo verá aplicado al agendar.",
   },
+  volverAComprar: "Puede volver a comprar en cuotas cuando lo necesite.",
   renovacion: "Le avisaremos a los 6 y a los 12 meses para revisar su medida, con un descuento ya aplicado.",
   volver: "Ir a mi estado",
 } as const;

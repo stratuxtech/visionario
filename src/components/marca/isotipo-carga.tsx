@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { marca, textos } from "@/content/visionario";
+import { marca, textos } from "@/content/optihelp";
 import { cn } from "@/lib/utils";
 
 /**

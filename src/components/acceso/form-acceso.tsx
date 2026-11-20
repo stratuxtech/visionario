@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ViewIcon, ViewOffSlashIcon } from "@hugeicons/core-free-icons";
-import { acceso, rutas, textos } from "@/content/visionario";
+import { acceso, rutas, textos } from "@/content/optihelp";
 import { siguienteRuta, useApp, useHidratado } from "@/lib/estado";
 import { BarraMarca } from "@/components/app/barras";
 import { Button, Flecha } from "@/components/ui/button";

@@ -1,4 +1,4 @@
-import { agenda, negocio, optica } from "@/content/visionario";
+import { agenda, negocio, optica } from "@/content/optihelp";
 
 export interface Bloque {
   /** ISO del inicio del bloque */

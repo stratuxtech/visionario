@@ -3,14 +3,14 @@
 import { useState } from "react";
 import Image from "next/image";
 import { MedicalFileIcon } from "@hugeicons/core-free-icons";
-import { navegacion, receta as t } from "@/content/visionario";
+import { navegacion, receta as t } from "@/content/optihelp";
 import { useApp } from "@/lib/estado";
 import { useGuardia } from "@/lib/guardias";
 import { dioptria, fecha, cn } from "@/lib/utils";
 import { PantallaApp } from "@/components/app/barras";
 import { EstadoVacio } from "@/components/app/estado-vacio";
 import { Nota } from "@/components/ui/nota";
-import type { OjoReceta } from "@/content/visionario";
+import type { OjoReceta } from "@/content/optihelp";
 
 type Columna = keyof typeof t.columnas;
 const columnas: Columna[] = ["esfera", "cilindro", "eje", "adicion"];

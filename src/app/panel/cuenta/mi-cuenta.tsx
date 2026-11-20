@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Camera01Icon, Logout01Icon } from "@hugeicons/core-free-icons";
-import { cuenta as t, formularioPerfil as f, navegacion, rutas, textos } from "@/content/visionario";
+import { cuenta as t, formularioPerfil as f, navegacion, rutas, textos } from "@/content/optihelp";
 import { useApp } from "@/lib/estado";
 import { useGuardia } from "@/lib/guardias";
 import { reducirFoto } from "@/lib/foto";

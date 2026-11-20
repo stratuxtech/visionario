@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ArrowLeft01Icon, ArrowRight01Icon } from "@hugeicons/core-free-icons";
-import { negocio, recorrido, textos } from "@/content/visionario";
+import { negocio, recorrido, textos } from "@/content/optihelp";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 

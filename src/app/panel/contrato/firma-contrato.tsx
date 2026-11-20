@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { File01Icon, RefreshIcon, Tick02Icon } from "@hugeicons/core-free-icons";
-import { contrato as t, rutas } from "@/content/visionario";
+import { contrato as t, rutas } from "@/content/optihelp";
 import { generarCuotas, useApp } from "@/lib/estado";
 import { useGuardia } from "@/lib/guardias";
 import { bs, cn, fecha } from "@/lib/utils";

@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { cormorant, manrope, ubuntu } from "@/lib/fonts";
-import { demo, marca } from "@/content/visionario";
+import { demo, marca } from "@/content/optihelp";
 import { Avisos } from "@/components/app/avisos";
 import { Simulador } from "@/components/demo/simulador";
 import "./globals.css";

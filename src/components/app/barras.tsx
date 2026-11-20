@@ -14,7 +14,7 @@ import {
   Notification01Icon,
   RouteIcon,
 } from "@hugeicons/core-free-icons";
-import { navegacion, rutas } from "@/content/visionario";
+import { navegacion, rutas } from "@/content/optihelp";
 import { situacionActual, useApp, useHidratado } from "@/lib/estado";
 import { Avatar } from "@/components/app/avatar";
 import { Logo } from "@/components/marca/logo";

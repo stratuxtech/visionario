@@ -16,7 +16,7 @@ import {
   Location01Icon,
   NecklaceIcon,
 } from "@hugeicons/core-free-icons";
-import { agenda, estado as textoEstado, optica, rutas } from "@/content/visionario";
+import { agenda, estado as textoEstado, optica, rutas } from "@/content/optihelp";
 import { modoCita, useApp } from "@/lib/estado";
 import { useGuardia } from "@/lib/guardias";
 import { diaCorto, enlaceGoogleCalendar, fechaCita, generarAgenda, rangoHora } from "@/lib/agenda";

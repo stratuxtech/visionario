@@ -3,7 +3,7 @@
 import { Dialog } from "radix-ui";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Cancel01Icon } from "@hugeicons/core-free-icons";
-import { contrato as t, negocio } from "@/content/visionario";
+import { contrato as t, negocio } from "@/content/optihelp";
 import { Logo } from "@/components/marca/logo";
 import { Button } from "@/components/ui/button";
 

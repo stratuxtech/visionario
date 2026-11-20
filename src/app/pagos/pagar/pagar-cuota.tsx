@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Coins01Icon, SecurityCheckIcon, Tick02Icon } from "@hugeicons/core-free-icons";
-import { negocio, pago as t, rutas } from "@/content/visionario";
+import { negocio, pago as t, rutas } from "@/content/optihelp";
 import { proximaCuota, useApp } from "@/lib/estado";
 import { useGuardia } from "@/lib/guardias";
 import { bs, fecha } from "@/lib/utils";

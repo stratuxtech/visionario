@@ -12,7 +12,7 @@ import {
   Notification01Icon,
   TestTube01Icon,
 } from "@hugeicons/core-free-icons";
-import { avisos as t, navegacion, notificaciones, rutas, type TipoNotificacion } from "@/content/visionario";
+import { avisos as t, navegacion, notificaciones, rutas, type TipoNotificacion } from "@/content/optihelp";
 import { useApp } from "@/lib/estado";
 import { useGuardia } from "@/lib/guardias";
 import { fecha } from "@/lib/utils";

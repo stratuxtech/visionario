@@ -13,7 +13,7 @@ import {
   type IdParada,
   type OjoReceta,
   type TipoNotificacion,
-} from "@/content/visionario";
+} from "@/content/optihelp";
 import { sumarMeses } from "@/lib/utils";
 
 /* ------------------------------------------------------------------ */

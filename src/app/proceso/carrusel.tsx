@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ArrowLeft01Icon } from "@hugeicons/core-free-icons";
-import { proceso, rutas } from "@/content/visionario";
+import { proceso, rutas } from "@/content/optihelp";
 import { useApp, useHidratado } from "@/lib/estado";
 import { AccionFija, BarraFlujo } from "@/components/app/barras";
 import { Button, Flecha } from "@/components/ui/button";

@@ -12,7 +12,7 @@ import {
   Alert02Icon,
   RouteIcon,
 } from "@hugeicons/core-free-icons";
-import { landing, marca, negocio, optica, rutas } from "@/content/visionario";
+import { landing, marca, negocio, optica, rutas } from "@/content/optihelp";
 import { BarraMarca } from "@/components/app/barras";
 import { Logo } from "@/components/marca/logo";
 import { Button, Flecha } from "@/components/ui/button";

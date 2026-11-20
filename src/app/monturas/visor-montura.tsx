@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Dialog } from "radix-ui";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ArrowLeft01Icon, ArrowRight01Icon, Cancel01Icon, FavouriteIcon } from "@hugeicons/core-free-icons";
-import { catalogo, type Montura } from "@/content/visionario";
+import { catalogo, type Montura } from "@/content/optihelp";
 import { cn } from "@/lib/utils";
 
 /**

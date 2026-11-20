@@ -22,7 +22,7 @@ import {
   RefreshIcon,
   PlayIcon,
 } from "@hugeicons/core-free-icons";
-import { demo, negocio, rutas, simulador, type TipoNotificacion } from "@/content/visionario";
+import { demo, negocio, rutas, simulador, type TipoNotificacion } from "@/content/optihelp";
 import { cuotasPagadas, proximaCuota, useApp, useHidratado } from "@/lib/estado";
 import { fechaCita, rangoHora } from "@/lib/agenda";
 import { Button } from "@/components/ui/button";

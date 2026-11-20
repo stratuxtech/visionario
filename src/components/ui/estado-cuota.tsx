@@ -1,6 +1,6 @@
 import { HugeiconsIcon } from "@hugeicons/react";
 import { CheckmarkCircle02Icon, Clock01Icon, AlertCircleIcon } from "@hugeicons/core-free-icons";
-import { textos, type EstadoCuota as Estado } from "@/content/visionario";
+import { textos, type EstadoCuota as Estado } from "@/content/optihelp";
 import { cn } from "@/lib/utils";
 
 const config = {

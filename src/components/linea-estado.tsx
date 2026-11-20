@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ArrowLeft01Icon, ArrowRight01Icon, Tick02Icon } from "@hugeicons/core-free-icons";
-import { estado as t } from "@/content/visionario";
+import { estado as t } from "@/content/optihelp";
 import { cn } from "@/lib/utils";
 
 export interface Parada {

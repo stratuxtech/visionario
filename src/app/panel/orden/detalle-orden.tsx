@@ -4,14 +4,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { CheckmarkCircle02Icon, File01Icon, NecklaceIcon } from "@hugeicons/core-free-icons";
-import { monturas, negocio, orden as t, rutas } from "@/content/visionario";
+import { monturas, negocio, orden as t, rutas } from "@/content/optihelp";
 import { generarCuotas, useApp } from "@/lib/estado";
 import { useGuardia } from "@/lib/guardias";
 import { bs, dioptria, fecha } from "@/lib/utils";
 import { AccionFija, BarraFlujo } from "@/components/app/barras";
 import { EstadoVacio } from "@/components/app/estado-vacio";
 import { Button, Flecha } from "@/components/ui/button";
-import type { OjoReceta } from "@/content/visionario";
+import type { OjoReceta } from "@/content/optihelp";
 
 export const formatoOjo = (o: OjoReceta) =>
   `${dioptria(o.esfera)} · cil. ${dioptria(o.cilindro)} · eje ${o.eje}°`;

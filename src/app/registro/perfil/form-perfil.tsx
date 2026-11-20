@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { formularioPerfil as f, rutas, textos } from "@/content/visionario";
+import { formularioPerfil as f, rutas, textos } from "@/content/optihelp";
 import { useApp, type Perfil } from "@/lib/estado";
 import { useGuardia } from "@/lib/guardias";
 import { AccionFija, BarraFlujo } from "@/components/app/barras";

@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { rutas } from "@/content/visionario";
+import { rutas } from "@/content/optihelp";
 import { useApp, useHidratado } from "@/lib/estado";
 
 interface Requisitos {

@@ -14,7 +14,7 @@ import {
   Tick02Icon,
   WhatsappIcon,
 } from "@hugeicons/core-free-icons";
-import { landing, rutas, textos } from "@/content/visionario";
+import { landing, rutas, textos } from "@/content/optihelp";
 import { siguienteRuta, useApp, useHidratado } from "@/lib/estado";
 import { diaRelativo, proximosLibres, rangoHora } from "@/lib/agenda";
 import { Button, Flecha } from "@/components/ui/button";

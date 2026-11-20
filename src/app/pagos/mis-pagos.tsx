@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Clock01Icon, Coins01Icon, Tick02Icon } from "@hugeicons/core-free-icons";
-import { cuotasPanel as c, navegacion, negocio, orden as textoOrden, rutas, textos } from "@/content/visionario";
+import { cuotasPanel as c, navegacion, negocio, orden as textoOrden, rutas, textos } from "@/content/optihelp";
 import { cuotasPagadas, diasHasta, finDeGracia, generarCuotas, proximaCuota, useApp } from "@/lib/estado";
 import { useGuardia } from "@/lib/guardias";
 import { bs, fecha } from "@/lib/utils";
