@@ -1,10 +1,12 @@
-# VISIONARIO: BIBLE BRAND SYSTEM
+# OPTIHELP: BIBLE BRAND SYSTEM
+
+> **Nota de nombres:** **OptiHelp** es el nombre (provisional) de la startup. **Visionario** es la óptica física de Susan Salinas en el centro de Santa Cruz de la Sierra; no es la startup.
 
 **Versión:** 1.0 | **Enfoque:** Web App, UI/UX (Shadcn UI) & Impacto Social
 
 ## 1. FILOSOFÍA Y ADN DE LA MARCA
 
-Visionario no es una clínica fría ni una financiera tradicional; es un motor de cambio social enfocado en la salud visual de poblaciones vulnerables. Todo el entorno digital está diseñado para eliminar la fricción, reducir la ansiedad y dignificar al paciente.
+OptiHelp no es una clínica fría ni una financiera tradicional; es un motor de cambio social enfocado en la salud visual de poblaciones vulnerables. Todo el entorno digital está diseñado para eliminar la fricción, reducir la ansiedad y dignificar al paciente.
 
 Nuestros tres adjetivos rectores son:
 
@@ -14,10 +16,10 @@ Nuestros tres adjetivos rectores son:
 
 ## 2. EL LOGOTIPO EN EL ECOSISTEMA DIGITAL
 
-El logotipo de Visionario (tipografía robusta, ceja superior curva, isotipo del ojo integrado en la "O") es el ancla de confianza de la startup.
+El logotipo de OptiHelp (wordmark en Ubuntu Bold, "Opti" en azul marino `#08285B` y "Help" en azul `#177ECB`, con un isotipo de ojo sostenido por un arco inferior en forma de sonrisa) es el ancla de confianza de la startup. Sobre fondos oscuros se usa la versión clara: "Opti" en blanco, "Help" e iris en `#3DA9DF`. Archivos: `deck/assets/logo/optihelp-logo.svg`, `optihelp-logo-white.svg` y `optihelp-isotipo.svg`.
 
 **Resolución visual en la interfaz:**
-*   **Integración armónica:** Sus formas circulares y curvas se replican sutilmente en los bordes de los componentes de la interfaz.
+*   **Formas del isotipo:** El círculo del iris y el arco de la sonrisa se replican sutilmente en los bordes de los componentes.
 *   **Uso funcional:** Se emplea en el navbar y footer como sello de garantía institucional. En pantallas de carga o estados vacíos, el isotipo del ojo puede funcionar como un spinner o marca de agua sutil.
 
 ## 3. SISTEMA DE COLOR (Design System Semantics)
@@ -60,7 +62,7 @@ Basado en la curva superior y el texto secundario del logo. Actúa como el ancla
 
 ## 4. TIPOGRAFÍA Y JERARQUÍAS (Sistema Rem/Px base 16px)
 
-La tipografía sobreescribe los valores por defecto del framework para inyectar el ADN de Visionario: amabilidad geométrica y máxima legibilidad técnica.
+La tipografía sobreescribe los valores por defecto del framework para inyectar el ADN de OptiHelp: amabilidad geométrica y máxima legibilidad técnica.
 
 1. **Tipografía Primaria (Títulos y Encabezados): Ubuntu.** Proporciona una estructura geométrica con terminaciones redondeadas que dialogan con el logo y el border-radius de la UI.
 2. **Tipografía Secundaria (Párrafos y UI): Manrope.** Tipografía sans-serif de alta legibilidad técnica. Ideal para lectura continua de contratos, cuotas o procesos clínicos.
@@ -76,7 +78,7 @@ La tipografía sobreescribe los valores por defecto del framework para inyectar 
 
 ## 5. FOTOGRAFÍA Y DIRECCIÓN DE ARTE
 
-La fotografía de Visionario es el puente de empatía con el usuario. Es profundamente humana y está alejada de los tecnicismos de laboratorio o el maximalismo estético.
+La fotografía de OptiHelp es el puente de empatía con el usuario. Es profundamente humana y está alejada de los tecnicismos de laboratorio o el maximalismo estético.
 
 *   **El Heroísmo de lo Cotidiano:** Retratos de personas reales de las clases sociales a las que ayudamos (comerciantes, sastres, mecánicos) en su entorno natural.
 *   **Empatía y Respeto:** Gente sonriendo, miradas amables, transmitiendo alivio y dignidad al haber recuperado su visión. Las tomas deben sentirse cálidas, documentales y honestas.
@@ -95,7 +97,7 @@ La construcción de la UI se basa en una configuración específica de Shadcn pa
 
 ## 7. TONO, VOZ Y MODELO MENTAL DE REDACCIÓN (UX Writing)
 
-El usuario que interactúa con Visionario a menudo siente ansiedad financiera (no sabe si le alcanzará el dinero) y preocupación de salud (tiene miedo de su diagnóstico visual).
+El usuario que interactúa con OptiHelp a menudo siente ansiedad financiera (no sabe si le alcanzará el dinero) y preocupación de salud (tiene miedo de su diagnóstico visual).
 
 *   **Voz:** Educativa y respetuosa (solemne). Hablamos como un profesional de la salud aliado, que entiende el esfuerzo que hace el paciente por pagar sus lentes.
 *   **Tono:** Empático, claro y pedagógico.
