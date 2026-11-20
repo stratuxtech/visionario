@@ -662,12 +662,22 @@ export const formularioPerfil = {
     edad: { etiqueta: "Edad", ejemplo: "Ej.: 42" },
     usoLentes: { etiqueta: "¿Ha usado lentes antes?", opciones: ["Sí", "No"] },
     usoMedidas: { etiqueta: "¿Le han medido la vista antes?", opciones: ["Sí", "No"] },
+    /** Solo una referencia: la medida real la toma la óptica en la cita */
     medidaEstimada: {
-      etiqueta: "¿Cuál es su medida aproximada?",
-      opciones: ["Menos de 4 dioptrías", "Entre 4 y 6 dioptrías", "Más de 6 dioptrías", "No sé"],
-      /** Opciones que muestran la aclaración de abajo */
-      conAclaracion: ["Menos de 4 dioptrías", "No sé"],
-      noSabe: "El crédito es para medidas desde 4 dioptrías. Si su medida es menor, le cobramos la receta y puede comprar sus lentes al contado.",
+      etiqueta: "¿Cuántas dioptrías cree que tiene?",
+      ayuda: "Si no está seguro, elija «No lo sé». En su cita le medimos la vista.",
+      opciones: ["Menos de 4 en cada ojo", "De 4 a 6 en cada ojo", "De 6 a 10 en cada ojo", "De 10 a 12 en cada ojo", "No lo sé"],
+      /** Aclaración que aparece al elegir cada opción (las demás no muestran nada) */
+      aclaraciones: {
+        "Menos de 4 en cada ojo": {
+          titulo: "Con menos de 4 dioptrías no hay crédito",
+          texto: "Le cobramos la receta y puede comprar sus lentes al contado, en un solo pago por QR.",
+        },
+        "No lo sé": {
+          titulo: "No se preocupe: en su cita le medimos la vista",
+          texto: "El crédito en cuotas es solo para personas con 4 dioptrías o más, porque con esa medida la vida diaria se complica mucho más: cuesta trabajar, leer o moverse sin lentes. Si su medida es menor, le cobramos la receta y puede comprar sus lentes al contado.",
+        },
+      } as Record<string, { titulo: string; texto: string }>,
     },
     comoNosConocio: {
       etiqueta: "¿Cómo nos conoció?",

@@ -15,7 +15,6 @@ import { Opciones, OpcionesMultiples } from "@/components/ui/opciones";
 type IdPaso = (typeof f.pasos)[number]["id"];
 type Errores = Partial<Record<keyof Perfil, string>>;
 const CORREO = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-const CON_ACLARACION: readonly string[] = f.campos.medidaEstimada.conAclaracion;
 
 function validar(paso: IdPaso, d: Perfil, pedirCorreo: boolean): Errores {
   const e: Errores = {};
@@ -61,6 +60,7 @@ export function FormPerfil() {
   const total = f.pasos.length;
   const actual = f.pasos[paso];
   const origenes = d.comoNosConocio ? d.comoNosConocio.split(", ") : [];
+  const aclaracion = d.medidaEstimada ? f.campos.medidaEstimada.aclaraciones[d.medidaEstimada] : undefined;
 
   const poner = <K extends keyof Perfil>(k: K, v: Perfil[K]) => {
     setDatos({ ...d, [k]: v });
@@ -221,13 +221,16 @@ export function FormPerfil() {
                   <Opciones
                     nombre="medidaEstimada"
                     etiqueta={f.campos.medidaEstimada.etiqueta}
+                    ayuda={f.campos.medidaEstimada.ayuda}
                     opciones={f.campos.medidaEstimada.opciones}
                     valor={d.medidaEstimada}
                     alCambiar={(v) => poner("medidaEstimada", v)}
                     error={errores.medidaEstimada}
                   />
-                  {d.medidaEstimada && CON_ACLARACION.includes(d.medidaEstimada) && (
-                    <Nota role="status" tono="info" titulo={f.campos.medidaEstimada.noSabe} className="mt-3" />
+                  {aclaracion && (
+                    <Nota key={d.medidaEstimada} role="status" tono="info" titulo={aclaracion.titulo} className="mt-3">
+                      {aclaracion.texto}
+                    </Nota>
                   )}
                 </div>
               </>

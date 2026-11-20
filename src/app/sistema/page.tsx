@@ -144,7 +144,7 @@ export default function SistemaVisual() {
             </div>
             <div>
               <dt className="mb-2 text-meta text-muted-foreground">Entrada · Manrope · 18px</dt>
-              <dd className="max-w-prose text-entrada text-secondary-800">{formularioPerfil.campos.medidaEstimada.noSabe}</dd>
+              <dd className="max-w-prose text-entrada text-secondary-800">{formularioPerfil.campos.medidaEstimada.aclaraciones["No lo sé"].texto}</dd>
             </div>
             <div>
               <dt className="mb-2 text-meta text-muted-foreground">Cuerpo · Manrope Regular · 16px / 1,5</dt>
