@@ -25,6 +25,14 @@
 - **Perfil económico:** trabajadores informales o de oficios manuales con ingresos diarios o cercanos al salario mínimo (Bs 3.300), sin acceso a crédito bancario.
 - **Universo de referencia (SOM):** 55.400 personas en el departamento de Santa Cruz con medida mediana a severa y en pobreza o vulnerabilidad.
 - **Clínica:** el crédito es para medidas de 4 dioptrías o más (miopía, hipermetropía o astigmatismo severo). Con menos, ver la sección 4.1.
+- **Por qué desde 4 dioptrías:** con esa medida la vida diaria se complica mucho más (trabajar, leer, moverse). Por eso el crédito es para ellos.
+
+## 2.1. Medida que el cliente cree tener (registro)
+
+- En el registro se le pregunta cuántas dioptrías cree que tiene en cada ojo: menos de 4, de 4 a 6, de 6 a 10, de 10 a 12, o "No lo sé".
+- Es solo una referencia: la medida real la toma la óptica en la cita. La respuesta no aprueba ni niega el crédito.
+- Si elige **menos de 4**, se le explica que no accede al crédito y que puede comprar al contado.
+- Si elige **"No lo sé"**, se le explica que en la cita le medimos la vista y que el crédito es solo para medidas de 4 dioptrías o más, por ser las que más complican la vida diaria.
 
 ## 3. Producto
 
@@ -66,7 +74,7 @@
 2. Va a la Óptica Visionario con su carnet. La medición es gratuita si accede al crédito.
 3. Elige su montura entre las de la óptica.
 4. OptiHelp carga la orden en su ERP. El cliente la recibe en la app.
-5. Antes de firmar, completa en la app su número de carnet y su domicilio.
+5. Antes de firmar, completa en la app su número de carnet y su domicilio, y saca con la cámara del celular **una foto del frente (anverso) y otra de atrás (reverso) de su carnet**. Sin las dos fotos no puede firmar. [NOTA: en el prototipo la cámara se simula y no se guarda ninguna imagen real.]
 6. Firma el contrato con el dedo y paga por QR la cuota inicial (40%).
 7. El laboratorio tarda entre 1 y 3 días hábiles en fabricar los lentes. [PENDIENTE: plazo real del laboratorio de la óptica.] Le avisamos por WhatsApp.
 8. Recoge sus lentes en la óptica.

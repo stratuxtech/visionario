@@ -27,7 +27,7 @@ Este flujo abarca la llegada del usuario a la plataforma, su registro y la captu
         *   Edad.
         *   ¿Ha usado lentes antes? (Selección: Sí / No).
         *   ¿Ha usado medidas antes? (Selección: Sí / No).
-        *   Medida estimada (Rango numérico o selección: "No sé").
+        *   Dioptrías que cree tener en cada ojo: menos de 4, de 4 a 6, de 6 a 10, de 10 a 12, o "No lo sé". Con "menos de 4" o "No lo sé" se muestra una aclaración sobre el crédito (ver reglas, sección 2.1).
         *   ¿Cómo nos conoció? (Menú desplegable para atribución de marketing; incluye "Una ONG o fundación" y, en ese caso, el nombre de la ONG, opcional).
     *   El registro **no** pide carnet ni domicilio: se piden recién antes de firmar el contrato.
 
@@ -51,7 +51,7 @@ El usuario asiste a la óptica, se realiza la evaluación, y la interacción vue
     *   Si la ONG 1 paga la montura, la orden lo muestra y el total ya viene descontado.
     *   Si la medida es menor a 4 dioptrías, la orden es **al contado** (receta + lentes): no hay contrato y se paga una sola vez por QR.
 *   **Firma de Contrato Digital:**
-    *   Antes del texto, la persona completa su número de carnet y su domicilio.
+    *   Antes del texto, la persona completa su número de carnet y su domicilio, y saca una foto del frente y otra de atrás de su carnet con la cámara (simulada en el prototipo).
     *   Despliegue del contrato de compra en cuotas en la pantalla del dispositivo (modelo The Blink Eye: partes, fechas exactas, 3 días hábiles para ponerse al día, interés moratorio y jurisdicción).
     *   Se habilita un lienzo digital para que el usuario realice la **firma de forma táctil (con el dedo sobre la pantalla del celular)**, aceptando las condiciones de las 3 cuotas mensuales.
 *   **Pago de Cuota Inicial:**

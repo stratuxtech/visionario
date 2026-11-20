@@ -22,7 +22,7 @@ Este documento detalla las historias de usuario basadas en los flujos de la apli
 *   **Como** usuario nuevo,
 *   **quiero** llenar un formulario sencillo con mis datos (Nombre, teléfono, correo, edad, historial de uso de lentes/medidas, medida estimada y atribución de marketing),
 *   **para** crear mi perfil clínico y comercial en el sistema.
-*   *Criterios de aceptación:* El formulario debe ser intuitivo, de un solo paso o pasos cortos, e incluir opciones como "No sé" en la medida estimada.
+*   *Criterios de aceptación:* El formulario debe ser intuitivo, de un solo paso o pasos cortos, e incluir la pregunta "¿Cuántas dioptrías cree que tiene?" con 5 opciones (menos de 4, de 4 a 6, de 6 a 10, de 10 a 12 en cada ojo, y "No lo sé"). Con "menos de 4" o "No lo sé" se explica que el crédito es para medidas de 4 dioptrías o más.
 
 ---
 
@@ -54,7 +54,7 @@ Este documento detalla las historias de usuario basadas en los flujos de la apli
 *   **Como** cliente,
 *   **quiero** leer y firmar digitalmente el contrato de financiamiento dibujando con mi dedo en la pantalla del celular,
 *   **para** formalizar el pago en 3 cuotas de manera 100% digital (cero papel).
-*   *Criterios de aceptación:* Antes de firmar, la persona completa su **número de carnet** (con extensión) y su **domicilio**; el celular viene del perfil y se puede corregir. Sin esos datos no se habilita la firma. Se guardan en el perfil. El contrato sigue el modelo de The Blink Eye (partes, fechas exactas, 3 días hábiles para ponerse al día, interés moratorio y jurisdicción). Se debe desplegar un lienzo (canvas) en pantalla que capture el trazo táctil y lo guarde junto al documento.
+*   *Criterios de aceptación:* Antes de firmar, la persona completa su **número de carnet** (con extensión) y su **domicilio**, y saca con la cámara una **foto del frente (anverso) y otra de atrás (reverso) de su carnet**; el celular viene del perfil y se puede corregir. Sin esos datos y sin las dos fotos no se habilita la firma. Se guardan en el perfil. El contrato sigue el modelo de The Blink Eye (partes, fechas exactas, 3 días hábiles para ponerse al día, interés moratorio y jurisdicción). Se debe desplegar un lienzo (canvas) en pantalla que capture el trazo táctil y lo guarde junto al documento.
 
 **HU 3.3: Pago de la primera cuota**
 *   **Como** cliente con contrato firmado,

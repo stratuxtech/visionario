@@ -27,7 +27,7 @@ Esta fase es un prototipo sin backend: todo lo que depende de terceros o del tie
 ## Operating Context
 
 - Cita presencial de 60 minutos en la Óptica Visionario: medición clínica (gratis si accede al crédito) y elección de la montura entre las de la óptica.
-- Después de la cita, OptiHelp carga la orden en su ERP (lo construye el CTO aparte; aquí se simula). La persona la recibe en la app, completa su carnet y su domicilio, firma el contrato con el dedo y paga por QR la cuota inicial del 40%. Con ese pago se mandan a hacer los lentes.
+- Después de la cita, OptiHelp carga la orden en su ERP (lo construye el CTO aparte; aquí se simula). La persona la recibe en la app, completa su carnet y su domicilio, saca una foto del frente y otra de atrás de su carnet, firma el contrato con el dedo y paga por QR la cuota inicial del 40%. Con ese pago se mandan a hacer los lentes.
 - Con menos de 4 dioptrías no hay crédito: la orden es al contado (receta + lentes) y se paga una sola vez por QR, sin contrato.
 - El laboratorio de la óptica tarda entre 1 y 3 días hábiles (PENDIENTE); aviso por WhatsApp para recojo en la óptica.
 - Recordatorios de cuota por WhatsApp y en la app, con QR dinámico. Único medio de pago: QR, a OptiHelp.

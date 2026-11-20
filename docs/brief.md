@@ -73,7 +73,7 @@ Fuente completa: `optihelp_bible_brand_system.md`. Aquí solo las decisiones que
 
 1. **Landing (usuario no autenticado):** propuesta de valor, sección "Cómo funciona" con énfasis en medidas medianas a severas, y botones "Iniciar sesión" y "Registrarse".
 2. **Autenticación:** acceso con Google (SSO) y con correo y contraseña. Simulados en el prototipo.
-3. **Formulario de perfil:** pasos cortos. Nombre, WhatsApp, correo, edad, uso previo de lentes, medida estimada (con opción "No sé") y cómo nos conoció.
+3. **Formulario de perfil:** pasos cortos. Nombre, WhatsApp, correo, edad, uso previo de lentes, dioptrías que cree tener en cada ojo (con opción "No lo sé") y cómo nos conoció.
 4. **Educación del proceso:** carrusel o infografía que explica la visita, la joya y las 3 cuotas, antes de abrir el calendario.
 5. **Catálogo de 20 monturas** (10 adultos, 10 niños) visible antes de agendar. Sin monturas fuera de catálogo.
 6. **Estimador de garantía:** según la medida aproximada y el peso en gramos de la joya, muestra un valor estimado. Es referencial y debe decirlo.
