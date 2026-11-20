@@ -4,19 +4,16 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
-  ArrowRight01Icon,
   Calendar03Icon,
   CheckmarkCircle02Icon,
   Clock01Icon,
   Coupon01Icon,
-  FavouriteIcon,
   GlassesIcon,
   IdIcon,
   InformationCircleIcon,
   Location01Icon,
-  NecklaceIcon,
 } from "@hugeicons/core-free-icons";
-import { agenda, estado as textoEstado, optica, rutas } from "@/content/optihelp";
+import { agenda, optica, rutas } from "@/content/optihelp";
 import { modoCita, useApp } from "@/lib/estado";
 import { useGuardia } from "@/lib/guardias";
 import { diaCorto, enlaceGoogleCalendar, fechaCita, generarAgenda, rangoHora } from "@/lib/agenda";
@@ -30,8 +27,8 @@ import { cn } from "@/lib/utils";
 
 const iconosTraer = [IdIcon, GlassesIcon];
 
-/* La cita en la tarjeta azul oscuro: fecha, hora y lugar */
-function TarjetaCita({ inicio, titulo, confirmada, conJoya }: { inicio: string; titulo: string; confirmada: boolean; conJoya: boolean }) {
+/* La cita en la tarjeta azul oscuro: fecha, hora y lugar (Óptica Visionario) */
+function TarjetaCita({ inicio, titulo, confirmada }: { inicio: string; titulo: string; confirmada: boolean }) {
   const cupon = useApp((s) => s.cupon);
   return (
     <section aria-labelledby="tarjeta-cita" className="relative animate-entrar overflow-hidden rounded-[2rem] bg-secondary-950 p-5 text-white shadow-lg lg:p-7">
@@ -72,14 +69,6 @@ function TarjetaCita({ inicio, titulo, confirmada, conJoya }: { inicio: string; 
           </div>
         </div>
       </dl>
-      {conJoya && (
-        <p className="mt-5 flex items-center gap-3 rounded-2xl bg-oro-300 px-3 py-2.5 font-bold text-secondary-950">
-          <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-white text-oro-800">
-            <HugeiconsIcon icon={NecklaceIcon} size={20} strokeWidth={2} aria-hidden />
-          </span>
-          {agenda.joyaAviso}
-        </p>
-      )}
       {cupon && (
         <p className="mt-3 inline-flex items-center gap-2 rounded-full bg-secondary-800 px-3 py-1 text-meta font-bold text-primary-300">
           <HugeiconsIcon icon={Coupon01Icon} size={16} strokeWidth={2} aria-hidden />
@@ -127,7 +116,6 @@ export function Agenda() {
   const cita = useApp((s) => s.cita);
   const modo = useApp(modoCita);
   const cupon = useApp((s) => s.cupon);
-  const interes = useApp((s) => s.monturasInteres.length);
   const preelegido = useApp((s) => s.horarioPreelegido);
   const agendarCita = useApp((s) => s.agendarCita);
   const desfase = useApp((s) => s.desfaseDias);
@@ -154,7 +142,6 @@ export function Agenda() {
           inicio={cita.inicio}
           titulo={modo === "realizada" ? agenda.tarjeta.realizada : agenda.tarjeta.reservada}
           confirmada={recien && modo === "reservada"}
-          conJoya={modo === "reservada"}
         />
         {modo === "reservada" ? (
           <>
@@ -176,16 +163,6 @@ export function Agenda() {
               />
             )}
             <QueTraer />
-            {interes > 0 && (
-              <Link
-                href={rutas.monturas}
-                className="tarjeta mt-4 flex items-center gap-3 p-4 text-secondary-900 no-underline transition-transform duration-300 hover:-translate-y-0.5 hover:shadow-md"
-              >
-                <HugeiconsIcon icon={FavouriteIcon} size={20} strokeWidth={2} aria-hidden className="shrink-0 text-primary-800 [&_path]:fill-current" />
-                <span className="flex-1 text-meta font-semibold">{textoEstado.monturasInteres(interes)}</span>
-                <HugeiconsIcon icon={ArrowRight01Icon} size={18} strokeWidth={2} aria-hidden className="text-secondary-600" />
-              </Link>
-            )}
           </>
         ) : (
           <Button asChild size="lg" className="mt-4">
@@ -250,7 +227,7 @@ export function Agenda() {
           </Button>
         )}
 
-        <Nota tono="oro" titulo={agenda.joyaAviso} />
+        <Nota tono="info" icono={IdIcon} titulo={agenda.carnetAviso} />
 
         {cupon && (
           <Nota tono="exito" icono={Coupon01Icon} className="mt-3" titulo={cupon.producto ? `${cupon.porcentaje}% de descuento en ${cupon.producto.toLowerCase()}` : agenda.cupon(cupon.porcentaje)}>

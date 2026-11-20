@@ -2,18 +2,19 @@ import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 import {
   AlertCircleIcon,
   CheckmarkCircle02Icon,
+  GiftIcon,
   InformationCircleIcon,
-  NecklaceIcon,
 } from "@hugeicons/core-free-icons";
 import { cn } from "@/lib/utils";
 
+/** `oro`: solo beneficios (montura pagada por la ONG, descuento en gafas de sol) */
 type Tono = "info" | "exito" | "alerta" | "oro" | "oscuro";
 
 const tonos: Record<Tono, { caja: string; chip: string; icono: IconSvgElement }> = {
   info: { caja: "bg-primary-50 ring-primary-100 text-secondary-800", chip: "bg-white text-primary-700 shadow-xs", icono: InformationCircleIcon },
   exito: { caja: "bg-exito-50 ring-exito-100 text-exito-800", chip: "bg-white text-exito-700 shadow-xs", icono: CheckmarkCircle02Icon },
   alerta: { caja: "bg-alerta-50 ring-alerta-100 text-alerta-700", chip: "bg-white text-alerta-600 shadow-xs", icono: AlertCircleIcon },
-  oro: { caja: "bg-oro-100 ring-oro-200 text-oro-800", chip: "bg-white text-oro-800 shadow-xs", icono: NecklaceIcon },
+  oro: { caja: "bg-oro-100 ring-oro-200 text-oro-800", chip: "bg-white text-oro-800 shadow-xs", icono: GiftIcon },
   oscuro: { caja: "bg-secondary-950 ring-white/10 text-secondary-200", chip: "bg-white/10 text-primary-300", icono: InformationCircleIcon },
 };
 

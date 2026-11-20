@@ -4,9 +4,9 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { CheckmarkCircle02Icon, NecklaceIcon, SunglassesIcon } from "@hugeicons/core-free-icons";
+import { CheckmarkCircle02Icon, ShoppingBag01Icon, SunglassesIcon } from "@hugeicons/core-free-icons";
 import { cupones, liquidacion as t, negocio, rutas } from "@/content/optihelp";
-import { useApp } from "@/lib/estado";
+import { esContado, useApp } from "@/lib/estado";
 import { useGuardia } from "@/lib/guardias";
 import { BarraApp } from "@/components/app/barras";
 import { BarraCuotas } from "@/components/cuotas/barra-cuotas";
@@ -17,20 +17,22 @@ export function Felicitacion() {
   const router = useRouter();
   const listo = useGuardia();
   const liquidado = useApp((s) => s.liquidadoEl);
+  /* El contado no tiene pantalla de cliente cumplido */
+  const contado = useApp((s) => esContado(s.orden));
   const cupon = useApp((s) => s.cupon);
   const usarBeneficio = useApp((s) => s.usarBeneficio);
   const b = cupones.liquidacion;
   const usado = cupon?.codigo === b.codigo;
 
   useEffect(() => {
-    if (listo && !liquidado) router.replace(rutas.panel);
-  }, [listo, liquidado, router]);
+    if (listo && (!liquidado || contado)) router.replace(rutas.panel);
+  }, [listo, liquidado, contado, router]);
 
-  if (!listo || !liquidado) return null;
+  if (!listo || !liquidado || contado) return null;
 
   return (
     <>
-      <BarraApp titulo="¡Felicidades!" />
+      <BarraApp titulo={t.barra} />
       <main className="contenedor flex-1 pt-10 pb-16 lg:pt-16">
         <div className="grid gap-10 lg:grid-cols-2 lg:items-start lg:gap-16">
           <section className="text-center lg:text-left">
@@ -43,25 +45,15 @@ export function Felicitacion() {
               <BarraCuotas pagadas={negocio.cuotas.cantidad} total={negocio.cuotas.cantidad} animarUltima />
               <p className="mt-3 flex items-center justify-center gap-2 text-meta font-bold text-exito-800 lg:justify-start">
                 <HugeiconsIcon icon={CheckmarkCircle02Icon} size={18} strokeWidth={2} aria-hidden />
-                3 de 3 cuotas pagadas
+                {t.pagadas(negocio.cuotas.cantidad)}
               </p>
             </div>
           </section>
 
           <div className="space-y-4">
-            <section className="flex animate-entrar items-start gap-4 rounded-[2rem] bg-oro-100 p-5 ring-1 ring-oro-200 [animation-delay:400ms]">
-              <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white text-oro-800 shadow-sm">
-                <HugeiconsIcon icon={NecklaceIcon} size={24} strokeWidth={1.75} aria-hidden />
-              </span>
-              <div>
-                <h2 className="text-bloque">{t.joya.titulo}</h2>
-                <p className="mt-1 text-secondary-800">{t.joya.texto}</p>
-              </div>
-            </section>
-
             <section aria-labelledby="beneficio" className="animate-entrar overflow-hidden rounded-[2rem] bg-secondary-950 text-white shadow-lg [animation-delay:550ms]">
               <div className="p-5 lg:p-7">
-                <span className="flex size-12 items-center justify-center rounded-full bg-primary-600 text-white shadow-brillo">
+                <span className="flex size-12 items-center justify-center rounded-full bg-oro-300 text-oro-800">
                   <HugeiconsIcon icon={SunglassesIcon} size={26} strokeWidth={1.75} aria-hidden />
                 </span>
                 <h2 id="beneficio" className="mt-4 font-titulo text-seccion text-white">
@@ -94,6 +86,12 @@ export function Felicitacion() {
               </div>
             </section>
 
+            <p className="flex items-center gap-3 rounded-2xl bg-white p-4 font-semibold text-secondary-900 shadow-xs">
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary-50 text-primary-700">
+                <HugeiconsIcon icon={ShoppingBag01Icon} size={20} strokeWidth={1.8} aria-hidden />
+              </span>
+              {t.volverAComprar}
+            </p>
             <p className="text-meta text-secondary-700">{t.renovacion}</p>
             <Button asChild variant="outline">
               <Link href={rutas.panel}>{t.volver}</Link>

@@ -9,12 +9,11 @@ import {
   Calendar03Icon,
   Cancel01Icon,
   Coins01Icon,
-  GlassesIcon,
   MedicalFileIcon,
   Notification01Icon,
   RouteIcon,
 } from "@hugeicons/core-free-icons";
-import { navegacion, rutas } from "@/content/optihelp";
+import { marca, navegacion, rutas } from "@/content/optihelp";
 import { situacionActual, useApp, useHidratado } from "@/lib/estado";
 import { Avatar } from "@/components/app/avatar";
 import { Logo } from "@/components/marca/logo";
@@ -82,31 +81,12 @@ export function BarraMarca({ children, enlaceLogo = rutas.inicio }: { children?:
   return (
     <header className={estiloBarra}>
       <div className="contenedor flex h-16 items-center justify-between gap-3 lg:h-20">
-        <Link href={enlaceLogo} className="rounded-sm" aria-label="Visionario, ir al inicio">
+        <Link href={enlaceLogo} className="rounded-sm" aria-label={marca.irAlInicio}>
           <Logo prioridad className="w-32 lg:w-40" />
         </Link>
         {children && <div className="flex items-center gap-2 lg:gap-3">{children}</div>}
       </div>
     </header>
-  );
-}
-
-/** Monturas: acceso rápido al catálogo, a la izquierda de Mi cuenta. */
-export function BotonMonturas() {
-  const ruta = usePathname();
-  const actual = ruta.startsWith(rutas.monturas);
-  return (
-    <Link
-      href={rutas.monturas}
-      aria-current={actual ? "page" : undefined}
-      aria-label={navegacion.monturas}
-      className={cn(
-        "flex size-11 items-center justify-center rounded-full text-secondary-800 transition-[background-color,transform] duration-300 hover:-translate-y-0.5 hover:bg-primary-50",
-        actual && "bg-primary-50 text-primary-700",
-      )}
-    >
-      <HugeiconsIcon icon={GlassesIcon} size={24} strokeWidth={1.8} aria-hidden />
-    </Link>
   );
 }
 
@@ -128,8 +108,8 @@ export function BotonCuenta() {
 
 /**
  * Barra superior de las pantallas de la app: el título de la pantalla a la
- * izquierda (en celular y en computadora) y, a la derecha, monturas y
- * Mi cuenta. Blanca.
+ * izquierda (en celular y en computadora) y, a la derecha, Mi cuenta.
+ * Blanca.
  */
 export function BarraApp({ titulo }: { titulo: string }) {
   return (
@@ -139,7 +119,6 @@ export function BarraApp({ titulo }: { titulo: string }) {
           {titulo}
         </p>
         <div className="flex shrink-0 items-center gap-1">
-          <BotonMonturas />
           <BotonCuenta />
         </div>
       </div>
@@ -206,7 +185,7 @@ export function BarraFlujo({
   return (
     <header className={estiloBarra}>
       <div className="mx-auto flex h-16 w-full items-center gap-2 px-2 lg:h-20 lg:max-w-6xl lg:gap-4 lg:px-10">
-        <Link href={rutas.inicio} className="mr-2 hidden rounded-sm lg:block" aria-label="Visionario, ir al inicio">
+        <Link href={rutas.inicio} className="mr-2 hidden rounded-sm lg:block" aria-label={marca.irAlInicio}>
           <Logo className="w-36" />
         </Link>
         <span className="hidden h-8 w-px bg-border lg:block" aria-hidden />

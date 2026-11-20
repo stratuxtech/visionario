@@ -4,7 +4,7 @@ import Link from "next/link";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Clock01Icon, Coins01Icon, Tick02Icon } from "@hugeicons/core-free-icons";
 import { cuotasPanel as c, navegacion, negocio, orden as textoOrden, rutas, textos } from "@/content/optihelp";
-import { cuotasPagadas, diasHasta, finDeGracia, generarCuotas, proximaCuota, useApp } from "@/lib/estado";
+import { cuotasPagadas, diasHasta, esContado, fechaLimiteRegularizar, generarCuotas, proximaCuota, useApp } from "@/lib/estado";
 import { useGuardia } from "@/lib/guardias";
 import { bs, fecha } from "@/lib/utils";
 import { PantallaApp } from "@/components/app/barras";
@@ -15,14 +15,17 @@ import { EstadoCuota } from "@/components/ui/estado-cuota";
 import { Nota } from "@/components/ui/nota";
 import { cn } from "@/lib/utils";
 
-/** Aviso de vencimiento: cuota vencida (con fin de gracia) o próxima a vencer. */
+/** Aviso de vencimiento: cuota vencida (con su fecha límite de 3 días hábiles) o próxima a vencer. */
 function Alerta() {
   const cuotas = useApp((s) => s.cuotas);
   const vencida = cuotas.find((x) => x.estado === "vencida");
   const proxima = proximaCuota(cuotas);
   if (vencida) {
-    const limite = finDeGracia(cuotas);
-    return <Nota tono="alerta" role="alert" titulo={c.alertaVencida.titulo}>{c.alertaVencida.texto(limite ? fecha(limite) : "")}</Nota>;
+    return (
+      <Nota tono="alerta" role="alert" titulo={c.alertaVencida.titulo}>
+        {c.alertaVencida.texto(fecha(fechaLimiteRegularizar(vencida.vence)))}
+      </Nota>
+    );
   }
   if (proxima && proxima.numero > 1) {
     const dias = diasHasta(proxima.vence);
@@ -56,11 +59,48 @@ export function MisPagos() {
           titulo={c.vacia.titulo}
           texto={c.vacia.texto}
           chips={[
-            { emoji: "📱", texto: "Pago por QR" },
-            { emoji: "✅", texto: "3 cuotas iguales", tono: "exito" },
-            { emoji: "💛", texto: "Sin intereses", tono: "oro" },
+            { emoji: "📱", texto: c.vacia.chips.qr },
+            { emoji: "✅", texto: c.vacia.chips.cuotas, tono: "exito" },
+            { emoji: "🤝", texto: c.vacia.chips.garantia, tono: "azul" },
           ]}
         />
+      </PantallaApp>
+    );
+  }
+
+  /* Orden al contado: un solo pago por QR, sin contrato */
+  if (esContado(orden)) {
+    const unico = cuotas[0];
+    const pagada = unico?.estado === "pagada";
+    return (
+      <PantallaApp titulo={titulo}>
+        <h2 className="font-titulo text-seccion text-secondary-950">{c.contado.titulo}</h2>
+        <p className="mt-1 text-secondary-700">{c.contado.texto}</p>
+        <section className="tarjeta mt-5 flex items-center gap-3 p-4 lg:p-5">
+          <span
+            className={cn(
+              "flex size-11 shrink-0 items-center justify-center rounded-full font-titulo font-bold",
+              pagada ? "bg-exito-500 text-white" : "bg-primary-600 text-white shadow-brillo",
+            )}
+          >
+            {pagada ? <HugeiconsIcon icon={Tick02Icon} size={20} strokeWidth={2.75} aria-hidden /> : 1}
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="font-bold text-secondary-950">
+              {textoOrden.contado.total} <span className="cifras font-semibold text-secondary-700">· {bs(orden.total)}</span>
+            </p>
+            {pagada && unico?.pagadaEl && <p className="cifras text-meta text-muted-foreground">{c.contado.pagado(fecha(unico.pagadaEl))}</p>}
+          </div>
+          {unico && <EstadoCuota estado={unico.estado} />}
+        </section>
+        {!pagada && (
+          <Button asChild size="lg" className="mt-6">
+            <Link href={rutas.pago}>
+              {c.contado.accion}
+              <Flecha />
+            </Link>
+          </Button>
+        )}
       </PantallaApp>
     );
   }
@@ -72,7 +112,7 @@ export function MisPagos() {
       <PantallaApp titulo={titulo}>
         <h2 className="font-titulo text-seccion text-secondary-950">{c.plan.titulo}</h2>
         <p className="cifras mt-1 text-secondary-700">
-          {bs(orden.total)} · {negocio.cuotas.cantidad} cuotas iguales
+          {c.plan.resumen(bs(orden.total))}
         </p>
         <ol className="mt-5 grid grid-cols-3 gap-2.5">
           {plan.map((x, i) => (
@@ -80,6 +120,7 @@ export function MisPagos() {
               <span className="mx-auto flex size-8 items-center justify-center rounded-full bg-primary-50 font-titulo font-bold text-primary-700">{x.numero}</span>
               <p className="cifras mt-3 font-titulo text-bloque font-bold text-secondary-950">{bs(x.monto)}</p>
               <p className="text-mini text-muted-foreground">{textoOrden.cuandoCuota[i]}</p>
+              <p className="cifras mt-1 text-mini font-bold text-secondary-800">{fecha(x.vence)}</p>
             </li>
           ))}
         </ol>
@@ -105,7 +146,7 @@ export function MisPagos() {
       <div className="space-y-5">
         <Alerta />
 
-        <section aria-label="Resumen de sus cuotas" className="relative overflow-hidden rounded-[2rem] bg-secondary-950 p-5 text-white shadow-lg lg:p-7">
+        <section aria-label={c.resumen} className="relative overflow-hidden rounded-[2rem] bg-secondary-950 p-5 text-white shadow-lg lg:p-7">
           <span aria-hidden className="absolute -top-16 -right-16 size-48 rounded-full bg-primary-500/40 blur-3xl" />
           <div className="relative">
             <p className="font-titulo text-bloque font-bold text-white lg:text-[1.5rem]">{textos.progresoCuotas(pagadas, total)}</p>
@@ -152,7 +193,7 @@ export function MisPagos() {
                   </span>
                   <div className="min-w-0 flex-1">
                     <p className="font-bold text-secondary-950">
-                      Cuota {x.numero} <span className="cifras font-semibold text-secondary-700">· {bs(x.monto)}</span>
+                      {c.cuota(x.numero, textos.porcentaje(x.porcentaje))} <span className="cifras font-semibold text-secondary-700">· {bs(x.monto)}</span>
                     </p>
                     <p className="cifras text-meta text-muted-foreground">
                       {pagada && x.pagadaEl ? c.pagadaEl(fecha(x.pagadaEl)) : c.venceEl(fecha(x.vence))}

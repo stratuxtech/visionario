@@ -6,9 +6,8 @@ import { Simulador } from "@/components/demo/simulador";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: { default: `${marca.nombre} · Lentes a medida en 3 cuotas`, template: `%s · ${marca.nombre}` },
-  description:
-    "Lentes tallados a medida para medidas medianas y severas en Santa Cruz de la Sierra. Pague en 3 cuotas sin intereses con una joya de oro como garantía.",
+  title: { default: `${marca.nombre} · ${marca.lema}`, template: `%s · ${marca.nombre}` },
+  description: marca.descripcion,
   robots: { index: false, follow: false },
   appleWebApp: { capable: true, title: marca.nombre, statusBarStyle: "default" },
 };

@@ -3,18 +3,18 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   ArrowRight01Icon,
   Cancel01Icon,
   CheckmarkCircle02Icon,
-  NecklaceIcon,
+  GlassesIcon,
+  IdIcon,
   SecurityCheckIcon,
   Tick02Icon,
   WhatsappIcon,
 } from "@hugeicons/core-free-icons";
-import { landing, rutas, textos } from "@/content/optihelp";
+import { landing, negocio, rutas, textos } from "@/content/optihelp";
 import { siguienteRuta, useApp, useHidratado } from "@/lib/estado";
 import { diaRelativo, proximosLibres, rangoHora } from "@/lib/agenda";
 import { Button, Flecha } from "@/components/ui/button";
@@ -22,7 +22,7 @@ import { ChipFlotante } from "@/components/ui/chip-flotante";
 import { ConNegrita } from "@/components/ui/con-negrita";
 import { Segmentado } from "@/components/ui/opciones";
 import { CodigoQR } from "@/components/pago/codigo-qr";
-import { cn } from "@/lib/utils";
+import { bs, cn, repartirCuotas } from "@/lib/utils";
 
 /** A dónde lleva "agendar" según el avance de la persona. */
 function useDestinoAgendar() {
@@ -73,7 +73,7 @@ export function BotonVerComo({ className, block, variante = "outline" }: { class
 }
 
 /* ------------------------------------------------------------------ */
-/* Hoy vs. con Visionario (referencia: "Sin Pling / Con Pling")        */
+/* Hoy vs. con OptiHelp (referencia: "Sin Pling / Con Pling")         */
 /* ------------------------------------------------------------------ */
 
 export function Comparacion() {
@@ -176,38 +176,44 @@ function PantallaAgenda() {
           </li>
         ))}
       </ul>
-      <p className="mt-4 flex items-center gap-1.5 rounded-full bg-oro-100 px-3 py-1.5 text-mini text-oro-800">
-        <HugeiconsIcon icon={NecklaceIcon} size={14} strokeWidth={2} aria-hidden />
-        Traiga su joya de oro de 18k
+      <p className="mt-4 flex items-center gap-1.5 rounded-full bg-primary-100 px-3 py-1.5 text-mini text-primary-800">
+        <HugeiconsIcon icon={IdIcon} size={14} strokeWidth={2} aria-hidden />
+        {landing.celular.traiga}
       </p>
     </div>
   );
 }
 
-/** Pantalla 2: la joya tasada y en custodia. */
+/* Ejemplo del celular: la orden de una medida media (precio referencial) */
+const ejemplo = negocio.precioReferencial.perfiles.find((p) => p.id === "medio")!.precio;
+const inicialEjemplo = repartirCuotas(ejemplo)[0].monto;
+
+/** Pantalla 2: la orden con la montura de la óptica y la cuota inicial. */
 function PantallaOptica() {
+  const t = landing.celular.orden;
   return (
     <div className="space-y-3 px-4">
-      <p className="font-titulo text-bloque font-bold text-secondary-950">Su orden</p>
-      <div className="animate-entrar overflow-hidden rounded-2xl bg-white shadow-xs">
-        <div className="relative h-24">
-          <Image src="/fotos/montura-negra.jpg" alt="" fill sizes="240px" className="object-cover" />
-        </div>
-        <p className="px-3 pt-2 text-mini font-semibold text-secondary-600">Montura</p>
-        <p className="px-3 pb-2.5 text-meta font-bold text-secondary-950">Sajama · A-03</p>
-      </div>
-      <div className="flex animate-entrar items-center gap-3 rounded-2xl bg-white p-3 shadow-xs [animation-delay:120ms]">
-        <span className="relative size-12 shrink-0 overflow-hidden rounded-xl">
-          <Image src="/fotos/cadena-oro.jpg" alt="" fill sizes="48px" className="object-cover" />
+      <p className="font-titulo text-bloque font-bold text-secondary-950">{t.titulo}</p>
+      <div className="flex animate-entrar items-center gap-3 rounded-2xl bg-white p-3 shadow-xs">
+        <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-700">
+          <HugeiconsIcon icon={GlassesIcon} size={24} strokeWidth={1.75} aria-hidden />
         </span>
         <span className="min-w-0">
-          <span className="block text-mini font-semibold text-secondary-600">Garantía en custodia</span>
-          <span className="block text-meta font-bold text-secondary-950">Tasada en Bs 1.800</span>
+          <span className="block text-meta font-bold text-secondary-950">{t.montura}</span>
+          <span className="block text-mini font-semibold text-secondary-600">{t.monturaDetalle}</span>
+        </span>
+      </div>
+      <div className="animate-entrar rounded-2xl bg-secondary-950 p-3 text-white shadow-xs [animation-delay:120ms]">
+        <span className="block text-mini font-semibold text-secondary-300">{t.total}</span>
+        <span className="cifras block font-titulo text-[1.5rem] leading-tight font-bold">{bs(ejemplo)}</span>
+        <span className="mt-2 flex items-center justify-between gap-2 rounded-xl bg-white/10 px-2.5 py-1.5 text-mini">
+          <span className="text-secondary-200">{t.inicial}</span>
+          <span className="cifras font-bold text-white">{bs(inicialEjemplo)}</span>
         </span>
       </div>
       <p className="flex animate-entrar items-center gap-1.5 rounded-full bg-exito-50 px-3 py-1.5 text-mini text-exito-800 [animation-delay:240ms]">
         <HugeiconsIcon icon={SecurityCheckIcon} size={14} strokeWidth={2} aria-hidden />
-        Guardada en bóveda externa
+        {t.sinGarantia}
       </p>
     </div>
   );
@@ -217,23 +223,23 @@ function PantallaOptica() {
 function PantallaPago() {
   return (
     <div className="space-y-3 px-4">
-      <p className="font-titulo text-bloque font-bold text-secondary-950">Cuota 1 de 3</p>
-      <p className="cifras -mt-2 font-titulo text-[1.75rem] font-bold text-secondary-950">Bs 300</p>
+      <p className="font-titulo text-bloque font-bold text-secondary-950">{landing.celular.pago.titulo}</p>
+      <p className="cifras -mt-2 font-titulo text-[1.75rem] font-bold text-secondary-950">{bs(inicialEjemplo)}</p>
       <div className="mx-auto w-36 animate-entrar">
-        <CodigoQR semilla="landing" etiqueta="Código QR de ejemplo" />
+        <CodigoQR semilla="landing" etiqueta={landing.celular.qr} />
       </div>
       <p className="flex animate-entrar items-center justify-center gap-1.5 rounded-full bg-exito-50 px-3 py-1.5 text-mini text-exito-800 [animation-delay:150ms]">
         <HugeiconsIcon icon={CheckmarkCircle02Icon} size={14} strokeWidth={2} aria-hidden />
-        Pago recibido
+        {landing.celular.pago.recibido}
       </p>
       <div className="flex animate-aviso items-start gap-2 rounded-2xl bg-white p-2.5 shadow-md [animation-delay:600ms]">
         <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-exito-500 text-white">
           <HugeiconsIcon icon={WhatsappIcon} size={16} strokeWidth={2} aria-hidden />
         </span>
         <span className="text-mini text-secondary-800">
-          <b>Visionario</b>
+          <b>{landing.celular.pago.remitente}</b>
           <br />
-          ¡Sus lentes están listos! Recójalos en la óptica.
+          {landing.celular.pago.mensaje}
         </span>
       </div>
     </div>
@@ -241,20 +247,7 @@ function PantallaPago() {
 }
 
 const pantallas = [PantallaAgenda, PantallaOptica, PantallaPago];
-const chipsPorPaso = [
-  [
-    { emoji: "📅", texto: "60 min para usted" },
-    { emoji: "👓", texto: "Medición gratis" },
-  ],
-  [
-    { emoji: "💎", texto: "Joya tasada" },
-    { emoji: "🕶️", texto: "20 monturas" },
-  ],
-  [
-    { emoji: "📱", texto: "Pago por QR" },
-    { emoji: "🎉", texto: "¡Listos!" },
-  ],
-];
+const chipsPorPaso = landing.celular.chips;
 
 export function PasosInteractivos() {
   const [paso, setPaso] = useState(0);

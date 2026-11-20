@@ -1,11 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { CheckmarkCircle02Icon, File01Icon, NecklaceIcon } from "@hugeicons/core-free-icons";
-import { monturas, negocio, orden as t, rutas } from "@/content/optihelp";
-import { generarCuotas, useApp } from "@/lib/estado";
+import { CheckmarkCircle02Icon, File01Icon, GiftIcon, InformationCircleIcon } from "@hugeicons/core-free-icons";
+import { negocio, orden as t, rutas, textos } from "@/content/optihelp";
+import { cuotasPagadas, esContado, generarCuotas, useApp } from "@/lib/estado";
 import { useGuardia } from "@/lib/guardias";
 import { bs, dioptria, fecha } from "@/lib/utils";
 import { AccionFija, BarraFlujo } from "@/components/app/barras";
@@ -29,6 +28,7 @@ export function DetalleOrden() {
   const listo = useGuardia({ sesion: true });
   const o = useApp((s) => s.orden);
   const r = useApp((s) => s.receta);
+  const cuotas = useApp((s) => s.cuotas);
   const contratoFirmado = useApp((s) => s.contrato);
   if (!listo) return null;
 
@@ -41,10 +41,10 @@ export function DetalleOrden() {
             icono={File01Icon}
             titulo={t.vacia.titulo}
             texto={t.vacia.texto}
-            chips={[{ emoji: "👓", texto: "Sus lentes" }, { emoji: "💛", texto: "Su joya", tono: "oro" }]}
+            chips={[{ emoji: "👓", texto: t.vacia.chips.lentes }, { emoji: "🕶️", texto: t.vacia.chips.montura, tono: "azul" }]}
           >
             <Button asChild variant="outline">
-              <Link href={rutas.panel}>Ir a mi estado</Link>
+              <Link href={rutas.panel}>{t.vacia.accion}</Link>
             </Button>
           </EstadoVacio>
         </main>
@@ -52,44 +52,60 @@ export function DetalleOrden() {
     );
   }
 
-  const montura = monturas.find((m) => m.id === o.monturaId);
-  const joya = o.joya;
+  const contado = esContado(o);
+  const pagadoContado = contado && cuotasPagadas(cuotas) > 0 ? cuotas[0] : null;
   const nombresTrat = o.tratamientos
     .map((id) => negocio.tratamientos.find((x) => x.id === id)?.nombre)
     .filter(Boolean)
     .join(", ");
-  const plan = generarCuotas(o.total, new Date().toISOString());
+  /* Antes de firmar, las fechas se cuentan desde hoy; después, las del contrato */
+  const plan = contratoFirmado ? cuotas : generarCuotas(o.total, new Date().toISOString());
+  const ong = o.montura.cubiertaPor;
 
   return (
     <>
-      <BarraFlujo titulo={t.titulo} paso={contratoFirmado ? undefined : 1} total={contratoFirmado ? undefined : 3} volverA={rutas.panel} />
+      <BarraFlujo
+        titulo={contado ? t.contado.titulo : t.titulo}
+        paso={contado ? (pagadoContado ? undefined : 1) : contratoFirmado ? undefined : 1}
+        total={contado ? (pagadoContado ? undefined : 2) : contratoFirmado ? undefined : 3}
+        volverA={rutas.panel}
+      />
 
       <main className="contenedor-flujo flex-1 animate-paso-adelante pt-4 pb-36 lg:pt-10 lg:pb-8">
-        {/* La montura elegida, en grande */}
-        <div className="relative aspect-[16/10] overflow-hidden rounded-[2rem] bg-primary-50 shadow-md ring-4 ring-white">
-          {montura?.imagen && <Image src={montura.imagen} alt={`Montura ${montura.nombre}`} fill priority sizes="(min-width: 1024px) 640px, 100vw" className="object-cover" />}
-          <span aria-hidden className="absolute inset-0 bg-linear-to-t from-secondary-950/70 to-transparent" />
-          <div className="cifras absolute inset-x-4 bottom-3 flex items-end justify-between gap-3 text-white">
-            <span>
-              <span className="block font-titulo text-bloque font-bold text-white">{montura?.nombre}</span>
-              <span className="text-meta text-secondary-100">
-                {t.recibida} {fecha(o.recibidaEl)}
-              </span>
-            </span>
-            <span className="vidrio rounded-full px-3 py-1 text-mini text-secondary-950">
-              {t.numero} {o.numero}
-            </span>
+        {/* Encabezado: de dónde viene la orden */}
+        <header className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2 className="font-titulo text-seccion leading-tight text-secondary-950">{t.encabezado}</h2>
+            <p className="cifras mt-1 text-meta text-muted-foreground">
+              {t.recibida} {fecha(o.recibidaEl)}
+            </p>
           </div>
-        </div>
+          <span className="cifras rounded-full bg-primary-50 px-3 py-1 text-mini text-primary-800">
+            {t.numero} {o.numero}
+          </span>
+        </header>
+
+        {contado && (
+          <p className="mt-5 flex items-start gap-3 rounded-2xl bg-primary-50 p-4 text-secondary-800 ring-1 ring-primary-100">
+            <HugeiconsIcon icon={InformationCircleIcon} size={22} strokeWidth={2} aria-hidden className="mt-0.5 shrink-0 text-primary-700" />
+            <span className="font-semibold">{t.contado.aviso}</span>
+          </p>
+        )}
 
         <dl className="tarjeta mt-5 divide-y divide-border p-5">
           <Fila etiqueta={t.lente}>{o.lente}</Fila>
           <Fila etiqueta={t.tratamientos}>{nombresTrat || t.sinTratamiento}</Fila>
           <Fila etiqueta={t.montura}>
-            {montura?.nombre}
-            <span className="block text-meta font-normal text-muted-foreground">
-              {montura ? (montura.publico === "adultos" ? "Adultos" : "Niños") : ""}
+            {o.montura.descripcion}
+            <span className="cifras block text-meta font-normal text-muted-foreground">
+              {bs(o.montura.valor)} · {t.monturaIncluida}
             </span>
+            {ong && (
+              <span className="cifras mt-2 inline-flex items-center gap-2 rounded-full bg-oro-100 px-3 py-1 text-meta font-bold text-oro-800 ring-1 ring-oro-200">
+                <HugeiconsIcon icon={GiftIcon} size={16} strokeWidth={2} aria-hidden />
+                {t.montoOng.replace("{ong}", ong)}: −{bs(o.montura.valor)}
+              </span>
+            )}
           </Fila>
           {r && (
             <Fila etiqueta={t.receta}>
@@ -106,55 +122,85 @@ export function DetalleOrden() {
               </Link>
             </Fila>
           )}
-          <Fila etiqueta={t.joya}>
-            <span className="flex items-center justify-between gap-4">
-              <span>
-                {joya?.descripcion ?? negocio.garantia.joya}
-                {joya && (
-                  <span className="cifras mt-1 block text-meta font-normal text-muted-foreground">
-                    {t.tasada} <strong className="font-bold text-secondary-950">{bs(joya.tasacion)}</strong>
-                  </span>
-                )}
-              </span>
-              {/* Foto de la joya que dejó en garantía; mientras no esté, queda su espacio */}
-              <span className="relative flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-oro-100 text-oro-800 ring-2 ring-oro-200">
-                {joya?.foto ? (
-                  <Image src={joya.foto} alt="Foto de su joya" fill sizes="80px" className="object-cover" />
-                ) : (
-                  <HugeiconsIcon icon={NecklaceIcon} size={32} strokeWidth={1.25} aria-hidden />
-                )}
-              </span>
-            </span>
-          </Fila>
+          <Fila etiqueta={t.atiende.etiqueta}>{t.atiende.valor}</Fila>
+          {!contado && <Fila etiqueta={t.financia.etiqueta}>{t.financia.valor}</Fila>}
         </dl>
 
-        <section aria-labelledby="total" className="relative mt-5 overflow-hidden rounded-[2rem] bg-secondary-950 p-5 text-white shadow-lg lg:p-7">
-          <span aria-hidden className="absolute -top-16 -right-16 size-48 rounded-full bg-primary-500/40 blur-3xl" />
-          <h2 id="total" className="text-meta font-semibold text-secondary-300">
-            {t.total}
-          </h2>
-          <p className="cifras mt-1 font-titulo text-cifra text-white">{bs(o.total)}</p>
-          <p className="mt-1 flex items-center gap-2 text-meta text-secondary-200">
-            <HugeiconsIcon icon={CheckmarkCircle02Icon} size={18} strokeWidth={2} aria-hidden className="text-exito-400" />
-            {t.sinIntereses}
-          </p>
-          <h3 className="mt-6 text-meta font-semibold text-secondary-300">{t.plan}</h3>
-          <ol className="relative mt-3 grid grid-cols-3 gap-2">
-            {plan.map((c, i) => (
-              <li key={c.numero} className="rounded-2xl bg-white/8 p-3 ring-1 ring-white/10">
-                <span className="text-mini text-secondary-300">
-                  Cuota {c.numero} de {negocio.cuotas.cantidad}
-                </span>
-                <span className="cifras mt-1 block font-titulo text-entrada font-bold text-white">{bs(c.monto)}</span>
-                <span className="block text-mini font-medium text-secondary-300">{t.cuandoCuota[i]}</span>
-              </li>
-            ))}
-          </ol>
-        </section>
+        {contado ? (
+          /* Contado: receta + lentes, un solo pago */
+          <section aria-labelledby="total" className="relative mt-5 overflow-hidden rounded-[2rem] bg-secondary-950 p-5 text-white shadow-lg lg:p-7">
+            <span aria-hidden className="absolute -top-16 -right-16 size-48 rounded-full bg-primary-500/40 blur-3xl" />
+            <dl className="cifras relative space-y-2 text-secondary-200">
+              <div className="flex items-baseline justify-between gap-4">
+                <dt>{t.contado.receta}</dt>
+                <dd className="font-titulo font-bold text-white">{bs(o.receta ?? 0)}</dd>
+              </div>
+              <div className="flex items-baseline justify-between gap-4">
+                <dt>{t.contado.lentes}</dt>
+                <dd className="font-titulo font-bold text-white">{bs(o.precioLista)}</dd>
+              </div>
+            </dl>
+            <h3 id="total" className="relative mt-5 border-t border-white/10 pt-4 text-meta font-semibold text-secondary-300">
+              {t.contado.total}
+            </h3>
+            <p className="cifras relative mt-1 font-titulo text-cifra text-white">{bs(o.total)}</p>
+            <p className="relative mt-1 flex items-center gap-2 text-meta text-secondary-200">
+              <HugeiconsIcon icon={CheckmarkCircle02Icon} size={18} strokeWidth={2} aria-hidden className="text-exito-400" />
+              {pagadoContado?.pagadaEl ? t.contado.pagado(fecha(pagadoContado.pagadaEl)) : t.contado.unPago}
+            </p>
+          </section>
+        ) : (
+          <section aria-labelledby="total" className="relative mt-5 overflow-hidden rounded-[2rem] bg-secondary-950 p-5 text-white shadow-lg lg:p-7">
+            <span aria-hidden className="absolute -top-16 -right-16 size-48 rounded-full bg-primary-500/40 blur-3xl" />
+            {ong && (
+              <p className="cifras relative text-meta text-secondary-300">
+                {t.precioLista}: <s>{bs(o.precioLista)}</s>
+              </p>
+            )}
+            <h2 id="total" className="relative text-meta font-semibold text-secondary-300">
+              {t.total}
+            </h2>
+            <p className="cifras relative mt-1 font-titulo text-cifra text-white">{bs(o.total)}</p>
+            <p className="relative mt-1 flex items-center gap-2 text-meta text-secondary-200">
+              <HugeiconsIcon icon={CheckmarkCircle02Icon} size={18} strokeWidth={2} aria-hidden className="text-exito-400" />
+              {t.sinIntereses}
+            </p>
+            <h3 className="relative mt-6 text-meta font-semibold text-secondary-300">{t.plan}</h3>
+            <ol className="relative mt-3 grid gap-2 sm:grid-cols-3">
+              {plan.map((c, i) => (
+                <li key={c.numero} className="flex items-center justify-between gap-3 rounded-2xl bg-white/8 p-3 ring-1 ring-white/10 sm:block">
+                  <span>
+                    <span className="block text-mini text-secondary-300">
+                      {textos.nombreCuota(c.numero, negocio.cuotas.cantidad)}
+                    </span>
+                    <span className="block text-mini font-medium text-secondary-300">{t.cuandoCuota[i]}</span>
+                  </span>
+                  <span className="text-right sm:text-left">
+                    <span className="cifras block font-titulo text-entrada font-bold text-white sm:mt-1">{bs(c.monto)}</span>
+                    <span className="cifras block text-mini font-bold text-primary-200">{fecha(c.vence)}</span>
+                  </span>
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
       </main>
 
       <AccionFija>
-        {contratoFirmado ? (
+        {contado ? (
+          pagadoContado ? (
+            <Button asChild variant="outline" size="lg">
+              <Link href={rutas.pagos}>{t.contado.verPagos}</Link>
+            </Button>
+          ) : (
+            <Button asChild size="lg">
+              <Link href={rutas.pago}>
+                {t.contado.accion}
+                <Flecha />
+              </Link>
+            </Button>
+          )
+        ) : contratoFirmado ? (
           <>
             <p className="mb-2 text-center text-meta text-muted-foreground">{t.firmado(fecha(contratoFirmado.firmadoEl))}</p>
             <Button asChild variant="outline" size="lg">

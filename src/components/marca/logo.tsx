@@ -2,13 +2,13 @@ import Image from "next/image";
 import { marca } from "@/content/optihelp";
 import { cn } from "@/lib/utils";
 
-/** Logo oficial. `navbar`: sin lema · `completo`: con "Accesorios Ópticos". */
+/** Logo de OptiHelp. `navbar`: barra · `completo`: pie y tamaños grandes · `blanco`: sobre fondos oscuros. */
 export function Logo({
   variante = "navbar",
   className,
   prioridad = false,
 }: {
-  variante?: "navbar" | "completo";
+  variante?: "navbar" | "completo" | "blanco";
   className?: string;
   prioridad?: boolean;
 }) {

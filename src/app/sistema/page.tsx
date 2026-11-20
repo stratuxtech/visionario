@@ -7,7 +7,7 @@ import {
   ArrowRight01Icon,
   Calendar03Icon,
   GlassesIcon,
-  NecklaceIcon,
+  IdIcon,
   QrCode01Icon,
   SignatureIcon,
   MedicalFileIcon,
@@ -69,7 +69,7 @@ function Seccion({ id, titulo, nota, children }: { id: string; titulo: string; n
 const iconosProceso = [
   { icono: Calendar03Icon, texto: "Cita" },
   { icono: GlassesIcon, texto: "Montura" },
-  { icono: NecklaceIcon, texto: "Joya" },
+  { icono: IdIcon, texto: "Carnet" },
   { icono: SignatureIcon, texto: "Firma" },
   { icono: QrCode01Icon, texto: "Pago QR" },
   { icono: MedicalFileIcon, texto: "Receta" },
@@ -92,7 +92,7 @@ export default function SistemaVisual() {
 
       <main>
         <div className="pt-10 pb-14 sm:pt-16">
-          <h1 className="max-w-3xl text-titular">Sistema visual de Visionario</h1>
+          <h1 className="max-w-3xl text-titular">Sistema visual de OptiHelp</h1>
           <p className="mt-5 max-w-prose text-entrada text-secondary-700">
             Fase 1 · Andamiaje. Tokens del brand system aplicados con los ajustes de accesibilidad aprobados. Esto no es
             el diseño de ninguna pantalla: es el material con el que se construirán.
@@ -140,7 +140,7 @@ export default function SistemaVisual() {
             </div>
             <div>
               <dt className="mb-2 text-meta text-muted-foreground">H3 · Manrope SemiBold · 20px</dt>
-              <dd className="text-bloque text-secondary-950">Valor estimado de su joya</dd>
+              <dd className="text-bloque text-secondary-950">Su orden en la Óptica Visionario</dd>
             </div>
             <div>
               <dt className="mb-2 text-meta text-muted-foreground">Entrada · Manrope · 18px</dt>
@@ -149,7 +149,7 @@ export default function SistemaVisual() {
             <div>
               <dt className="mb-2 text-meta text-muted-foreground">Cuerpo · Manrope Regular · 16px / 1,5</dt>
               <dd className="max-w-prose">
-                {negocio.garantia.devolucion} {negocio.cancelaciones} El precio total se informa antes de firmar y no
+                {negocio.contado.texto} {negocio.cancelaciones} El precio total se informa antes de firmar y no
                 tiene intereses adicionales.
               </dd>
             </div>
@@ -288,9 +288,9 @@ export default function SistemaVisual() {
         <Seccion
           id="marca"
           titulo="Logo"
-          nota="Barra superior: logo oficial sin el lema. Pie y tamaños grandes: lockup completo. El isotipo sirve como indicador de carga."
+          nota="El logo de OptiHelp no tiene lema: barra superior y pie usan el mismo dibujo en dos tamaños. La versión blanca va sobre fondos oscuros. El isotipo sirve como indicador de carga."
         >
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <figure className="flex flex-col justify-between gap-6 rounded-lg bg-card p-6">
               <Logo className="w-44" />
               <figcaption className="text-meta text-muted-foreground">Barra superior</figcaption>
@@ -299,8 +299,12 @@ export default function SistemaVisual() {
               <Logo variante="completo" className="w-full max-w-64 md:w-full" />
               <figcaption className="text-meta text-muted-foreground">Pie y tamaños grandes</figcaption>
             </figure>
+            <figure className="flex flex-col justify-between gap-6 rounded-lg bg-secondary-950 p-6">
+              <Logo variante="blanco" className="w-full max-w-64 md:w-full" />
+              <figcaption className="text-meta text-secondary-300">Sobre fondos oscuros</figcaption>
+            </figure>
             <figure className="flex flex-col justify-between gap-6 rounded-lg bg-card p-6">
-              <Image src={marca.logo.isotipo.src} width={80} height={80} alt="Isotipo de Visionario" className="size-20" />
+              <Image src={marca.logo.isotipo.src} width={80} height={80} alt={`Isotipo de ${marca.nombre}`} className="size-20" />
               <figcaption className="text-meta text-muted-foreground">Isotipo</figcaption>
             </figure>
           </div>

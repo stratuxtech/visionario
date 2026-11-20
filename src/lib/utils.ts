@@ -60,3 +60,18 @@ export function sumarMeses(iso: string, meses: number) {
   d.setDate(Math.min(dia, ultimo));
   return d.toISOString();
 }
+
+/**
+ * Reparte un total con `negocio.cuotas.porcentajes` (40 / 30 / 30): cada cuota
+ * se redondea al boliviano y la última es el resto, así la suma da siempre el
+ * total exacto (Bs 1.740 = 696 + 522 + 522).
+ */
+export function repartirCuotas(total: number) {
+  const porcentajes = negocio.cuotas.porcentajes;
+  let asignado = 0;
+  return porcentajes.map((porcentaje, i) => {
+    const monto = i === porcentajes.length - 1 ? total - asignado : Math.round(total * porcentaje);
+    asignado += monto;
+    return { monto, porcentaje };
+  });
+}

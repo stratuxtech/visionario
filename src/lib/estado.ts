@@ -15,7 +15,7 @@ import {
   type TipoNotificacion,
   type TipoOrden,
 } from "@/content/optihelp";
-import { sumarMeses } from "@/lib/utils";
+import { repartirCuotas, sumarMeses } from "@/lib/utils";
 
 /* ------------------------------------------------------------------ */
 /* Modelo                                                              */
@@ -177,23 +177,16 @@ export const datosIniciales: Datos = {
 /* ------------------------------------------------------------------ */
 
 /**
- * Reparte el total con `negocio.cuotas.porcentajes` (40 / 30 / 30). Cada cuota
- * se redondea al boliviano y la última es el resto, así la suma da siempre el
- * total exacto (Bs 1.740 = 696 + 522 + 522). Vencen el mismo día de cada mes
- * desde la firma, como en el contrato de referencia.
+ * Las 3 cuotas de 40 / 30 / 30 (ver `repartirCuotas`). Vencen el mismo día de
+ * cada mes desde la firma, como en el contrato de referencia.
  */
 export function generarCuotas(total: number, desde: string): Cuota[] {
-  const { porcentajes, mesesDesdeFirma } = negocio.cuotas;
-  let asignado = 0;
-  return porcentajes.map((porcentaje, i) => {
-    const ultima = i === porcentajes.length - 1;
-    const monto = ultima ? total - asignado : Math.round(total * porcentaje);
-    asignado += monto;
+  return repartirCuotas(total).map(({ monto, porcentaje }, i) => {
     return {
       numero: i + 1,
       monto,
       porcentaje,
-      vence: sumarMeses(desde, mesesDesdeFirma[i]),
+      vence: sumarMeses(desde, negocio.cuotas.mesesDesdeFirma[i]),
       estado: "pendiente" as const,
       pagadaEl: null,
     };

@@ -15,7 +15,7 @@ import { Opciones, OpcionesMultiples } from "@/components/ui/opciones";
 type IdPaso = (typeof f.pasos)[number]["id"];
 type Errores = Partial<Record<keyof Perfil, string>>;
 const CORREO = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-const NO_SE = "No sé";
+const CON_ACLARACION: readonly string[] = f.campos.medidaEstimada.conAclaracion;
 
 function validar(paso: IdPaso, d: Perfil, pedirCorreo: boolean): Errores {
   const e: Errores = {};
@@ -226,26 +226,49 @@ export function FormPerfil() {
                     alCambiar={(v) => poner("medidaEstimada", v)}
                     error={errores.medidaEstimada}
                   />
-                  {d.medidaEstimada === NO_SE && (
-                    <Nota role="status" tono="exito" titulo={f.campos.medidaEstimada.noSabe} className="mt-3" />
+                  {d.medidaEstimada && CON_ACLARACION.includes(d.medidaEstimada) && (
+                    <Nota role="status" tono="info" titulo={f.campos.medidaEstimada.noSabe} className="mt-3" />
                   )}
                 </div>
               </>
             )}
 
             {actual.id === "origen" && (
-              <div id="campo-comoNosConocio" tabIndex={-1}>
-                <OpcionesMultiples
-                  nombre="comoNosConocio"
-                  etiqueta={f.campos.comoNosConocio.etiqueta}
-                  ocultarEtiqueta
-                  ayuda={f.elegirVarias}
-                  opciones={f.campos.comoNosConocio.opciones}
-                  valores={origenes}
-                  alCambiar={(v) => poner("comoNosConocio", v.length ? v.join(", ") : null)}
-                  error={errores.comoNosConocio}
-                />
-              </div>
+              <>
+                <div id="campo-comoNosConocio" tabIndex={-1}>
+                  <OpcionesMultiples
+                    nombre="comoNosConocio"
+                    etiqueta={f.campos.comoNosConocio.etiqueta}
+                    ocultarEtiqueta
+                    ayuda={f.elegirVarias}
+                    opciones={f.campos.comoNosConocio.opciones}
+                    valores={origenes}
+                    alCambiar={(v) => {
+                      const conOng = v.includes(f.campos.comoNosConocio.ong);
+                      setDatos({ ...d, comoNosConocio: v.length ? v.join(", ") : null, institucion: conOng ? d.institucion : null });
+                      if (errores.comoNosConocio) setErrores({ ...errores, comoNosConocio: undefined });
+                    }}
+                    error={errores.comoNosConocio}
+                  />
+                </div>
+                {/* Solo si la envía una ONG. Es opcional: el beneficio lo confirma OptiHelp en la orden */}
+                {origenes.includes(f.campos.comoNosConocio.ong) && (
+                  <div className="animate-entrar space-y-2">
+                    <Label htmlFor="campo-institucion">{f.campos.institucion.etiqueta}</Label>
+                    <Input
+                      id="campo-institucion"
+                      autoCapitalize="words"
+                      placeholder={f.campos.institucion.ejemplo}
+                      value={d.institucion ?? ""}
+                      onChange={(e) => poner("institucion", e.target.value || null)}
+                      aria-describedby="institucion-ayuda"
+                    />
+                    <p id="institucion-ayuda" className="text-meta text-muted-foreground">
+                      {f.campos.institucion.ayuda}
+                    </p>
+                  </div>
+                )}
+              </>
             )}
           </div>
           </div>

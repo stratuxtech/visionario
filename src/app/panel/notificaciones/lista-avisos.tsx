@@ -24,6 +24,7 @@ import { cn } from "@/lib/utils";
 const iconos: Record<TipoNotificacion, typeof Calendar03Icon> = {
   "recordatorio-cita": Calendar03Icon,
   "orden-recibida": Invoice01Icon,
+  "orden-contado": Invoice01Icon,
   "pago-confirmado": CheckmarkCircle02Icon,
   "lente-listo": TestTube01Icon,
   "recordatorio-cuota": Coins01Icon,

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { AlertCircleIcon, ArrowRight01Icon, PlayIcon } from "@hugeicons/core-free-icons";
 import { estado as t, navegacion, rutas } from "@/content/optihelp";
-import { paradaActual, proximaCuota, situacionActual, useApp, type TipoSituacion } from "@/lib/estado";
+import { cuotasPagadas, esContado, paradaActual, proximaCuota, situacionActual, useApp, type TipoSituacion } from "@/lib/estado";
 import { useGuardia } from "@/lib/guardias";
 import { fechaCita, horaInicio } from "@/lib/agenda";
 import { bs, cn, fecha } from "@/lib/utils";
@@ -13,25 +13,26 @@ import { LineaEstado, type Parada } from "@/components/linea-estado";
 import { Button, Flecha } from "@/components/ui/button";
 import type { IdParada } from "@/content/optihelp";
 
-const ORDEN: IdParada[] = ["cita", "medicion", "joya", "firma", "cuota-2", "cuota-3", "devolucion"];
+const ORDEN: IdParada[] = ["cita", "medicion", "firma", "recojo", "cuota-2", "cuota-3", "terminado"];
 const EMOJIS: Record<IdParada, string> = {
   cita: "📅",
   medicion: "👓",
-  joya: "💛",
   firma: "✍️",
+  recojo: "👓",
   "cuota-2": "📱",
   "cuota-3": "📱",
-  devolucion: "🎁",
+  terminado: "🎉",
 };
 const EMOJI_SITUACION: Record<TipoSituacion, string> = {
   "sin-cita": "📅",
   cita: "🗓️",
   orden: "📄",
+  contado: "🧾",
   "cuota-1": "📱",
   fabricando: "🔬",
   vencida: "⚠️",
   listo: "🎉",
-  liquidado: "💛",
+  liquidado: "🕶️",
 };
 
 /** Tarjeta pequeña: siempre permite volver a ver cómo funciona todo. */
@@ -63,6 +64,7 @@ function EstadoActual() {
     "sin-cita": sit["sin-cita"].titulo,
     cita: s.cita ? sit.cita.titulo(`${fechaCita(s.cita.inicio).toLowerCase()} a las ${horaInicio(s.cita.inicio)}`) : "",
     orden: sit.orden.titulo,
+    contado: sit.contado.titulo,
     "cuota-1": sit["cuota-1"].titulo,
     fabricando: sit.fabricando.titulo,
     vencida: sit.vencida.titulo(cuota?.numero ?? 0),
@@ -73,6 +75,7 @@ function EstadoActual() {
     "sin-cita": sit["sin-cita"].detalle,
     cita: sit.cita.detalle,
     orden: sit.orden.detalle,
+    contado: sit.contado.detalle,
     "cuota-1": sit["cuota-1"].detalle,
     fabricando: sit.fabricando.detalle,
     vencida: sit.vencida.detalle,
@@ -117,12 +120,43 @@ function EstadoActual() {
   );
 }
 
+/** Orden al contado: sin recorrido de cuotas, solo la orden y el pago por QR. */
+function TarjetaContado() {
+  const orden = useApp((s) => s.orden);
+  const cuotas = useApp((s) => s.cuotas);
+  if (!orden || cuotasPagadas(cuotas) > 0) return null;
+  return (
+    <section aria-labelledby="orden-contado" className="relative mt-8 overflow-hidden rounded-[2rem] bg-secondary-950 p-5 text-white shadow-lg lg:mt-12 lg:max-w-xl lg:p-7">
+      <span aria-hidden className="absolute -top-16 -right-16 size-48 rounded-full bg-primary-500/40 blur-3xl" />
+      <div className="relative">
+        <h2 id="orden-contado" className="font-titulo text-bloque font-bold text-white">
+          {t.contado.titulo}
+        </h2>
+        <p className="mt-3 text-meta text-secondary-300">{t.contado.total}</p>
+        <p className="cifras font-titulo text-cifra text-white">{bs(orden.total)}</p>
+        <div className="mt-5 grid gap-3">
+          <Button asChild variant="claro" size="lg">
+            <Link href={rutas.pago}>
+              {t.acciones.pagarContado}
+              <Flecha />
+            </Link>
+          </Button>
+          <Link href={rutas.orden} className="text-center text-meta font-semibold text-primary-300">
+            {t.contado.verOrden}
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /** Mi estado: cómo funciona (tarjeta pequeña), dónde estoy y el recorrido horizontal. */
 export function Inicio() {
   const listo = useGuardia();
   const s = useApp();
   if (!listo) return null;
 
+  const contado = esContado(s.orden);
   const actual = paradaActual(s);
   const indiceActual = ORDEN.indexOf(actual);
   const proxima = proximaCuota(s.cuotas);
@@ -149,7 +183,7 @@ export function Inicio() {
         : null;
   }
   if ((actual === "cuota-2" || actual === "cuota-3") && proxima) accion[actual] = ir(rutas.pago, t.acciones.pagar(proxima.numero));
-  if (actual === "devolucion") accion.devolucion = ir(rutas.liquidacion, t.acciones.verBeneficio);
+  if (actual === "terminado") accion.terminado = ir(rutas.liquidacion, t.acciones.verBeneficio);
 
   /* Cada parada dice lo que corresponde a su momento: nada de "agende" si ya agendó */
   const textos: Record<IdParada, string> = {
@@ -159,11 +193,11 @@ export function Inicio() {
         : t.paradas.cita.hecha(`${fechaCita(s.cita.inicio).toLowerCase()} a las ${horaInicio(s.cita.inicio)}`)
       : t.paradas.cita.pendiente,
     medicion: s.orden ? t.paradas.medicion.hecha : t.paradas.medicion.pendiente,
-    joya: s.orden ? t.paradas.joya.hecha(bs(s.orden.joya?.tasacion ?? 0)) : t.paradas.joya.pendiente,
     firma: cuotaUnoPagada ? t.paradas.firma.hecha : t.paradas.firma.pendiente,
+    recojo: s.laboratorio === "listo" ? t.paradas.recojo.hecha : t.paradas.recojo.pendiente,
     "cuota-2": t.paradas["cuota-2"],
     "cuota-3": t.paradas["cuota-3"],
-    devolucion: t.paradas.devolucion,
+    terminado: t.paradas.terminado,
   };
 
   const paradas: Parada[] = ORDEN.map((id, i) => ({
@@ -181,9 +215,13 @@ export function Inicio() {
         <EstadoActual />
       </div>
 
-      <div className="mt-8 lg:mt-12">
-        <LineaEstado paradas={paradas} titulo={t.recorrido} />
-      </div>
+      {contado ? (
+        <TarjetaContado />
+      ) : (
+        <div className="mt-8 lg:mt-12">
+          <LineaEstado paradas={paradas} titulo={t.recorrido} />
+        </div>
+      )}
     </PantallaApp>
   );
 }

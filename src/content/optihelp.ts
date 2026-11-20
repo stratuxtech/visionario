@@ -49,6 +49,10 @@ export const marca = {
   opticaAliada: "Óptica Visionario",
   ciudad: "Santa Cruz de la Sierra, Bolivia",
   irAlInicio: "OptiHelp, ir al inicio",
+  /** Título y descripción de la página (metadatos) */
+  lema: "Lentes a medida en 3 cuotas",
+  descripcion:
+    "Lentes a medida en 3 cuotas sin intereses, solo con su carnet. Le atendemos en la Óptica Visionario, en Santa Cruz de la Sierra.",
   logo: {
     /** Logo de OptiHelp (sin lema) para la barra superior. */
     navbar: { src: "/brand/logo-navbar.png", ancho: 1200, alto: 223 },
@@ -1137,7 +1141,7 @@ export const cuotasPanel = {
   vacia: {
     titulo: "Aquí verá sus pagos",
     texto: "Su plan de 3 cuotas aparecerá cuando su orden esté lista.",
-    chips: { qr: "Pago por QR", cuotas: "3 cuotas sin intereses", intereses: "Sin intereses" },
+    chips: { qr: "Pago por QR", cuotas: "3 cuotas sin intereses", garantia: "Sin garantía" },
   },
   plan: {
     titulo: "Su plan de 3 cuotas",

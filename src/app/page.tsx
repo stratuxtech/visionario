@@ -4,15 +4,18 @@ import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 import {
   Calendar03Icon,
   Coins01Icon,
+  Clock01Icon,
   GlassesIcon,
-  NecklaceIcon,
+  HandHelpingIcon,
+  Location01Icon,
   SparklesIcon,
+  Store01Icon,
   Tick02Icon,
   UserGroupIcon,
   Alert02Icon,
   RouteIcon,
 } from "@hugeicons/core-free-icons";
-import { landing, marca, negocio, optica, rutas } from "@/content/optihelp";
+import { landing, marca, negocio, optica, rutas, textos } from "@/content/optihelp";
 import { BarraMarca } from "@/components/app/barras";
 import { Logo } from "@/components/marca/logo";
 import { Button, Flecha } from "@/components/ui/button";
@@ -20,7 +23,7 @@ import { ChipFlotante } from "@/components/ui/chip-flotante";
 import { ConNegrita, Titular } from "@/components/ui/con-negrita";
 import { Revelar } from "@/components/ui/revelar";
 import { AccesoBarra, BotonAgendar, BotonVerComo, Comparacion, PasosInteractivos } from "@/components/landing/interactivos";
-import { bs } from "@/lib/utils";
+import { bs, repartirCuotas } from "@/lib/utils";
 
 /** Etiqueta de sección (referencia: Pling): ícono en un círculo tenue y texto azul. */
 function Etiqueta({ icono, children }: { icono: IconSvgElement; children: React.ReactNode }) {
@@ -34,10 +37,10 @@ function Etiqueta({ icono, children }: { icono: IconSvgElement; children: React.
   );
 }
 
-/* Escala de dioptrías: dónde empieza "a medida" (desde 4) */
+/* Escala de dioptrías: desde 4, lentes en cuotas; con menos, receta y contado */
 function EscalaDioptrias() {
   const marcas = [0, 2, 4, 6, 8, 10];
-  const corte = (negocio.medidaMinimaDioptrias / 10) * 100;
+  const corte = (negocio.medidaMinimaCredito / 10) * 100;
   return (
     <figure className="tarjeta p-5 lg:p-6">
       <div className="relative h-3 overflow-hidden rounded-full bg-secondary-100" aria-hidden>
@@ -64,24 +67,31 @@ function EscalaDioptrias() {
   );
 }
 
-/* Las 3 cuotas iguales y la joya que vuelve */
+/* Las 3 cuotas de 40 / 30 / 30: cada barra mide lo que pesa su cuota */
 function PlanCuotas() {
   const t = landing.cuotas;
-  const cuota = t.ejemplo / negocio.cuotas.cantidad;
+  const cuotas = repartirCuotas(t.ejemplo);
+  const mayor = Math.max(...cuotas.map((c) => c.porcentaje));
   return (
     <ol className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
-      {t.pasos.map((cuando, i) => (
-        <Revelar como="li" key={cuando} retraso={i * 120} className="rounded-3xl bg-white/10 p-4 ring-1 ring-white/10 lg:p-6">
-          <span className="flex size-9 items-center justify-center rounded-full bg-primary-600 font-titulo font-bold text-white">{i + 1}</span>
-          <p className="cifras mt-4 font-titulo text-[1.75rem] leading-none font-bold text-white lg:text-[2.25rem]">{bs(cuota)}</p>
-          <p className="mt-1 text-meta text-secondary-200">{cuando}</p>
+      {cuotas.map((c, i) => (
+        <Revelar como="li" key={t.pasos[i]} retraso={i * 120} className="rounded-3xl bg-white/10 p-4 ring-1 ring-white/10 lg:p-6">
+          <div className="flex items-center justify-between gap-2">
+            <span className="flex size-9 items-center justify-center rounded-full bg-primary-600 font-titulo font-bold text-white">{i + 1}</span>
+            <span className="cifras rounded-full bg-white/10 px-2.5 py-0.5 text-mini text-primary-200">{textos.porcentaje(c.porcentaje)}</span>
+          </div>
+          <span aria-hidden className="mt-4 block h-2 overflow-hidden rounded-full bg-white/10">
+            <span className="block h-full rounded-full bg-linear-to-r from-primary-400 to-primary-300" style={{ width: `${(c.porcentaje / mayor) * 100}%` }} />
+          </span>
+          <p className="cifras mt-3 font-titulo text-[1.75rem] leading-none font-bold text-white lg:text-[2.25rem]">{bs(c.monto)}</p>
+          <p className="mt-1 text-meta text-secondary-200">{t.pasos[i]}</p>
         </Revelar>
       ))}
-      <Revelar como="li" retraso={360} className="rounded-3xl bg-oro-300 p-4 text-oro-800 lg:p-6">
-        <span className="flex size-9 items-center justify-center rounded-full bg-white">
-          <HugeiconsIcon icon={NecklaceIcon} size={18} strokeWidth={2} aria-hidden />
+      <Revelar como="li" retraso={360} className="rounded-3xl bg-exito-100 p-4 text-exito-800 lg:p-6">
+        <span className="flex size-9 items-center justify-center rounded-full bg-white text-exito-700">
+          <HugeiconsIcon icon={Tick02Icon} size={18} strokeWidth={2.75} aria-hidden />
         </span>
-        <p className="mt-4 font-titulo text-bloque leading-tight font-bold text-secondary-950 lg:text-[1.5rem]">{t.final} 💛</p>
+        <p className="mt-4 font-titulo text-bloque leading-tight font-bold text-secondary-950 lg:text-[1.5rem]">{t.final} 🎉</p>
       </Revelar>
     </ol>
   );
@@ -97,8 +107,8 @@ export default function Inicio() {
         <Link href="#como-funciona" className="hidden rounded-full px-4 py-2 font-semibold text-secondary-800 no-underline transition-colors hover:bg-primary-50 lg:block">
           {landing.pasos.etiqueta}
         </Link>
-        <Link href={rutas.monturas} className="hidden rounded-full px-4 py-2 font-semibold text-secondary-800 no-underline transition-colors hover:bg-primary-50 lg:block">
-          {landing.catalogo.etiqueta}
+        <Link href="#donde-atendemos" className="hidden rounded-full px-4 py-2 font-semibold text-secondary-800 no-underline transition-colors hover:bg-primary-50 lg:block">
+          {landing.dondeAtendemos.etiqueta}
         </Link>
         <AccesoBarra />
       </BarraMarca>
@@ -142,7 +152,7 @@ export default function Inicio() {
             <ChipFlotante icono={Calendar03Icon} texto={h.chips.cita} retraso={600} giro={-4} className="-top-4 -left-3 lg:-left-12" />
             <ChipFlotante emoji="✅" texto={h.chips.cuota} tono="exito" retraso={850} giro={3} className="top-1/3 -right-3 lg:-right-10" />
             <ChipFlotante emoji="💬" texto={h.chips.listo} tono="azul" retraso={1100} giro={-2} className="bottom-16 -left-4 lg:-left-14" />
-            <ChipFlotante icono={NecklaceIcon} texto={h.chips.joya} tono="oro" retraso={1350} giro={4} className="-right-2 -bottom-4 lg:right-6" />
+            <ChipFlotante icono={Location01Icon} texto={h.chips.atencion} retraso={1350} giro={4} className="-right-2 -bottom-4 lg:right-6" />
           </div>
         </section>
 
@@ -178,7 +188,7 @@ export default function Inicio() {
           </ul>
         </section>
 
-        {/* ------------------------------------------------ Hoy vs. con Visionario */}
+        {/* ------------------------------------------------ Hoy vs. con OptiHelp */}
         <section aria-labelledby="comparacion" className="contenedor py-16 text-center lg:py-24">
           <Revelar>
             <Etiqueta icono={SparklesIcon}>{landing.comparacion.etiqueta}</Etiqueta>
@@ -229,6 +239,12 @@ export default function Inicio() {
                   <ConNegrita texto={landing.paraQuien.noSabe} />
                 </span>
               </p>
+              <p className="mt-3 flex items-center gap-2.5 text-secondary-800">
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary-100 text-primary-700">
+                  <HugeiconsIcon icon={HandHelpingIcon} size={16} strokeWidth={2} aria-hidden />
+                </span>
+                <span>{landing.ong}</span>
+              </p>
             </Revelar>
           </div>
           <ul className="mt-12 grid grid-cols-2 gap-3 lg:mt-0 lg:gap-4">
@@ -266,39 +282,52 @@ export default function Inicio() {
                   <ConNegrita texto={landing.cuotas.nota} />
                 </p>
                 <p className="shrink-0">
-                  <ConNegrita texto={landing.cuotas.gracia} />
+                  <ConNegrita texto={landing.cuotas.atraso} />
                 </p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* ------------------------------------------------ Monturas */}
-        <section aria-labelledby="catalogo" className="contenedor py-16 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] lg:items-center lg:gap-16 lg:py-24">
+        {/* ------------------------------------------------ Dónde le atendemos */}
+        <section id="donde-atendemos" aria-labelledby="donde" className="contenedor scroll-mt-24 py-16 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:items-center lg:gap-16 lg:py-24">
           <Revelar>
-            <Etiqueta icono={GlassesIcon}>{landing.catalogo.etiqueta}</Etiqueta>
-            <h2 id="catalogo" className="mt-3 text-seccion">
-              <Titular partes={landing.catalogo.titulo} />
+            <Etiqueta icono={Store01Icon}>{landing.dondeAtendemos.etiqueta}</Etiqueta>
+            <h2 id="donde" className="mt-3 text-seccion">
+              <Titular partes={landing.dondeAtendemos.titulo} />
             </h2>
             <p className="mt-4 text-entrada text-secondary-700">
-              <ConNegrita texto={landing.catalogo.texto} />
+              <ConNegrita texto={landing.dondeAtendemos.texto} />
             </p>
-            <Button asChild variant="outline" size="lg" className="mt-8 lg:w-auto">
-              <Link href={rutas.monturas}>
-                {landing.catalogo.accion}
-                <Flecha />
-              </Link>
-            </Button>
-          </Revelar>
-          <div className="mt-10 grid grid-cols-3 gap-3 lg:mt-0">
-            {landing.catalogo.fotos.map((src, i) => (
-              <Revelar key={src} retraso={i * 120} className={i === 1 ? "-translate-y-6" : ""}>
-                <div className="group relative aspect-3/4 overflow-hidden rounded-[1.5rem] shadow-md ring-4 ring-white">
-                  <Image src={src} alt="" fill sizes="(min-width: 1024px) 220px, 30vw" className="object-cover transition-transform duration-700 ease-resorte group-hover:scale-110" />
+            <dl className="tarjeta mt-8 space-y-4 p-5">
+              <div className="flex items-start gap-3">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary-50 text-primary-700">
+                  <HugeiconsIcon icon={Location01Icon} size={20} strokeWidth={1.8} aria-hidden />
+                </span>
+                <div>
+                  <dt className="font-bold text-secondary-950">
+                    {optica.nombre} · {optica.direccion}
+                  </dt>
+                  <dd className="text-meta text-muted-foreground">{landing.dondeAtendemos.direccion}</dd>
                 </div>
-              </Revelar>
-            ))}
-          </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary-50 text-primary-700">
+                  <HugeiconsIcon icon={Clock01Icon} size={20} strokeWidth={1.8} aria-hidden />
+                </span>
+                <div>
+                  <dt className="font-bold text-secondary-950">{optica.rol}</dt>
+                  <dd className="text-meta text-muted-foreground">{landing.dondeAtendemos.horario}</dd>
+                </div>
+              </div>
+            </dl>
+          </Revelar>
+          <Revelar retraso={150} className="mt-10 lg:mt-0">
+            <figure className="relative aspect-4/3 overflow-hidden rounded-[2rem] shadow-md ring-4 ring-white">
+              <Image src={landing.dondeAtendemos.foto.src} alt={landing.dondeAtendemos.foto.alt} fill sizes="(min-width: 1024px) 560px, 100vw" className="object-cover" />
+              <figcaption className="vidrio absolute top-3 left-3 rounded-full px-3 py-1 text-mini font-bold text-secondary-950">{landing.dondeAtendemos.foto.etiqueta}</figcaption>
+            </figure>
+          </Revelar>
         </section>
 
         {/* ------------------------------------------------ Cierre */}
@@ -333,7 +362,7 @@ export default function Inicio() {
           <div className="space-y-3 text-meta text-secondary-700">
             <p>{landing.pie.requisitos}</p>
             <p>
-              {optica.nombre} · {optica.direccion}
+              {landing.pie.atencion} {optica.nombre} · {optica.direccion}
               <br />
               <span className="text-muted-foreground">{optica.referencia}</span>
             </p>
