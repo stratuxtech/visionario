@@ -1,8 +1,10 @@
+> La marca de la app es OptiHelp. Visionario es la óptica aliada donde se atiende al cliente. Ver `docs/CAMBIOS_FASE_1.md`.
+
 # 01 · Brief general: Web App Visionario
 
 > Este documento define las decisiones y criterios de la web app de Visionario. Trátalo como decisiones cerradas. Si algo es ambiguo, resuélvelo con lo documentado en el proyecto y anota el supuesto. No inventes fuera de este criterio.
 >
-> Fuentes de referencia: `visionario_bible_brand_system.md` (sistema de marca), `reglas_de_negocio.md` (reglas), `user_flows_web_app_visionario.md` (flujos) e `historias_de_usuario_web_app_visionario.md` (historias).
+> Fuentes de referencia: `optihelp_bible_brand_system.md` (sistema de marca), `reglas_de_negocio.md` (reglas), `user_flows_web_app_visionario.md` (flujos) e `historias_de_usuario_web_app_visionario.md` (historias).
 
 ---
 
@@ -30,7 +32,7 @@
 
 ## 4. Decisiones de estilo (resumen del design system)
 
-Fuente completa: `visionario_bible_brand_system.md`. Aquí solo las decisiones que guían cada pantalla.
+Fuente completa: `optihelp_bible_brand_system.md`. Aquí solo las decisiones que guían cada pantalla.
 
 - **Color:**
   - **Primary (cian, base del iris del logo):** es el color de la acción, las conversiones y el progreso. Reservado para botones principales, CTAs, progreso de cuotas y enlaces.

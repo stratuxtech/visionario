@@ -1,94 +1,127 @@
-# Reglas de Negocio: Visionario
+# Reglas de Negocio: OptiHelp (Fase 1)
 
-**Propósito:** describir cómo funciona el negocio en su operación cotidiana (venta, cobro, garantía, incumplimiento y catálogo). Este documento es la base para diseñar la Web App y el ERP. Cuando una regla cambie, se actualiza aquí primero.
+**Propósito:** describir cómo funciona el negocio en su operación cotidiana (venta, cobro, incumplimiento y monturas). Este documento es la base para diseñar la Web App y el ERP. Cuando una regla cambie, se actualiza aquí primero.
 
-**Notas:** los puntos marcados como **[PENDIENTE]** aún no están definidos. Los puntos con **[NOTA]** son supuestos o decisiones que deben validarse con asesoría legal o financiera antes del lanzamiento.
+**Notas:** los puntos marcados como **[PENDIENTE]** aún no están definidos. Los puntos con **[NOTA]** son supuestos o decisiones que deben validarse con asesoría legal o financiera antes del lanzamiento. El detalle de los cambios de la Fase 1 está en `docs/CAMBIOS_FASE_1.md`.
 
 ---
 
+## 0. Quién es quién
+
+- **OptiHelp** es la startup y la marca de la app. Vende, da el crédito y cobra las cuotas.
+- **Óptica Visionario** es la óptica aliada, en el centro de Santa Cruz. Ahí se hace la cita: mide la vista, el cliente elige su montura, la óptica manda a fabricar los lentes y los entrega.
+- **El ERP de OptiHelp** lo construye el CTO por separado. Ahí se cargan las órdenes después de cada cita. En el prototipo se simula.
+- En la Fase 1 **no hay financiera**. OptiHelp da el crédito directamente.
+
 ## 1. Propuesta de negocio
 
-- Visionario ofrece lentes de medida mediana a severa (desde ±4.00 dioptrías) fabricados a medida en laboratorio, para personas de bajos recursos en Santa Cruz de la Sierra, Bolivia.
-- El cliente paga el lente en 3 cuotas fijas mensuales. Visionario financia directamente la venta.
-- La garantía del financiamiento es una joya de oro de 18 quilates que el cliente deja en custodia.
+- OptiHelp ofrece lentes a medida, fabricados en laboratorio, para personas de bajos recursos en Santa Cruz de la Sierra, Bolivia.
+- Con una medida de **4 dioptrías o más**, el cliente paga sus lentes en 3 cuotas sin intereses.
+- El cliente compra **solo con su carnet de identidad y el contrato** firmado en la app. **No deja ninguna garantía.**
 
 ## 2. Mercado objetivo
 
 - **Público:** personas de 18 años o más, y niños y adolescentes con su representante legal, que viven en zonas periféricas de Santa Cruz, como Plan 3000, Villa 1° de Mayo, Pampa de la Isla y Los Lotes.
 - **Perfil económico:** trabajadores informales o de oficios manuales con ingresos diarios o cercanos al salario mínimo (Bs 3.300), sin acceso a crédito bancario.
 - **Universo de referencia (SOM):** 55.400 personas en el departamento de Santa Cruz con medida mediana a severa y en pobreza o vulnerabilidad.
-- **Clínica:** pacientes con medidas de ±4.00 dioptrías o más (miopía, hipermetropía o astigmatismo severo).
+- **Clínica:** el crédito es para medidas de 4 dioptrías o más (miopía, hipermetropía o astigmatismo severo). Con menos, ver la sección 4.1.
 
 ## 3. Producto
 
-- **Tipo de lente:** lente orgánico de alto índice tallado a medida en laboratorio externo.
+- **Tipo de lente:** lente orgánico tallado a medida en el laboratorio con el que trabaja la Óptica Visionario.
 - **Opciones de tratamiento:** antirreflejo, filtro de luz azul y bifocal. [PENDIENTE: precio de cada opción.]
-- **Monturas:** catálogo cerrado de 20 modelos exactos, 10 para adultos y 10 para niños. No se venden monturas fuera de catálogo.
+- **Monturas:** las de la Óptica Visionario (ver sección 11).
 - **Garantía de producto:** [PENDIENTE]
 
 ## 4. Precio y forma de pago
 
-- **Precio del lente a medida:** entre Bs 900 y Bs 2.000, según la medida y el tratamiento. [PENDIENTE: tabla de precios por rango de dioptrías.]
-- **Precio cerrado:** el precio total se informa antes de firmar y no tiene intereses adicionales.
-- **Plazo:** 3 cuotas fijas mensuales. [NOTA: el pitch y la solución mencionan entre 3 y 6 meses; la regla vigente es 3 cuotas.]
-- **Cuota inicial:** se paga al firmar el contrato. [PENDIENTE: monto de la cuota inicial o si es la primera de las 3 cuotas.]
-- **Medios de pago:** efectivo o QR dinámico generado por la App o el sistema.
+- **Precios referenciales** [PENDIENTE: hasta tener las cotizaciones reales del laboratorio de la óptica]:
+
+| Tipo de medida | Precio OptiHelp | Precio en una óptica tradicional | ¿Crédito? |
+|---|---|---|---|
+| Menos de 4 dioptrías | Bs 825 al contado + receta | Bs 950 | No |
+| Media (4 a 6 dioptrías) | Bs 1.740 | Bs 2.040 | Sí |
+| Alta (más de 6 dioptrías) | Bs 3.490 | Bs 4.140 | Sí |
+
+- Estos precios incluyen una montura de precio promedio. La montura real la elige el cliente en la óptica, así que el precio final lo confirma la orden.
+- **Precio cerrado:** el precio total se informa antes de firmar y no cambia. **Sin intereses.**
+- **Cuotas:** 3 cuotas de **40% / 30% / 30%**:
+  - 1.ª cuota (40%): el día de la firma. Con ese pago se mandan a hacer los lentes.
+  - 2.ª cuota (30%): al mes, el mismo día de la firma.
+  - 3.ª cuota (30%): a los dos meses, el mismo día de la firma.
+- **Redondeo:** la cuota 1 y la cuota 2 se redondean al boliviano; la cuota 3 es el resto, así la suma da siempre el total exacto.
+- **Medio de pago:** **solo QR**, pagado **a OptiHelp** (no a la óptica), desde la app o desde el enlace que se envía por WhatsApp. No hay pago en efectivo ni descuento por planilla.
+
+## 4.1. Clientes con menos de 4 dioptrías
+
+- **No acceden al crédito.**
+- Se les cobra la **receta**. [PENDIENTE: precio de la receta. Valor demo: Bs 100.]
+- Pueden comprar sus lentes **al contado** (precio referencial Bs 825).
+- Pagan todo junto, en un solo pago por QR. No firman contrato de crédito.
+- Con el pago, la óptica manda a fabricar los lentes.
 
 ## 5. Venta presencial
 
 1. El cliente agenda una cita de **60 minutos** desde la Web App.
-2. En la óptica se realiza la medición clínica gratuita.
-3. El cliente elige montura dentro del catálogo cerrado.
-4. Se tasa la joya de oro (ver sección 6).
-5. El cliente firma el contrato digital en tablet y paga la cuota inicial.
-6. El laboratorio tarda entre 2 y 10 días hábiles en fabricar el lente.
+2. Va a la Óptica Visionario con su carnet. La medición es gratuita si accede al crédito.
+3. Elige su montura entre las de la óptica.
+4. OptiHelp carga la orden en su ERP. El cliente la recibe en la app.
+5. Antes de firmar, completa en la app su número de carnet y su domicilio.
+6. Firma el contrato con el dedo y paga por QR la cuota inicial (40%).
+7. El laboratorio tarda entre 1 y 3 días hábiles en fabricar los lentes. [PENDIENTE: plazo real del laboratorio de la óptica.] Le avisamos por WhatsApp.
+8. Recoge sus lentes en la óptica.
 
-## 6. Garantía en oro
-
-- **Joya aceptada:** oro de 18 quilates. [PENDIENTE: confirmar si se aceptan otros quilates o piezas.]
-- **Tasación:** se pesa la joya en gramos en el momento de la venta. [PENDIENTE: criterio de valor por gramo, responsable de la tasación y margen de seguridad sobre el valor de la deuda.]
-- **Custodia:** la joya queda en bóveda externa tercerizada hasta que el cliente liquide su deuda.
-- **Insuficiencia de valor:** si al momento de liquidar la joya su valor es menor que la deuda pendiente, Visionario le pide al cliente el monto faltante. [NOTA: validar cómo se comunica y se cobra.]
-- **Excedente:** si la venta de la joya deja dinero por encima de la deuda, el excedente se queda en Visionario.
-- **Garantías adicionales:** no se aceptan otras garantías distintas de la joya.
-
-## 6.1. Cobro de las cuotas
+## 6. Cobro de las cuotas
 
 - El sistema envía recordatorios por WhatsApp y en la App antes de cada vencimiento, con QR dinámico para pagar.
-- Al completar la tercera cuota, la joya se devuelve al cliente.
+- Todas las cuotas se pagan a OptiHelp.
 
 ## 7. Incumplimiento
 
-- **Periodo de gracia:** 1 mes adicional al plazo total. Aplica a todos los clientes.
-- **Mora:** si el cliente no completa el pago dentro del periodo de gracia, Visionario se queda con la joya.
-- **Liquidación:** la joya se vende para recuperar la deuda. [PENDIENTE: canal de venta de la joya y plazo de aviso previo al cliente.]
-- **Penalidades:** no se cobran intereses adicionales por mora. [PENDIENTE: confirmar si se aplica algún recargo.]
+- **Plazo para ponerse al día:** si se atrasa, el cliente tiene **3 días hábiles** desde el vencimiento para pagar sin recargo. [NOTA: en el prototipo se cuentan de lunes a sábado, como el horario de la óptica; confirmar si el sábado cuenta.]
+- **Interés moratorio:** pasado ese plazo, la deuda tiene un interés de **3% mensual** sobre el monto vencido, hasta que se pague. [PENDIENTE: revisión legal.]
+- **Acciones legales:** OptiHelp puede iniciar las acciones legales que correspondan y reportar la deuda a las centrales de información crediticia. [PENDIENTE: revisión legal; confirmar si OptiHelp puede reportar sin ser entidad financiera.]
+- Las cuotas no tienen intereses mientras se paguen a tiempo.
 
 ## 8. Firma del contrato y representación de menores
 
-- El contrato lo firma el dueño del lente, si es mayor de edad.
-- Si el paciente es menor de edad, el contrato lo firma su padre o madre, o un tutor responsable. Ese adulto también entrega la joya en garantía.
-- Visionario no acepta contratos firmados por menores sin representante.
+- El contrato lo firma el dueño del lente, si es mayor de edad, con su carnet de identidad.
+- Si el paciente es menor de edad, el contrato lo firma su padre, madre o tutor, con sus propios datos.
+- OptiHelp no acepta contratos firmados por menores sin representante.
+- El contrato sigue el modelo de The Blink Eye: datos completos de las partes, fechas exactas de pago, 3 días hábiles para ponerse al día, interés moratorio y jurisdicción en Santa Cruz de la Sierra. [PENDIENTE: datos legales de OptiHelp (razón social, NIT, representante legal y domicilio) y revisión legal de la firma dibujada en el celular.]
 
 ## 9. Pacientes que no podemos atender
 
-- Si el paciente requiere cirugía u otra patología, Visionario lo deriva a otro centro de salud. No se atiende en Visionario.
-- [PENDIENTE: criterio para medidas que superen el rango del laboratorio externo.]
+- Si el paciente requiere cirugía u otra patología, se lo deriva a otro centro de salud.
+- [PENDIENTE: criterio para medidas que superen el rango del laboratorio.]
 
 ## 10. Cancelaciones y devoluciones
 
 - **No hay cancelaciones** una vez firmado el contrato.
 - **No hay reembolsos** de la cuota inicial ni de las cuotas pagadas.
 
-## 11. Catálogo de monturas
+## 11. Monturas
 
-- **Adultos:** 10 modelos exactos.
-- **Niños:** 10 modelos exactos.
-- Los modelos se compran en volumen mayorista y se reponen según rotación. [PENDIENTE: política de reposición y criterio de descontinuación.]
+- Las monturas son de la **Óptica Visionario**. La óptica decide cuáles ofrece y a qué precio.
+- OptiHelp no tiene monturas ni inventario, y la app no tiene catálogo.
+- En la orden solo se muestra la montura que el cliente eligió y su precio.
 
-## 12. Puntos abiertos
+## 12. ONG 1
 
-- **Márgenes:** no se conoce aún el margen por venta. [NOTA: definir costo del lente, costo de la montura, costo de la custodia de la joya y costo del delivery antes de fijar precios finales.]
-- **Punto de equilibrio de la Fase 1:** no se conoce cuántas ventas mensuales se necesitan para cubrir el capital que se adelanta al laboratorio. [NOTA: calcular cuando estén definidos el costo del lente y el monto de la ronda no dilutiva.]
+- La ONG 1 **paga la montura** de los clientes que ella envía.
+- Al cliente se le descuenta el precio de la montura del total (en el ejemplo demo, Bs 240).
+- El cliente puede decir en su registro que lo envía una ONG, pero eso no aplica ningún descuento por sí solo: el beneficio lo confirma OptiHelp en la orden.
+- [PENDIENTE: nombre de la ONG y acuerdo firmado.]
+
+## 13. Beneficio al terminar
+
+- Al pagar la 3.ª cuota, los lentes son del cliente.
+- Recibe un **descuento en gafas de sol**. El descuento lo pone **OptiHelp**. [PENDIENTE: porcentaje. Valor demo: 15%.]
+- Puede volver a comprar en cuotas.
+
+## 14. Puntos abiertos
+
+- **Márgenes:** no se conoce aún el margen por venta. [NOTA: definir costo del lente, costo de la montura y costo del delivery antes de fijar precios finales.]
+- **Punto de equilibrio de la Fase 1:** no se conoce cuántas ventas mensuales se necesitan para cubrir el capital que se adelanta al laboratorio.
 - **Ronda no dilutiva:** el pitch la define entre USD 2.000 y USD 5.000.
-- **Validación legal:** los términos de garantía, mora y liquidación de la joya deben revisarse con un abogado antes del lanzamiento. [NOTA]
+- **Validación legal:** el interés moratorio, el reporte a centrales de riesgo y la validez de la firma dibujada deben revisarse con un abogado antes del lanzamiento. OptiHelp debe estar constituida (NIT) antes de la primera venta. [NOTA]

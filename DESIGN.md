@@ -1,6 +1,6 @@
 ---
-name: Visionario
-description: Lentes a medida en 3 cuotas sin intereses, con una joya en garantía. Web app del paciente, celular primero, con look and feel de app (referencias Pling y Stratux).
+name: OptiHelp
+description: Lentes a medida en 3 cuotas sin intereses, solo con el carnet. Atención en la Óptica Visionario. Web app del paciente, celular primero, con look and feel de app (referencias Pling y Stratux).
 version: 2 (noviembre 2026)
 colors:
   primary-50: "#eef6fd"
@@ -202,25 +202,25 @@ components:
     position: "fijo abajo, a todo el ancho, en celular y en escritorio"
 ---
 
-# Design System: Visionario (v2)
+# Design System: OptiHelp (v2)
 
-Este documento describe la web app tal como está construida hoy (noviembre 2026, ronda 4). Si el código y este documento no coinciden, manda el código y este archivo se corrige. Los tokens viven en `src/app/globals.css`; los textos, en `src/content/visionario.ts`.
+Este documento describe la web app tal como está construida hoy (noviembre 2026, ronda 4). Si el código y este documento no coinciden, manda el código y este archivo se corrige. Los tokens viven en `src/app/globals.css`; los textos, en `src/content/optihelp.ts`.
 
 ## Overview
 
 **Creative North Star: "Una app luminosa que festeja cada paso"**
 
-Visionario se siente como una app de celular moderna, no como una página informativa: fondo azul muy claro que respira, menús blancos, tarjetas blancas o marino oscuro, botones en píldora con un resplandor azul, elementos que flotan alrededor de las fotos y festejos cuando algo sale bien. El mundo visual combina dos referencias que pidió el cliente:
+OptiHelp se siente como una app de celular moderna, no como una página informativa: fondo azul muy claro que respira, menús blancos, tarjetas blancas o marino oscuro, botones en píldora con un resplandor azul, elementos que flotan alrededor de las fotos y festejos cuando algo sale bien. El mundo visual combina dos referencias que pidió el cliente:
 
 - **Pling (pling.com.bo):** botones redondeados con resplandor de color, barras de vidrio con desenfoque, fondos con manchas de color suaves, chips flotantes alrededor de un celular o una foto, etiquetas de sección con ícono, palabras destacadas en cursiva, selectores segmentados con una píldora que se desliza, listas con check verde.
 - **Stratux (stratux.tech, formularios "Agendar reunión" y "Diagnostícate"):** campos translúcidos con borde de luz que se ilumina al enfocar, opciones como tarjetas que se elevan en hover, botón con la flecha dentro de un chip.
 
-Se toma la mecánica, nunca el tema oscuro: Visionario es solo tema claro. La paleta, la tipografía y el tono siguen la Bible de marca (`docs/visionario_bible_brand_system.md`) con los ajustes de esta versión: azul más saturado tomado del logo, verde de éxito y oro para la joya.
+Se toma la mecánica, nunca el tema oscuro: OptiHelp es solo tema claro. La paleta, la tipografía y el tono siguen la Bible de marca (`docs/optihelp_bible_brand_system.md`) con los ajustes de esta versión: azul más saturado tomado del logo, verde de éxito y oro para los beneficios.
 
 **Key Characteristics:**
 - Celular primero (390px). En escritorio la app se mantiene como app: el menú global vive abajo, centrado y a todo el ancho.
 - Azul del logo para la acción, con resplandor; marino de la ceja del logo para estructura y tarjetas oscuras.
-- Oro para todo lo que es la joya; verde para lo que se cumplió; rojo solo para problemas.
+- Oro solo para los beneficios (montura pagada por la ONG, descuento en gafas de sol); verde para lo que se cumplió; rojo solo para problemas.
 - Movimiento con propósito: entrar, flotar, festejar, deslizar. Siempre con versión sin movimiento.
 - Redacción al grano, con **negritas** en las palabras clave.
 
@@ -228,7 +228,7 @@ Se toma la mecánica, nunca el tema oscuro: Visionario es solo tema claro. La pa
 
 La paleta por defecto de Tailwind está eliminada (`--color-*: initial`). Solo existen estas escalas.
 
-### Primary · Azul Visionario (del iris del logo, `#157DCA`)
+### Primary · Azul OptiHelp (del logo, `#157DCA`; el azul del logo de OptiHelp es `#177ECB`, prácticamente el mismo)
 - **Azul Acción** (primary-600 `#0F69B4`): botón primario, píldora activa del menú y del selector segmentado, tarjeta de la parada actual del recorrido, chips azules. Texto blanco encima: **5,7:1 (AA)**.
 - **Azul Profundo** (primary-700 `#0B5796`): hover del botón primario, enlaces, palabras en negrita de los titulares, texto de acento. Sobre blanco: **7,5:1 (AAA)**.
 - **Azul Logo** (primary-500 `#157DCA`): el color exacto del logo. Solo decoración y progreso: iris, barras de pasos, anillo de foco (3,9:1 sobre el fondo, válido para controles), borde de campo enfocado y de opción marcada.
@@ -236,13 +236,13 @@ La paleta por defecto de Tailwind está eliminada (`--color-*: initial`). Solo e
 - **Azul Noche** (primary-800 a 950): texto sobre fondos azules claros.
 
 ### Secondary · Marino (de la ceja del logo, `#08285A`)
-- **Marino Noche** (secondary-950 `#0B1B38`): títulos y tarjetas oscuras (próxima cita, resumen de pagos, total de la orden, beneficio, "Hoy vs. con Visionario", banda de cuotas de la homepage).
+- **Marino Noche** (secondary-950 `#0B1B38`): títulos y tarjetas oscuras (próxima cita, resumen de pagos, total de la orden, beneficio, "Hoy vs. con OptiHelp", banda de cuotas de la homepage).
 - **Tinta** (secondary-900, 800): texto de cuerpo.
 - **Texto de apoyo** (secondary-700 9,6:1 y secondary-600 7,2:1, AAA): ayudas, fechas, etiquetas inactivas del menú.
 - **Bruma** (secondary-100 a 300): bordes de campos (200), pistas de progreso, estados pendientes.
 
-### Oro · la joya
-oro-300 para el recuadro "Recuerde traer su joya" dentro de la tarjeta oscura y la tarjeta "Su joya vuelve"; oro-100/200 con texto oro-800 (6,6:1) para la nota de la joya y la foto de la joya en custodia. También tiñe la mancha cálida del fondo.
+### Oro · los beneficios
+oro-100/200 con texto oro-800 (6,6:1) para la nota "Pagada por {ONG}" de la montura en la orden y para la tarjeta del descuento en gafas de sol al terminar de pagar. También tiñe la mancha cálida del fondo.
 
 ### Éxito
 exito-500 para el sello del festejo y los checks de cuotas pagadas; exito-50 con texto exito-800 (6,4:1) para "Pagada", "Pago recibido" y notas positivas; exito-100 para los círculos con check de las listas.
@@ -256,7 +256,7 @@ alerta-600/700 con fondo alerta-50 para errores, cuota vencida y el contador de 
 ### Named Rules
 **The Blanco Sobre Azul 600 Rule.** El texto sobre el azul de acción siempre es blanco y el azul es el 600 (no el 500 del logo, que no llega a 4,5:1).
 
-**The Oro Es La Joya Rule.** El oro solo aparece cuando se habla de la joya en garantía o en el calor del fondo.
+**The Oro Es Beneficio Rule.** El oro solo aparece en los beneficios (la montura que paga la ONG y el descuento en gafas de sol) o en el calor del fondo.
 
 **The Verde Es Cumplido Rule.** El verde marca solo lo que ya pasó bien (pagado, completado, recibido).
 
@@ -285,7 +285,7 @@ alerta-600/700 con fondo alerta-50 para errores, cuota vencida y el contador de 
 
 - **Celular primero.** La columna de la app mide hasta 28rem; en tablet hasta 42rem; desde 1024px ocupa la pantalla.
 - **Contenedores:** general (1.25rem de margen, máx. 72rem en escritorio) y de flujo (columna de 40rem).
-- **Barra superior blanca:** el título de la pantalla a la izquierda (también en escritorio) y, a la derecha, el acceso a Monturas (ícono de lentes) y el avatar de Mi cuenta. Sin logo dentro de la app: el logo vive en la homepage, el acceso, las barras de flujo en escritorio y el contrato.
+- **Barra superior blanca:** el título de la pantalla a la izquierda (también en escritorio) y, a la derecha, el avatar de Mi cuenta. Sin logo dentro de la app: el logo vive en la homepage, el acceso, las barras de flujo en escritorio y el contrato.
 - **Menú global abajo, siempre:** blanco, a todo el ancho de la pantalla, con las 5 pestañas (Mi cita, Estado, Pagos, Receta, Avisos) centradas en un ancho máximo de 42rem. Alto de 76px más la zona segura. El contenido reserva ese espacio con `pb-menu`.
 - **Acción principal fija** en celular, sobre un degradado del fondo (sobre el menú si la pantalla lo tiene); en escritorio pasa al final del contenido.
 - **Botones a todo el ancho** por defecto (tamaños `default` y `lg`); solo los pequeños (`sm`), los de ícono y los que se piden con `block={false}` se ajustan a su contenido. En la homepage de escritorio los CTA del héroe y del cierre se ponen lado a lado con ancho automático.
@@ -318,14 +318,14 @@ Píldora, Ubuntu 700, a todo el ancho por defecto. En hover suben 2px y crece el
 
 ### Opciones (`opciones.tsx`)
 - **Opciones / OpcionesMultiples:** tarjetas de 56px que se elevan en hover; marcada con borde azul 500, fondo azul 50, anillo y resplandor; el indicador (círculo o cuadrado) se llena de azul 600 y el check entra con rebote.
-- **Segmentado:** selector de vidrio en píldora; una píldora azul con resplandor se desliza hasta la opción elegida (500 ms, curva de resorte). Se usa en Adultos/Niños, Hoy/Con Visionario y los pasos de "Cómo funciona".
+- **Segmentado:** selector de vidrio en píldora; una píldora azul con resplandor se desliza hasta la opción elegida (500 ms, curva de resorte). Se usa en Adultos/Niños, Hoy/Con OptiHelp y los pasos de "Cómo funciona".
 - **Interruptor:** toggle de 56×32px; la bolita se desliza con rebote y el riel se enciende en azul con resplandor.
 
 ### Notas de información (`nota.tsx`)
-Componente de información dentro de una pantalla (no flota): ícono en un chip blanco, título en negrita y, si hace falta, una línea más. Tonos: `info` (azul 50), `exito` (verde 50), `alerta` (rojo 50), `oro` (joya) y `oscuro`. Entran con un leve deslizamiento.
+Componente de información dentro de una pantalla (no flota): ícono en un chip blanco, título en negrita y, si hace falta, una línea más. Tonos: `info` (azul 50), `exito` (verde 50), `alerta` (rojo 50), `oro` (beneficios) y `oscuro`. Entran con un leve deslizamiento.
 
 ### Notificaciones flotantes (`avisos.tsx`)
-Tarjeta de vidrio con radio 1.5rem que entra desde arriba con rebote (arriba a la derecha en escritorio): isotipo en un chip blanco con punto rojo, título Ubuntu, texto y la acción como píldora azul. Se van solas a los 7 s. La pestaña Avisos del menú global muestra un contador rojo con las notificaciones sin leer. Las notificaciones son parte del núcleo de la app y por eso viven en el menú global; Monturas, de uso menos frecuente, queda en la barra superior.
+Tarjeta de vidrio con radio 1.5rem que entra desde arriba con rebote (arriba a la derecha en escritorio): isotipo en un chip blanco con punto rojo, título Ubuntu, texto y la acción como píldora azul. Se van solas a los 7 s. La pestaña Avisos del menú global muestra un contador rojo con las notificaciones sin leer. Las notificaciones son parte del núcleo de la app y por eso viven en el menú global.
 
 ### Chips flotantes (`chip-flotante.tsx`)
 Píldoras de vidrio (o azules, verdes de éxito, oro) con un ícono o emoji en un círculo. Aparecen con un pequeño rebote escalonado y luego levitan (6 s, 10px). Decorativos (`aria-hidden`): la información real siempre está en el texto. Se usan alrededor de fotos (homepage, onboarding), del celular simulado y de los estados vacíos.
@@ -346,19 +346,19 @@ Centrados en el espacio libre. Un círculo blanco con el ícono del tema sobre u
 Tarjetas horizontales (240px en celular, cuatro por fila en escritorio) que se deslizan con el dedo (nativo, con snap), se arrastran con el mouse y se mueven con flechas. Hecha: blanca con emoji en círculo verde y check. Actual: tarjeta azul 600 con resplandor, chip "Ahora" y la acción como botón claro. Pendiente: blanca translúcida con emoji atenuado. Debajo, un punto por parada. Al abrir se centra en la parada actual.
 
 ### Homepage
-Héroe con etiqueta de sección, titular con palabra brillante, bajada con negritas, dos CTA ("Agendar cita gratuita" y "Ver cómo funciona", que abre el onboarding con una X que vuelve aquí), pruebas con check verde y una foto con cuatro chips flotantes. Luego: el problema (cuatro datos del pitch, uno en tarjeta oscura), "Hoy vs. con Visionario" (segmentado), "Cómo funciona" (tres pestañas con un celular simulado que muestra horarios libres reales, la joya tasada y el pago QR con el aviso de WhatsApp), para quién (fotos de adultos y niños), las cuotas iguales (tarjeta oscura: Bs 300 + 300 + 300 y "Su joya vuelve"), monturas y un cierre azul con CTA.
+Héroe con etiqueta de sección, titular con palabra brillante, bajada con negritas, dos CTA ("Agendar cita gratuita" y "Ver cómo funciona", que abre el onboarding con una X que vuelve aquí), pruebas con check verde y una foto con cuatro chips flotantes. Luego: el problema (cuatro datos del pitch, uno en tarjeta oscura), "Hoy vs. con OptiHelp" (segmentado), "Cómo funciona" (tres pestañas con un celular simulado que muestra horarios libres reales, la orden con la montura de la Óptica Visionario y la cuota inicial del 40%, y el pago QR con el aviso de WhatsApp), para quién (escala de dioptrías: menos de 4 al contado, 4 o más en cuotas; fotos de adultos y niños), las cuotas 40/30/30 (tarjeta oscura: Bs 400 + 300 + 300, tres barras de distinto tamaño y "Listo, son suyos"), "Dónde le atendemos" (Óptica Visionario, dirección y horario pendientes) y un cierre azul con CTA.
 
 ### Onboarding (`proceso/carrusel.tsx`)
-Tres pasos, solo título con negritas: (1) 3 cuotas sin intereses, (2) agende gratis, medición y tasación de la joya, (3) pague por QR, recoja y su joya vuelve. Cada paso tiene una foto que entra con escala y tres chips flotantes. Se desliza con el dedo; puntos de avance con píldora activa.
+Tres pasos, solo título con negritas: (1) 3 cuotas sin intereses, solo con su carnet, (2) agende gratis, medición en la Óptica Visionario y elección de la montura, (3) pague el 40% por QR, recoja sus lentes y el resto en 2 cuotas. Cada paso tiene una foto que entra con escala y tres chips flotantes. Se desliza con el dedo; puntos de avance con píldora activa.
 
 ### Firma (`lienzo-firma.tsx`)
 Recuadro de 320px (384px en escritorio), blanco con borde punteado azul 200 y radio 1.75rem; mientras está vacío, un trazo de ejemplo se dibuja solo. Al firmar: borde azul 500 con halo. Bloqueo de desplazamiento doble: `touch-action: none` + `preventDefault` en el lienzo y, mientras el dedo dibuja, la página entera queda quieta (`overflow: hidden` en `html` y `touchmove` bloqueado en el documento). Al soltar se libera.
 
 ### Pago
-Tarjeta blanca con chip "Cuota N de 3", el monto en Cifra, la fecha y el QR con una línea de escaneo animada; debajo, el chip verde "Pago protegido". Las cuotas son siempre **iguales** (`montoCuota = total / 3`).
+Tarjeta blanca con chip "Cuota inicial", "Cuota 2 de 3", "Cuota 3 de 3" o "Pago único" (contado), el monto en Cifra, la fecha, "Paga a: OptiHelp" y el QR con una línea de escaneo animada; debajo, el chip verde "Pago protegido". Las cuotas son **40% / 30% / 30%** (`generarCuotas` en `src/lib/estado.ts`: la 1 y la 2 se redondean y la 3 es el resto, así la suma da el total exacto).
 
 ### Fotografía
-Fotos de Pexels (licencia libre, créditos en `public/fotos/CREDITOS.md`): adultos y niños con lentes, consulta óptica, monturas y la cadena de oro. Siempre con radio grande, anillo blanco y, si llevan texto encima, un degradado marino. El avatar por defecto del usuario de ejemplo es `public/fotos/avatar-rosa.jpg`. Las 20 monturas del catálogo usan fotos de ejemplo (`public/fotos/monturas/a-01…n-10.jpg`) hasta tener las reales.
+Fotos de Pexels (licencia libre, créditos en `public/fotos/CREDITOS.md`): adultos y niños con lentes, consulta óptica y monturas. Siempre con radio grande, anillo blanco y, si llevan texto encima, un degradado marino. El avatar por defecto del usuario de ejemplo es `public/fotos/avatar-rosa.jpg`. La sección "Dónde le atendemos" usa una foto marcador hasta tener la foto real de la Óptica Visionario.
 
 ## Motion
 
@@ -378,16 +378,16 @@ Probado en Chromium (Chrome, y por motor Brave y Opera) y en WebKit (motor de Sa
 - **Do** poner el menú global abajo, blanco y a todo el ancho, también en escritorio.
 - **Do** mostrar el título de la pantalla en la barra superior, sin logo dentro de la app.
 - **Do** festejar cada logro (cita, firma, pago, liquidación) y decir en corto qué pasa ahora.
-- **Do** usar oro para la joya, verde para lo cumplido y rojo solo para problemas, siempre con ícono y texto.
+- **Do** usar oro solo para los beneficios, verde para lo cumplido y rojo solo para problemas, siempre con ícono y texto.
 - **Do** marcar las palabras clave con negrita y escribir al grano.
 - **Do** dar a cada animación su versión sin movimiento.
-- **Do** mantener las cuotas exactamente iguales.
+- **Do** mostrar cada cuota con su porcentaje (40/30/30), su monto y su fecha exacta.
 
 ### Don't:
 - **Don't** usar tema oscuro como base: lo oscuro solo vive en tarjetas puntuales.
 - **Don't** poner texto sobre el azul 500 del logo: el 500 es decoración y progreso.
 - **Don't** poner el logo o el iris como adorno en pantallas de la app (receta, pagos, estado).
 - **Don't** usar más de una palabra brillante por titular, ni en botones, formularios o montos.
-- **Don't** incluir un estimador de la joya: la tasación es manual en la óptica.
+- **Don't** mostrar un catálogo de monturas: las monturas son de la óptica.
 - **Don't** dejar elementos flotantes sobre botones o el texto que hay que leer.
 - **Don't** distinguir un estado solo por color.

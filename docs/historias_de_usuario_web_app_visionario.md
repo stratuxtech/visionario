@@ -1,6 +1,8 @@
-# Historias de Usuario: Web App Visionario
+# Historias de Usuario: Web App OptiHelp
 
-Este documento detalla las historias de usuario basadas en los flujos de la aplicación web de Visionario. Están redactadas desde la perspectiva del usuario final (paciente/cliente) para guiar el desarrollo de la plataforma.
+> La marca de la app es OptiHelp. Visionario es la óptica aliada donde se atiende al cliente. Ver `docs/CAMBIOS_FASE_1.md`.
+
+Este documento detalla las historias de usuario basadas en los flujos de la aplicación web de OptiHelp. Están redactadas desde la perspectiva del usuario final (paciente/cliente) para guiar el desarrollo de la plataforma.
 
 ## Épica 1: Descubrimiento y Onboarding
 
@@ -44,21 +46,33 @@ Este documento detalla las historias de usuario basadas en los flujos de la apli
 
 **HU 3.1: Recepción de orden de compra**
 *   **Como** paciente evaluado en la clínica,
-*   **quiero** recibir una notificación y ver el detalle de mi orden de compra generada por el optometrista en mi cuenta de la app,
-*   **para** verificar mis datos y el modelo de lentes elegido antes de pagar.
-*   *Criterios de aceptación:* La Web App debe sincronizarse con el ERP y mostrar los detalles del producto y montos al usuario.
+*   **quiero** recibir una notificación y ver el detalle de mi orden de compra en mi cuenta de la app,
+*   **para** verificar mis datos, mis lentes y la montura que elegí en la Óptica Visionario antes de pagar.
+*   *Criterios de aceptación:* La orden llega desde el **ERP de OptiHelp** (lo construye el CTO; en el prototipo se simula). La app muestra la medida, la montura elegida y su precio, el total y las 3 cuotas con su porcentaje, su monto y su fecha exacta.
 
 **HU 3.2: Firma de contrato digital**
 *   **Como** cliente,
 *   **quiero** leer y firmar digitalmente el contrato de financiamiento dibujando con mi dedo en la pantalla del celular,
 *   **para** formalizar el pago en 3 cuotas de manera 100% digital (cero papel).
-*   *Criterios de aceptación:* Se debe desplegar un lienzo (canvas) en pantalla que capture el trazo táctil y lo guarde junto al documento.
+*   *Criterios de aceptación:* Antes de firmar, la persona completa su **número de carnet** (con extensión) y su **domicilio**; el celular viene del perfil y se puede corregir. Sin esos datos no se habilita la firma. Se guardan en el perfil. El contrato sigue el modelo de The Blink Eye (partes, fechas exactas, 3 días hábiles para ponerse al día, interés moratorio y jurisdicción). Se debe desplegar un lienzo (canvas) en pantalla que capture el trazo táctil y lo guarde junto al documento.
 
 **HU 3.3: Pago de la primera cuota**
 *   **Como** cliente con contrato firmado,
-*   **quiero** ser redirigido a una pasarela de pago para abonar mi primera cuota (1 de 3) mediante código QR o enlace directo,
-*   **para** iniciar la fabricación y envío de mis lentes.
-*   *Criterios de aceptación:* Integración con la pasarela de pago; al confirmar el pago, el estado de la deuda debe actualizarse a "1/3 pagado".
+*   **quiero** pagar por QR mi cuota inicial, que es el **40%** del total,
+*   **para** que manden a hacer mis lentes.
+*   *Criterios de aceptación:* El pago se hace por QR y se le paga a OptiHelp. Al confirmar el pago, el estado de la deuda pasa a "1/3 pagado" y el laboratorio empieza a fabricar los lentes.
+
+**HU 3.4: Montura pagada por una ONG**
+*   **Como** cliente enviado por una ONG,
+*   **quiero** ver en mi orden que la montura ya está pagada por la ONG,
+*   **para** saber cuánto pago yo.
+*   *Criterios de aceptación:* La orden muestra la nota "Pagada por {ONG}: −Bs {valor}", el total ya descontado y las cuotas calculadas sobre ese total. El contrato incluye la cláusula de la ayuda de la ONG.
+
+**HU 3.5: Receta y compra al contado (menos de 4 dioptrías)**
+*   **Como** paciente con menos de 4 dioptrías,
+*   **quiero** ver mi receta y cuánto cuestan mis lentes al contado,
+*   **para** decidir si los compro.
+*   *Criterios de aceptación:* La orden muestra el aviso de que no aplica el crédito, el costo de la receta, el precio de los lentes al contado y el total. No pide contrato. Se paga una sola vez por QR.
 
 ---
 
@@ -67,7 +81,7 @@ Este documento detalla las historias de usuario basadas en los flujos de la apli
 **HU 4.1: Visualización del estado de deuda**
 *   **Como** cliente activo,
 *   **quiero** ver un panel claro que muestre cuántas cuotas he pagado y cuántas me faltan,
-*   **para** tener control financiero sobre mi deuda con Visionario.
+*   **para** tener control financiero sobre mi deuda con OptiHelp.
 *   *Criterios de aceptación:* El dashboard debe mostrar un indicador visual de progreso (ej. "Has pagado 1 de 3 cuotas").
 
 **HU 4.2: Pago de cuotas pendientes**
@@ -94,9 +108,9 @@ Este documento detalla las historias de usuario basadas en los flujos de la apli
 
 **HU 5.1: Hito de finalización y Upsell**
 *   **Como** cliente que paga su tercera y última cuota,
-*   **quiero** ver una pantalla de felicitación que incluya un descuento exclusivo inmediato (ej. para gafas de sol),
+*   **quiero** ver una pantalla de felicitación que incluya un descuento en gafas de sol,
 *   **para** sentirme recompensado y aprovechar para comprar un producto secundario.
-*   *Criterios de aceptación:* Animación o mensaje de felicitación al registrar el tercer pago, junto con un banner interactivo de descuento.
+*   *Criterios de aceptación:* Animación o mensaje de felicitación al registrar el tercer pago: los lentes son suyos (no hay ninguna garantía que devolver). Banner con el descuento en gafas de sol, que **pone OptiHelp**, y la línea "Puede volver a comprar en cuotas cuando lo necesite".
 
 **HU 5.2: Notificaciones de renovación**
 *   **Como** cliente antiguo (después de 6 o 12 meses),

@@ -1,6 +1,8 @@
+> La marca de la app es OptiHelp. Visionario es la óptica aliada donde se atiende al cliente. Ver `docs/CAMBIOS_FASE_1.md`.
+
 # 02 · Referencias: Web App Visionario
 
-> De cada web de referencia tomamos **mecánicas concretas de movimiento, layout o interacción** y descartamos explícitamente lo que no encaja con la identidad de **Visionario**. Todo se aplica bajo las reglas de `visionario_bible_brand_system.md` (paleta cian y slate, Ubuntu, Manrope y Cormorant Garamond, HugeIcons, radios suaves) y de `brief.md` (accesible, solemne, confiable; la animación explica o reconforta, nunca decora).
+> De cada web de referencia tomamos **mecánicas concretas de movimiento, layout o interacción** y descartamos explícitamente lo que no encaja con la identidad de **Visionario**. Todo se aplica bajo las reglas de `optihelp_bible_brand_system.md` (paleta cian y slate, Ubuntu, Manrope y Cormorant Garamond, HugeIcons, radios suaves) y de `brief.md` (accesible, solemne, confiable; la animación explica o reconforta, nunca decora).
 
 ---
 
