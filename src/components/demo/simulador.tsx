@@ -13,7 +13,9 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Cancel01Icon,
   CheckmarkCircle02Icon,
+  HandHelpingIcon,
   Invoice01Icon,
+  Invoice03Icon,
   Coins01Icon,
   TestTube01Icon,
   AlertCircleIcon,
@@ -23,10 +25,10 @@ import {
   PlayIcon,
 } from "@hugeicons/core-free-icons";
 import { demo, negocio, rutas, simulador, type TipoNotificacion } from "@/content/optihelp";
-import { cuotasPagadas, proximaCuota, useApp, useHidratado } from "@/lib/estado";
+import { cuotasPagadas, esContado, proximaCuota, useApp, useHidratado } from "@/lib/estado";
 import { fechaCita, rangoHora } from "@/lib/agenda";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { bs, cn } from "@/lib/utils";
 
 export function Simulador() {
   const hidratado = useHidratado();
@@ -39,6 +41,12 @@ export function Simulador() {
 
   const pagadas = cuotasPagadas(s.cuotas);
   const hayPendiente = !!proximaCuota(s.cuotas);
+  const contado = esContado(s.orden);
+  /* Las 3 órdenes se bloquean entre sí: solo puede haber una */
+  const bloqueoOrden = !s.sesion.activa ? simulador.requisitos.sesion : s.orden ? simulador.requisitos.orden : null;
+  /* El pago sirve para las cuotas del crédito y para el pago único del contado */
+  const bloqueoPago = !s.contrato && !contado ? simulador.requisitos.pago : !hayPendiente ? simulador.requisitos.cuotas : null;
+  const bloqueoCredito = !s.contrato ? simulador.requisitos.contrato : !hayPendiente ? simulador.requisitos.cuotas : null;
 
   const acciones: {
     id: keyof typeof simulador.descripciones;
@@ -46,18 +54,10 @@ export function Simulador() {
     hacer: () => void;
     bloqueo: string | null;
   }[] = [
-    {
-      id: "ordenErp",
-      icono: Invoice01Icon,
-      hacer: s.simular.ordenErp,
-      bloqueo: !s.sesion.activa ? simulador.requisitos.sesion : s.orden ? simulador.requisitos.orden : null,
-    },
-    {
-      id: "pagoCuota",
-      icono: Coins01Icon,
-      hacer: s.simular.pagoCuota,
-      bloqueo: !s.contrato ? simulador.requisitos.contrato : !hayPendiente ? simulador.requisitos.cuotas : null,
-    },
+    { id: "ordenErp", icono: Invoice01Icon, hacer: s.simular.ordenErp, bloqueo: bloqueoOrden },
+    { id: "ordenOng", icono: HandHelpingIcon, hacer: s.simular.ordenOng, bloqueo: bloqueoOrden },
+    { id: "ordenContado", icono: Invoice03Icon, hacer: s.simular.ordenContado, bloqueo: bloqueoOrden },
+    { id: "pagoCuota", icono: Coins01Icon, hacer: s.simular.pagoCuota, bloqueo: bloqueoPago },
     {
       id: "laboratorio",
       icono: TestTube01Icon,
@@ -68,13 +68,13 @@ export function Simulador() {
       id: "mora",
       icono: AlertCircleIcon,
       hacer: s.simular.mora,
-      bloqueo: !s.contrato ? simulador.requisitos.contrato : !hayPendiente ? simulador.requisitos.cuotas : null,
+      bloqueo: bloqueoCredito,
     },
     {
       id: "liquidacion",
       icono: Award01Icon,
       hacer: s.simular.liquidacion,
-      bloqueo: !s.contrato ? simulador.requisitos.contrato : !hayPendiente ? simulador.requisitos.cuotas : null,
+      bloqueo: bloqueoCredito,
     },
   ];
 
@@ -83,11 +83,29 @@ export function Simulador() {
     setAbierto(false);
   };
 
+  const tipoOrden = !s.orden
+    ? ""
+    : contado
+      ? simulador.tiposOrden.contado
+      : s.orden.montura.cubiertaPor
+        ? simulador.tiposOrden.ong
+        : simulador.tiposOrden.credito;
+  const fl = simulador.filas;
+  const v = simulador.valores;
   const estado: [string, string][] = [
-    ["Cuenta", s.sesion.activa ? (s.perfil.nombre || s.perfil.correo || "Iniciada") : "Visitante"],
-    ["Cita", s.cita ? `${fechaCita(s.cita.inicio)} · ${rangoHora(s.cita.inicio)}` : "Sin cita"],
-    ["Orden", s.orden ? s.orden.numero : "Sin orden"],
-    ["Cuotas", s.contrato ? `${pagadas} de ${negocio.cuotas.cantidad} pagadas` : "Sin contrato"],
+    [fl.cuenta, s.sesion.activa ? s.perfil.nombre || s.perfil.correo || v.iniciada : v.visitante],
+    [fl.cita, s.cita ? `${fechaCita(s.cita.inicio)} · ${rangoHora(s.cita.inicio)}` : v.sinCita],
+    [fl.orden, s.orden ? `${s.orden.numero} · ${tipoOrden} · ${bs(s.orden.total)}` : v.sinOrden],
+    [
+      fl.cuotas,
+      contado
+        ? pagadas
+          ? v.unicoPagado
+          : v.unicoPendiente
+        : s.contrato
+          ? v.cuotas(pagadas, negocio.cuotas.cantidad)
+          : v.sinContrato,
+    ],
   ];
 
   return (
