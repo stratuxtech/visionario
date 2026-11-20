@@ -118,6 +118,7 @@
 
 - La ONG 1 **paga la montura** de los clientes que ella envía.
 - Al cliente se le descuenta el precio de la montura del total (en el ejemplo demo, Bs 240).
+- **En la app no se nombra a la ONG.** El cliente solo ve que no paga la montura ("Usted no paga la montura") y el total más bajo. Que la paga una ONG se le explica en persona.
 - El cliente puede decir en su registro que lo envía una ONG, pero eso no aplica ningún descuento por sí solo: el beneficio lo confirma OptiHelp en la orden.
 - [PENDIENTE: nombre de la ONG y acuerdo firmado.]
 

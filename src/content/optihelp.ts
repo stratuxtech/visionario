@@ -689,7 +689,7 @@ export const formularioPerfil = {
     institucion: {
       etiqueta: "¿Cómo se llama la ONG?",
       ejemplo: "Ej.: Fundación Ver Bien",
-      ayuda: "Es opcional. Si la ONG le ayuda con su montura, se lo confirmamos en su orden.",
+      ayuda: "Es opcional. Si le corresponde, en su orden verá que no paga la montura.",
     },
   },
 } as const;
@@ -782,7 +782,7 @@ export const simulador = {
   cerrar: "Cerrar simulador",
   acciones: {
     ordenErp: "Simular orden del ERP (crédito)",
-    ordenOng: "Simular orden con montura pagada por ONG",
+    ordenOng: "Simular orden con montura sin costo (la paga una ONG)",
     ordenContado: "Simular orden al contado (menos de 4 dioptrías)",
     pagoCuota: "Simular pago de cuota",
     laboratorio: "Simular laboratorio listo",
@@ -793,7 +793,7 @@ export const simulador = {
   },
   descripciones: {
     ordenErp: "Tras la cita se carga la orden con la medida, la montura y el precio.",
-    ordenOng: "La misma orden, pero la ONG aliada paga la montura y el cliente paga menos.",
+    ordenOng: "La misma orden, pero el cliente no paga la montura. La app no nombra a la ONG: eso se le explica en persona.",
     ordenContado: "La medida es menor a 4 dioptrías: receta cobrada y lentes al contado, sin contrato.",
     pagoCuota: "Marca como pagada la próxima cuota (o el pago único del contado).",
     laboratorio: "El laboratorio terminó los lentes: aviso para recoger en la óptica.",
@@ -916,7 +916,8 @@ export const orden = {
   sinTratamiento: "Sin tratamiento adicional",
   montura: "Montura",
   monturaIncluida: "Incluida en el precio total",
-  montoOng: "Pagada por {ong}",
+  /** Si la ONG paga la montura: al cliente no se le nombra la ONG, solo que no la paga */
+  montoOng: "Usted no paga la montura",
   atiende: { etiqueta: "Le atiende", valor: "Óptica Visionario" },
   financia: { etiqueta: "Crédito de", valor: "OptiHelp" },
   receta: "Su medida",
@@ -1048,9 +1049,9 @@ export const contrato = {
     },
     {
       id: "ong",
-      titulo: "Ayuda de una ONG",
+      titulo: "Montura sin costo",
       soloConOng: true,
-      parrafos: (d: DatosContrato) => [{ texto: `${d.ong} paga la montura. Por eso su total es ${d.total} en lugar de ${d.precioLista}.` }],
+      parrafos: (d: DatosContrato) => [{ texto: `EL CLIENTE no paga la montura. Por eso su total es ${d.total} en lugar de ${d.precioLista}.` }],
     },
     {
       id: "forma",

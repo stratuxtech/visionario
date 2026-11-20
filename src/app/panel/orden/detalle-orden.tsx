@@ -98,12 +98,13 @@ export function DetalleOrden() {
           <Fila etiqueta={t.montura}>
             {o.montura.descripcion}
             <span className="cifras block text-meta font-normal text-muted-foreground">
-              {bs(o.montura.valor)} · {t.monturaIncluida}
+              {bs(o.montura.valor)}
+              {!ong && ` · ${t.monturaIncluida}`}
             </span>
             {ong && (
               <span className="cifras mt-2 inline-flex items-center gap-2 rounded-full bg-oro-100 px-3 py-1 text-meta font-bold text-oro-800 ring-1 ring-oro-200">
                 <HugeiconsIcon icon={GiftIcon} size={16} strokeWidth={2} aria-hidden />
-                {t.montoOng.replace("{ong}", ong)}: −{bs(o.montura.valor)}
+                {t.montoOng}: −{bs(o.montura.valor)}
               </span>
             )}
           </Fila>
